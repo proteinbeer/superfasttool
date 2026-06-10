@@ -9,7 +9,7 @@
         .tool-card { transition: all 0.2s ease-in-out; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 🚨 구글 번역기 본체 및 위젯 UI를 완전히 파괴하여 숨김 */
+        /* 🚨 구글 번역기 오리지널 UI 요소를 완전히 숨김 */
         #google_translate_element, 
         .goog-te-banner-frame, 
         .goog-te-balloon-frame, 
@@ -30,7 +30,7 @@
             <div class="flex items-center gap-3 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
                 <span id="labelEN" class="text-xs font-bold text-indigo-600 transition-colors">English</span>
                 
-                <button id="langToggleBtn" class="w-10 h-5 bg-gray-300 rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none relative">
+                <button id="langToggleBtn" class="w-10 h-5 bg-gray-300 rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none relative cursor-pointer">
                     <div id="toggleHandle" class="w-4 h-4 bg-white rounded-full shadow duration-200 ease-in-out transform pointer-events-none"></div>
                 </button>
                 
@@ -52,7 +52,6 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
             <a href="/stock-calculator" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-300">
                 <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
                 <h3 class="text-lg font-bold text-gray-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
@@ -64,8 +63,76 @@
                 <h3 class="text-lg font-bold text-gray-400 mb-1">New Tools Coming Soon</h3>
                 <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
             </div>
-
         </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 mt-24
+    <footer class="bg-white border-t border-gray-200 mt-24 py-12 text-center text-sm text-gray-400">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>© 2026 SuperFastTool. All rights reserved.</p>
+            <p class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within the user's browser.</p>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', 
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        function getBrowserLanguage() {
+            const lang = navigator.language || navigator.userLanguage;
+            return lang.split('-')[0];
+        }
+
+        const toggleBtn = document.getElementById('langToggleBtn');
+        const toggleHandle = document.getElementById('toggleHandle');
+        const labelEN = document.getElementById('labelEN');
+        const labelAuto = document.getElementById('labelAuto');
+        
+        let isTranslated = false;
+
+        toggleBtn.addEventListener('click', () => {
+            // 🚀 [핵심 방어선] 구글 셀렉트 박스가 정상적으로 로드되었는지 체크
+            const googleSelect = document.querySelector('.goog-te-combo');
+            
+            if (!googleSelect) {
+                // 애드블록 등으로 차단되었거나 로드가 안 되었을 때 띄우는 친절한 안내
+                alert("Translation engine could not be loaded.\nIf you are using an Adblocker or Brave browser, please disable it for this site to use Auto-Translate!");
+                return;
+            }
+
+            if (!isTranslated) {
+                const userLang = getBrowserLanguage();
+                googleSelect.value = userLang; 
+                googleSelect.dispatchEvent(new Event('change')); 
+
+                toggleBtn.classList.remove('bg-gray-300');
+                toggleBtn.classList.add('bg-indigo-600');
+                toggleHandle.classList.add('translate-x-5');
+                labelEN.classList.remove('text-indigo-600', 'font-bold');
+                labelEN.classList.add('text-gray-400', 'font-medium');
+                labelAuto.classList.remove('text-gray-400', 'font-medium');
+                labelAuto.classList.add('text-indigo-600', 'font-bold');
+                isTranslated = true;
+            } else {
+                googleSelect.value = ''; 
+                googleSelect.dispatchEvent(new Event('change'));
+
+                toggleBtn.classList.remove('bg-indigo-600');
+                toggleBtn.classList.add('bg-gray-300');
+                toggleHandle.classList.remove('translate-x-5');
+                labelAuto.classList.remove('text-indigo-600', 'font-bold');
+                labelAuto.classList.add('text-gray-400', 'font-medium');
+                labelEN.classList.remove('text-gray-400', 'font-medium');
+                labelEN.classList.add('text-indigo-600', 'font-bold');
+                isTranslated = false;
+            }
+        });
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>
