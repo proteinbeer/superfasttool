@@ -13,14 +13,27 @@
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
 
-        /* ⚡ [수정] 무력화된 스크롤을 완치하고, 격자 선명도를 2.5배 올린 무적의 배경 패턴 */
+        /* ⚡ 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
         .bg-tech-grid {
-            background-color: #f8fafc; /* 조금 더 맑은 슬레이트 빛 배경 */
+            background-color: #f8fafc;
             background-image: 
                 linear-gradient(to right, rgba(15, 23, 42, 0.09) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(15, 23, 42, 0.09) 1px, transparent 1px);
-            background-size: 40px 40px; /* 격자 크기를 넓혀 시각적 쾌적함 확보 */
-            background-attachment: fixed;
+            background-size: 40px 40px;
+            
+            /* 🚀 8초 동안 선형(linear)으로 무한히(infinite) 애니메이션 가동 */
+            animation: gridScrollLinear 8s linear infinite;
+        }
+
+        /* 🛠️ 완벽한 무한 루프를 보장하는 격자 애니메이션 축 */
+        @keyframes gridScrollLinear {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                /* 격자 크기인 40px 단위로 움직여야 경계선이 깨지지 않고 자연스럽게 흐릅니다 */
+                background-position: 40px 40px;
+            }
         }
 
         /* 중앙 히어로 영역을 은은하게 밝혀주는 방사형 광원 효과 */
@@ -80,7 +93,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 SuperFastTool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.6</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.8</p>
         </div>
     </footer>
 
@@ -121,40 +134,4 @@
                 if (el) originalTexts[id] = el.innerText;
             });
 
-            const userLang = getBrowserLanguage();
-
-            if (userLang !== 'en') {
-                toggleBtn.classList.add('opacity-50');
-                
-                const translationPromises = targetIds.map(async (id) => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) {
-                        const translatedText = await fetchTranslation(originalTexts[id], userLang);
-                        translatedTexts[id] = translatedText;
-                        return { id, text: translatedText };
-                    }
-                    return null;
-                });
-
-                const results = await Promise.all(translationPromises);
-                results.forEach(result => {
-                    if (result) document.getElementById(result.id).innerText = result.text;
-                });
-                
-                toggleBtn.classList.remove('opacity-50');
-            }
-        });
-
-        toggleBtn.addEventListener('click', async () => {
-            if (isLoopBlocking) return;
-            const userLang = getBrowserLanguage();
-            isLoopBlocking = true;
-
-            if (isTranslated) {
-                targetIds.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) el.innerText = originalTexts[id];
-                });
-
-                toggleBtn.classList.remove('bg-zinc-900');
-                toggleBtn.classList
+            const
