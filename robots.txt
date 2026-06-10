@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://proteinbeer.github.io/sitemap.xml
+Sitemap: https://superfasttool.com/sitemap.xml
