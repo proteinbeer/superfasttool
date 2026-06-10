@@ -22,11 +22,15 @@
                 ⚡ SuperFastTool
             </a>
             
-            <div class="flex items-center gap-2.5 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
-                <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
-                    <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
-                </button>
-                <span id="labelAuto" class="text-xs font-bold text-zinc-900 transition-colors">Auto-Translate</span>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
+                    <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
+                        <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
+                    </button>
+                    <span id="labelAuto" class="text-xs font-medium text-zinc-900 transition-colors">Auto-Translate</span>
+                </div>
+                
+                <span class="text-xs bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-full font-bold border border-zinc-200 shadow-sm">v1.0.3</span>
             </div>
         </div>
     </header>
@@ -47,7 +51,7 @@
             <a href="/stock-calculator" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400">
                 <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
                 <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
-                <p id="tool1Desc" class="text-sm text-gray-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
+                <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
             </a>
 
             <div class="block p-6 bg-gray-100/50 rounded-2xl border border-dashed border-gray-200 opacity-60">
@@ -91,14 +95,12 @@
         
         const targetIds = ['heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc'];
         
-        // 🚀 원본 영어와 번역본을 영구 저장할 메모리 사본 생성 (구글 트래픽 폭탄 방지)
         const originalTexts = {};
         const translatedTexts = {}; 
         
         let isTranslated = true;
         let isLoopBlocking = false;
 
-        // 1. 최초 로드 시 딱 한 번만 구글 통신 수행 후 무조건 캐싱
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -114,7 +116,7 @@
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) {
                         const translatedText = await fetchTranslation(originalTexts[id], userLang);
-                        translatedTexts[id] = translatedText; // 캐시에 저장
+                        translatedTexts[id] = translatedText;
                         return { id, text: translatedText };
                     }
                     return null;
@@ -129,14 +131,12 @@
             }
         });
 
-        // 2. 이후 토글 시에는 구글 서버를 아예 건드리지 않고 메모리에서 0초 만에 스위칭
         toggleBtn.addEventListener('click', async () => {
             if (isLoopBlocking) return;
             const userLang = getBrowserLanguage();
             isLoopBlocking = true;
 
             if (isTranslated) {
-                // 번역 OFF: 메모리에 킵해둔 순수 영어 원본으로 원상 복구
                 targetIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) el.innerText = originalTexts[id];
@@ -145,26 +145,27 @@
                 toggleBtn.classList.remove('bg-zinc-900');
                 toggleBtn.classList.add('bg-gray-300');
                 toggleHandle.classList.remove('translate-x-5');
-                labelAuto.classList.remove('text-zinc-900', 'font-bold');
-                labelAuto.classList.add('text-gray-400', 'font-medium');
+                
+                // 폰트 두께 변경 없이 색상만 스위칭하여 미니멀함 유지
+                labelAuto.classList.remove('text-zinc-900');
+                labelAuto.classList.add('text-gray-400');
 
                 isTranslated = false;
             } else {
-                // 번역 ON: 구글 요청 없이 이미 캐싱된 데이터를 화면에 즉시 주입
                 if (userLang !== 'en') {
                     targetIds.forEach(id => {
                         const el = document.getElementById(id);
-                        // 캐시에 값이 있으면 쓰고, 없으면 안전빵으로 영어 노출
                         if (el) el.innerText = translatedTexts[id] || originalTexts[id];
                     });
                 } 
 
-                // 오타 싹 고쳐낸 깔끔한 스위치 활성화 코드
                 toggleBtn.classList.remove('bg-gray-300');
                 toggleBtn.classList.add('bg-zinc-900');
                 toggleHandle.classList.add('translate-x-5');
-                labelAuto.classList.remove('text-gray-400', 'font-medium');
-                labelAuto.classList.add('text-zinc-900', 'font-bold');
+                
+                // 폰트 두께 변경 없이 색상만 스위칭하여 미니멀함 유지
+                labelAuto.classList.remove('text-gray-400');
+                labelAuto.classList.add('text-zinc-900');
 
                 isTranslated = true;
             }
