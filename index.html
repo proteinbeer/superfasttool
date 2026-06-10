@@ -128,7 +128,8 @@
         .info-panel { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .info-panel-scroll { max-height: 18rem; overflow-y: auto; overscroll-behavior: contain; padding-right: 0.25rem; }
+        .calculator-content, .info-panel-scroll { overscroll-behavior: contain; }
+        .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         .info-panel-scroll::-webkit-scrollbar { width: 8px; }
         .info-panel-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 999px; }
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
@@ -154,6 +155,12 @@
         /* Radial glow behind the central hero area */
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
+        }
+
+        @media (max-width: 640px) {
+            .calculator-content { max-height: calc(100vh - 11rem); overflow-y: auto; }
+            .info-panel-content { max-height: calc(100vh - 2rem); overflow-y: hidden; }
+            .info-panel-scroll { max-height: calc(100vh - 12rem); }
         }
     </style>
 </head>
@@ -670,7 +677,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.44</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.45</p>
         </div>
     </footer>
 
@@ -895,7 +902,7 @@
             activeInfoSourceButton = sourceButton;
             const rect = sourceButton.getBoundingClientRect();
             const targetWidth = Math.min(520, window.innerWidth - 32);
-            const targetHeight = panelId === 'contactPanel' ? 440 : 330;
+            const targetHeight = Math.min(panelId === 'contactPanel' ? 440 : 330, window.innerHeight - 32);
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
 
@@ -1040,7 +1047,7 @@
             card.style.transition = 'none';
             card.style.width = targetWidth + 'px';
             card.style.height = 'auto';
-            const targetHeight = card.offsetHeight;
+            const targetHeight = Math.min(card.offsetHeight, window.innerHeight - 32);
 
             // 5. Restore the clicked button size as the real animation starting point.
             card.style.width = rect.width + 'px';
