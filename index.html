@@ -6,13 +6,15 @@
     <title>Super Fast Tool - Ultra-Fast Web Utilities</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        .tool-card { transition: all 0.2s ease-in-out; cursor: pointer; }
+        .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 토글 스위치 및 모달 애니메이션 */
+        /* 토글 스위치 및 카드 인터랙션 애니메이션 */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
-        .modal-transition { transition: opacity 0.2s ease, transform 0.2s ease; }
+        
+        /* ⚡ [v1.4.0] 카드가 그 자리에서 확장되는 플루이드 모션 CSS */
+        .expand-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* ⚡ 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
         .bg-tech-grid {
@@ -47,6 +49,7 @@
                 <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
                     <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
                 </button>
+                
                 <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4.5 h-4.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138A14.25 14.25 0 0 0 9.25 12m5.341-7.124A17.912 17.912 0 0 1 12 11.25" />
@@ -69,15 +72,66 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
             
-            <div id="openCalcBtn" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs">
-                <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
-                <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
-                <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
+            <div id="expandableCard" class="expand-transition relative z-10 block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                
+                <div id="cardContent" class="opacity-100 transition-opacity duration-300">
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
+                    <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
+                    <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
+                </div>
+
+                <div id="calculatorContent" class="absolute inset-0 p-6 opacity-0 pointer-events-none transition-opacity duration-300 space-y-6">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">📈</span>
+                            <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
+                        </div>
+                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-medium text-sm cursor-pointer p-1">Close</button>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblCurPrice" class="block text-xs font-medium text-zinc-500 mb-1">Current Avg Price</label>
+                                <input type="number" id="curPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblCurShares" class="block text-xs font-medium text-zinc-500 mb-1">Current Shares</label>
+                                <input type="number" id="curShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblBuyPrice" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Price</label>
+                                <input type="number" id="buyPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblBuyShares" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Shares</label>
+                                <input type="number" id="buyShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner">
+                        <div class="flex justify-between items-center">
+                            <span id="resAvgPrice" class="text-xs text-zinc-500 font-medium">New Expected Avg Cost</span>
+                            <span id="valAvgPrice" class="text-sm font-black text-zinc-900">—</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resTotalShares" class="text-xs text-zinc-500 font-medium">Total Shares</span>
+                            <span id="valTotalShares" class="text-sm font-bold text-zinc-800">—</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resTotalAmount" class="text-xs text-zinc-500 font-medium">Total Investment</span>
+                            <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">—</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs">
+            <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full">
                 <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
                 <h3 id="tool2Title" class="text-lg font-bold text-zinc-400 mb-1">New Tools Coming Soon</h3>
                 <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
@@ -85,62 +139,11 @@
         </div>
     </main>
 
-    <div id="calcModal" class="modal-transition fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-sm opacity-0 pointer-events-none">
-        <div class="modal-transition bg-white rounded-3xl border border-gray-200 shadow-2xl w-full max-w-lg p-6 transform scale-95 origin-center">
-            
-            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-xl">📈</span>
-                    <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
-                </div>
-                <button id="closeCalcBtn" class="text-zinc-400 hover:text-zinc-600 font-medium text-sm cursor-pointer p-1">Close</button>
-            </div>
-
-            <div class="space-y-4 mb-6">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label id="lblCurPrice" class="block text-xs font-medium text-zinc-500 mb-1">Current Avg Price</label>
-                        <input type="number" id="curPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
-                    </div>
-                    <div>
-                        <label id="lblCurShares" class="block text-xs font-medium text-zinc-500 mb-1">Current Shares</label>
-                        <input type="number" id="curShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label id="lblBuyPrice" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Price</label>
-                        <input type="number" id="buyPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
-                    </div>
-                    <div>
-                        <label id="lblBuyShares" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Shares</label>
-                        <input type="number" id="buyShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner">
-                <div class="flex justify-between items-center">
-                    <span id="resAvgPrice" class="text-xs text-zinc-500 font-medium">New Expected Avg Cost</span>
-                    <span id="valAvgPrice" class="text-sm font-black text-zinc-900">—</span>
-                </div>
-                <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
-                    <span id="resTotalShares" class="text-xs text-zinc-500 font-medium">Total Shares</span>
-                    <span id="valTotalShares" class="text-sm font-bold text-zinc-800">—</span>
-                </div>
-                <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
-                    <span id="resTotalAmount" class="text-xs text-zinc-500 font-medium">Total Investment</span>
-                    <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">—</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-20">
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.3.0</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.1</p>
         </div>
     </footer>
 
@@ -167,36 +170,63 @@
         const toggleBtn = document.getElementById('langToggleBtn');
         const toggleHandle = document.getElementById('toggleHandle');
         const translateIcon = document.getElementById('translateIcon');
-        const calcModal = document.getElementById('calcModal');
-        const modalBox = calcModal.querySelector('.transform');
+        const expandableCard = document.getElementById('expandableCard');
+        const cardContent = document.getElementById('cardContent');
+        const calculatorContent = document.getElementById('calculatorContent');
+        const closeExpandedBtn = document.getElementById('closeExpandedBtn');
         
-        // 🚀 자동 번역 대상 ID 연동 기지 (신규 계산기 내부 글자들 전원 편입)
+        // 🚀 자동 번역 대상 ID 연동 기지 (확장된 계산기 내부 글자들 완벽 편입)
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc',
-            'calcTitle', 'closeCalcBtn', 'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount'
+            'calcTitle', 'closeExpandedBtn', 'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount'
         ];
         
         const originalTexts = {};
         const translatedTexts = {}; 
         let isTranslated = true;
         let isLoopBlocking = false;
+        let isExpanded = false;
 
-        // [인터랙션 1] 모달 창 열기/닫기 제어
-        document.getElementById('openCalcBtn').addEventListener('click', () => {
-            calcModal.classList.remove('opacity-0', 'pointer-events-none');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
+        // [인터랙션 1] 카드 버튼 그 자리에서 확장(Expand) / 축소(Collapse) 제어
+        expandableCard.addEventListener('click', (e) => {
+            // 이미 확장된 상태이거나, 외부 클릭 시 축소 로직이 작동하게 함
+            if (isExpanded) return;
+            isExpanded = true;
+            
+            // 원래 카드 컨텐츠 숨김
+            cardContent.classList.remove('opacity-100');
+            cardContent.classList.add('opacity-0');
+            
+            // 그 자리에서 부드럽게 스케일업 및 내용 표시
+            expandableCard.classList.add('scale-105', 'z-30'); // 살짝 키워서 도드라지게 함
+            calculatorContent.classList.remove('opacity-0', 'pointer-events-none');
+            calculatorContent.classList.add('opacity-100', 'z-40');
         });
 
-        function closeModal() {
-            calcModal.classList.add('opacity-0', 'pointer-events-none');
-            modalBox.classList.remove('scale-100');
-            modalBox.classList.add('scale-95');
+        // Close 버튼 또는 카드 외부 클릭 시 축소 로직
+        function collapseCard() {
+            if (!isExpanded) return;
+            isExpanded = false;
+            
+            // 원래 카드 컨텐츠 표시
+            cardContent.classList.remove('opacity-0');
+            cardContent.classList.add('opacity-100');
+            
+            // 원래 크기로 축소 및 내용 숨김
+            expandableCard.classList.remove('scale-105', 'z-30');
+            calculatorContent.classList.remove('opacity-100', 'z-40');
+            calculatorContent.classList.add('opacity-0', 'pointer-events-none');
         }
-        document.getElementById('closeCalcBtn').addEventListener('click', closeModal);
-        calcModal.addEventListener('click', (e) => { if (e.target === calcModal) closeModal(); });
+        closeExpandedBtn.addEventListener('click', collapseCard);
+        
+        // 확장된 창 바깥 영역 클릭 시 축소 (body에 리스너 등록)
+        document.body.addEventListener('click', (e) => {
+            if (isExpanded && !expandableCard.contains(e.target)) {
+                collapseCard();
+            }
+        });
 
-        // [인터랙션 2] 계산기 실시간 수식 연산 제어 로직
+        // [인터랙션 2] 계산기 실시간 수식 연산 제어 로직 (동일하게 유지)
         const inputs = ['curPrice', 'curShares', 'buyPrice', 'buyShares'].map(id => document.getElementById(id));
         inputs.forEach(input => input.addEventListener('input', () => {
             const cp = parseFloat(document.getElementById('curPrice').value) || 0;
@@ -220,7 +250,7 @@
             }
         }));
 
-        // [인터랙션 3] 백그라운드 코어 다국어 번역 시스템
+        // [인터랙션 3] 백그라운드 코어 다국어 번역 시스템 (동일하게 유지)
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -255,6 +285,7 @@
             isLoopBlocking = true;
 
             if (isTranslated) {
+                // 번역 OFF: 영어 원본 복구
                 targetIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) el.innerText = originalTexts[id];
@@ -262,10 +293,14 @@
                 toggleBtn.classList.remove('bg-zinc-900');
                 toggleBtn.classList.add('bg-gray-300');
                 toggleHandle.classList.remove('translate-x-5');
+                
+                // 번역 아이콘 비활성화 색상(zinc-400) 처리
                 translateIcon.classList.remove('text-zinc-900');
-                translateIcon.classList.add('text-gray-400');
+                translateIcon.classList.add('text-zinc-400');
+
                 isTranslated = false;
             } else {
+                // 번역 ON: 구글 요청 없이 캐싱 데이터 주입
                 if (userLang !== 'en') {
                     targetIds.forEach(id => {
                         const el = document.getElementById(id);
@@ -275,8 +310,11 @@
                 toggleBtn.classList.remove('bg-gray-300');
                 toggleBtn.classList.add('bg-zinc-900');
                 toggleHandle.classList.add('translate-x-5');
-                translateIcon.classList.remove('text-gray-400');
+                
+                // 번역 아이콘 활성화 색상(zinc-900) 처리
+                translateIcon.classList.remove('text-zinc-400');
                 translateIcon.classList.add('text-zinc-900');
+
                 isTranslated = true;
             }
             isLoopBlocking = false;
