@@ -47,7 +47,7 @@
                     <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
                 </button>
                 
-                <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200">
+                <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4.5 h-4.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138A14.25 14.25 0 0 0 9.25 12m5.341-7.124A17.912 17.912 0 0 1 12 11.25" />
                     </svg>
@@ -90,7 +90,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.0</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.0</p>
         </div>
     </footer>
 
@@ -155,13 +155,14 @@
             }
         });
 
+        // 락이 걸리지 않도록 동기 구조 신뢰성 대폭 상향 수정
         toggleBtn.addEventListener('click', () => {
             if (isLoopBlocking) return;
             const userLang = getBrowserLanguage();
             isLoopBlocking = true;
 
             if (isTranslated) {
-                // 번역 OFF
+                // 번역 OFF: 메모리에 킵해둔 순수 영어 원본으로 원상 복구
                 targetIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) el.innerText = originalTexts[id];
@@ -173,11 +174,11 @@
                 
                 // 번역 아이콘 비활성화 색상(gray) 처리
                 translateIcon.classList.remove('text-zinc-900');
-                translateIcon.classList.add('text-gray-400');
+                translateIcon.classList.add('text-zinc-400');
 
                 isTranslated = false;
             } else {
-                // 번역 ON
+                // 번역 ON: 구글 요청 없이 이미 캐싱된 데이터를 화면에 즉시 주입
                 if (userLang !== 'en') {
                     targetIds.forEach(id => {
                         const el = document.getElementById(id);
@@ -190,14 +191,5 @@
                 toggleHandle.classList.add('translate-x-5');
                 
                 // 번역 아이콘 활성화 색상(zinc) 처리
-                translateIcon.classList.remove('text-gray-400');
+                translateIcon.classList.remove('text-zinc-400');
                 translateIcon.classList.add('text-zinc-900');
-
-                isTranslated = true;
-            }
-
-            isLoopBlocking = false;
-        });
-    </script>
-</body>
-</html>
