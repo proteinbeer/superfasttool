@@ -67,9 +67,10 @@
     </footer>
 
     <script type="text/javascript">
-        // 🚀 [테스트 변경] 브라우저 언어 설정을 무시하고 무조건 한국어('ko')를 반환하도록 고정
+        // 🚀 유저 브라우저 국가 코드를 정상적으로 자동 인식하도록 복구
         function getBrowserLanguage() {
-            return 'ko'; 
+            const lang = navigator.language || navigator.userLanguage;
+            return lang.split('-')[0];
         }
 
         async function fetchTranslation(text, targetLang) {
@@ -95,13 +96,14 @@
         let isTranslated = true;
         let isLoopBlocking = false;
 
+        // 초기 화면 로드 시 자동 번역 프로세스
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) originalTexts[id] = el.innerText;
             });
 
-            const userLang = getBrowserLanguage(); // 무조건 'ko' 로 작동
+            const userLang = getBrowserLanguage();
 
             if (userLang !== 'en') {
                 toggleBtn.classList.add('opacity-50');
@@ -124,12 +126,14 @@
             }
         });
 
+        // 토글 버튼 클릭 시 On/Off 스위칭 프로세스
         toggleBtn.addEventListener('click', async () => {
             if (isLoopBlocking) return;
             const userLang = getBrowserLanguage();
             isLoopBlocking = true;
 
             if (isTranslated) {
+                // 번역 OFF: 영어 원본 복구
                 targetIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) el.innerText = originalTexts[id];
@@ -143,6 +147,7 @@
 
                 isTranslated = false;
             } else {
+                // 번역 ON: 비영어권 유저일 때만 실제 데이터 치환 수행
                 toggleBtn.classList.add('opacity-50');
 
                 if (userLang !== 'en') {
