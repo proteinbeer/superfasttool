@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperFastTool - 초고속 웹 유틸리티 모음</title>
+    <title>SuperFastTool - Ultra-Fast Web Utilities</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* 부드러운 호버 효과 */
         .tool-card { transition: all 0.2s ease-in-out; }
         .tool-card:hover { transform: translateY(-4px); }
     </style>
@@ -18,32 +17,35 @@
             <a href="/" class="text-xl font-extrabold tracking-tight text-indigo-600 flex items-center gap-2">
                 ⚡ SuperFastTool
             </a>
-            <span class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full font-medium">v1.0.0</span>
+            <div class="flex items-center gap-4">
+                <button id="langToggle" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-xl font-semibold transition">
+                    🌐 EN / KO
+                </button>
+                <span class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full font-medium">v1.0.0</span>
+            </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 py-12">
         <div class="text-center max-w-2xl mx-auto mb-12">
-            <h1 class="text-4xl font-black text-gray-900 tracking-tight sm:text-5xl mb-4">
-                설치 없이, 회원가입 없이<br><span class="text-indigo-600">1초 만에 끝내는 작업</span>
-            </h1>
-            <p class="text-lg text-gray-500">
-                매일 반복되는 번거로운 연산과 데이터 변환을 가장 빠르게 해결하세요.
-            </p>
+            <h1 id="heroTitle" class="text-4xl font-black text-gray-900 tracking-tight sm:text-5xl mb-4">
+                </h1>
+            <p id="heroDesc" class="text-lg text-gray-500">
+                </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             <a href="/stock-calculator" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-300">
                 <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
-                <h3 class="text-lg font-bold text-gray-900 mb-1">주식/코인 평단가 계산기</h3>
-                <p class="text-sm text-gray-500">추가 매수 시 변화하는 최종 평단가와 총 매수 금액을 실시간으로 시뮬레이션합니다.</p>
+                <h3 id="tool1Title" class="text-lg font-bold text-gray-900 mb-1"></h3>
+                <p id="tool1Desc" class="text-sm text-gray-500"></p>
             </a>
 
             <div class="block p-6 bg-gray-100/50 rounded-2xl border border-dashed border-gray-200 opacity-60">
                 <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
-                <h3 class="text-lg font-bold text-gray-400 mb-1">새로운 도구 준비 중</h3>
-                <p class="text-sm text-gray-400">방문자들에게 필요한 유용한 유틸리티 툴이 곧 추가될 예정입니다.</p>
+                <h3 id="tool2Title" class="text-lg font-bold text-gray-400 mb-1"></h3>
+                <p id="tool2Desc" class="text-sm text-gray-400"></p>
             </div>
 
         </div>
@@ -52,9 +54,72 @@
     <footer class="bg-white border-t border-gray-200 mt-24 py-12 text-center text-sm text-gray-400">
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 SuperFastTool. All rights reserved.</p>
-            <p class="mt-2 text-xs">서버로 어떠한 데이터도 전송하지 않으며, 모든 연산은 브라우저 내에서 안전하게 처리됩니다.</p>
+            <p id="footerDesc" class="mt-2 text-xs"></p>
         </div>
     </footer>
 
+    <script>
+        // 언어별 텍스트 데이터 사전
+        const translations = {
+            en: {
+                title: "SuperFastTool - Ultra-Fast Web Utilities",
+                heroTitle: "No Install, No Signup<br><span class='text-indigo-600'>Done in 1 Second</span>",
+                heroDesc: "Solve your repetitive daily calculations and data conversions instantly.",
+                tool1Title: "Stock/Crypto Avg Cost Calculator",
+                tool1Desc: "Simulate your final average price and total investment in real-time when buying more shares.",
+                tool2Title: "New Tools Coming Soon",
+                tool2Desc: "Useful utility tools will be added here shortly for all visitors.",
+                footerDesc: "No data is transmitted to the server; all operations are processed safely within the user's browser."
+            },
+            ko: {
+                title: "SuperFastTool - 초고속 웹 유틸리티 모음",
+                heroTitle: "설치 없이, 회원가입 없이<br><span class='text-indigo-600'>1초 만에 끝내는 작업</span>",
+                heroDesc: "매일 반복되는 번거로운 연산과 데이터 변환을 가장 빠르게 해결하세요.",
+                tool1Title: "주식/코인 평단가 계산기",
+                tool1Desc: "추가 매수 시 변화하는 최종 평단가와 총 매수 금액을 실시간으로 시뮬레이션합니다.",
+                tool2Title: "새로운 도구 준비 중",
+                tool2Desc: "방문자들에게 필요한 유용한 유틸리티 툴이 곧 추가될 예정입니다.",
+                footerDesc: "서버로 어떠한 데이터도 전송하지 않으며, 모든 연산은 유저의 브라우저 내에서 안전하게 처리됩니다."
+            }
+        };
+
+        // 1. 유저 언어 감지 로직
+        function detectLanguage() {
+            // 브라우저 기본 언어 설정값 가져오기 (예: ko-KR, en-US 등)
+            const browserLang = navigator.language || navigator.userLanguage;
+            
+            // 한국어 계열(ko)이면 ko 리턴, 그 외 전 세계 모든 국가는 en(영어) 리턴
+            return browserLang.startsWith('ko') ? 'ko' : 'en';
+        }
+
+        // 현재 선택된 언어 변수 (기본값 설정)
+        let currentLang = detectLanguage();
+
+        // 2. 화면에 텍스트 반영하는 함수
+        function applyTranslations(lang) {
+            const data = translations[lang];
+            
+            document.title = data.title;
+            document.getElementById('heroTitle').innerHTML = data.heroTitle;
+            document.getElementById('heroDesc').innerText = data.heroDesc;
+            document.getElementById('tool1Title').innerText = data.tool1Title;
+            document.getElementById('tool1Desc').innerText = data.tool1Desc;
+            document.getElementById('tool2Title').innerText = data.tool2Title;
+            document.getElementById('tool2Desc').innerText = data.tool2Desc;
+            document.getElementById('footerDesc').innerText = data.footerDesc;
+            
+            // HTML lang 태그도 표준에 맞게 동적 변경
+            document.documentElement.lang = lang;
+        }
+
+        // 3. 수동 언어 전환 토글 버튼 이벤트
+        document.getElementById('langToggle').addEventListener('click', () => {
+            currentLang = (currentLang === 'en') ? 'ko' : 'en';
+            applyTranslations(currentLang);
+        });
+
+        // 페이지 로드 시 최초 실행
+        applyTranslations(currentLang);
+    </script>
 </body>
 </html>
