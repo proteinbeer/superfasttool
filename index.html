@@ -13,10 +13,10 @@
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
         
-        /* ⚡ [v1.0.2] 카드가 엉뚱한 곳에서 튀어나오지 않고 '그 자리에서' 커지도록 보장하는 트랜지션 타임 */
+        /* ⚡ 카드가 자연스럽게 늘어나고 줄어드는 플루이드 모션 CSS */
         .expand-transition { transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease; }
 
-        /* ⚡ 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
+        /* 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
         .bg-tech-grid {
             background-color: #f8fafc;
             background-image: 
@@ -35,9 +35,14 @@
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
         }
+
+        /* 암전 백드롭 애니메이션 제어 */
+        .backdrop-fade { transition: opacity 0.4s ease; }
     </style>
 </head>
 <body class="bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+
+    <div id="modalBackdrop" class="backdrop-fade fixed inset-0 bg-zinc-950/20 backdrop-blur-xs opacity-0 pointer-events-none z-40"></div>
 
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -74,16 +79,16 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
             
-            <div id="expandableCard" class="expand-transition relative z-10 block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="expandableCard" class="expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 
-                <div id="cardContent" class="opacity-100 transition-opacity duration-200">
+                <div id="cardContent" class="p-6 opacity-100 transition-opacity duration-200 w-full h-full">
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
                     <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
                     <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
 
-                <div id="calculatorContent" class="absolute inset-0 p-6 opacity-0 pointer-events-none transition-opacity duration-300 space-y-6 overflow-y-auto">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3 sticky top-0 bg-white z-10">
+                <div id="calculatorContent" class="hidden opacity-0 p-6 flex flex-col w-full transition-opacity duration-300 space-y-6">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3 bg-white z-10">
                         <div class="flex items-center gap-2">
                             <span class="text-xl">📈</span>
                             <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
@@ -91,8 +96,8 @@
                         <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none">✕</button>
                     </div>
 
-                    <div class="space-y-4 mb-6">
-                        <div class="grid grid-cols-2 gap-3">
+                    <div class="space-y-4 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label id="lblCurPrice" class="block text-xs font-medium text-zinc-500 mb-1">Current Avg Price</label>
                                 <input type="number" id="curPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
@@ -102,7 +107,7 @@
                                 <input type="number" id="curShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label id="lblBuyPrice" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Price</label>
                                 <input type="number" id="buyPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
@@ -114,7 +119,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner">
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
                         <div class="flex justify-between items-center">
                             <span id="resAvgPrice" class="text-xs text-zinc-500 font-medium">New Expected Avg Cost</span>
                             <span id="valAvgPrice" class="text-sm font-black text-zinc-900">—</span>
@@ -131,7 +136,7 @@
                 </div>
             </div>
 
-            <div id="cardPlaceholder" class="hidden bg-transparent border border-transparent p-6 w-full h-full"></div>
+            <div id="cardPlaceholder" class="hidden bg-transparent border border-transparent w-full h-full"></div>
 
             <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full min-h-[170px]">
                 <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
@@ -145,7 +150,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.2</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.3</p>
         </div>
     </footer>
 
@@ -176,6 +181,7 @@
         const cardContent = document.getElementById('cardContent');
         const calculatorContent = document.getElementById('calculatorContent');
         const closeExpandedBtn = document.getElementById('closeExpandedBtn');
+        const modalBackdrop = document.getElementById('modalBackdrop');
         
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc',
@@ -188,90 +194,117 @@
         let isLoopBlocking = false;
         let isExpanded = false;
 
-        // [인터랙션 1] 🚀 진짜 물리 카드가 정중앙 3배 크기로 확대/축소 무빙하는 특수 로직
+        // [핵심 로직] 크기가 물 흐르듯 변하는 정밀 플루이드 확장 계산 엔진
         expandableCard.addEventListener('click', () => {
             if (isExpanded) return;
             isExpanded = true;
             
-            // 1. 애니메이션 시작 전 본래의 스냅샷 좌표(First) 확보
+            // 1. 클릭 전 카드의 오리지널 좌표 확보
             const rect = expandableCard.getBoundingClientRect();
             
-            // 2. 그리드가 빈자리 채우려고 들썩거리는 현상을 막기 위해 더미 슬롯 임시 소환
-            cardPlaceholder.style.width = expandableCard.offsetWidth + 'px';
-            cardPlaceholder.style.height = expandableCard.offsetHeight + 'px';
+            cardPlaceholder.style.width = rect.width + 'px';
+            cardPlaceholder.style.height = rect.height + 'px';
             cardPlaceholder.classList.remove('hidden');
 
-            // 3. 클릭한 그 위치 그대로 고정(Fixed) 좌표계를 동적으로 씌움
+            // 2. 확장 시작을 위해 오리지널 좌표 고정
             expandableCard.style.position = 'fixed';
             expandableCard.style.top = rect.top + 'px';
             expandableCard.style.left = rect.left + 'px';
             expandableCard.style.width = rect.width + 'px';
             expandableCard.style.height = rect.height + 'px';
             expandableCard.style.margin = '0';
-            
-            // 브라우저 렌더링 락 방지를 위한 강제 리플로우
-            expandableCard.offsetHeight;
+            expandableCard.style.maxWidth = 'none';
 
-            // 4. 원래 닫혀있던 텍스트는 서서히 페이드 아웃
-            cardContent.classList.remove('opacity-100');
-            cardContent.classList.add('opacity-0');
+            cardContent.classList.add('hidden');
+            calculatorContent.classList.remove('hidden');
 
-            // 5. 정중앙을 타겟으로 3배(x3) 면적인 가로 최대 672px형 대형창 규격으로 무빙 트랜지션 실행
+            // 3. 내부 요소에 딱 맞는 높이를 자바스크립트로 강제 선행 스캔
+            expandableCard.style.width = 'calc(100% - 2rem)';
+            expandableCard.style.maxWidth = '672px';
+            expandableCard.style.height = 'auto';
+
+            const targetWidth = expandableCard.offsetWidth;
+            const targetHeight = expandableCard.offsetHeight; // 내부 요소 높이를 완벽하게 읽어옴
+
+            // 4. 스캔을 끝내고 눈에 보이기 전에 0.001초 만에 다시 원본 크기로 복구
+            expandableCard.style.width = rect.width + 'px';
+            expandableCard.style.height = rect.height + 'px';
+            expandableCard.style.maxWidth = 'none';
+
+            // 강제 리플로우 (브라우저에게 시작 크기를 각인시킴)
+            expandableCard.offsetHeight; 
+
+            modalBackdrop.classList.remove('pointer-events-none', 'opacity-0');
+            modalBackdrop.classList.add('opacity-100');
+            expandableCard.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
+
+            // 5. 정해진 정확한 높이(targetHeight)를 향해 부드럽게 무빙 기동
             expandableCard.style.top = '50%';
             expandableCard.style.left = '50%';
             expandableCard.style.transform = 'translate(-50%, -50%)';
-            expandableCard.style.width = 'calc(100% - 2rem)';
-            expandableCard.style.maxWidth = '672px';
-            expandableCard.style.height = '560px';
-            expandableCard.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
-            
-            calculatorContent.classList.remove('opacity-0', 'pointer-events-none');
-            calculatorContent.classList.add('opacity-100', 'z-40');
+            expandableCard.style.width = targetWidth + 'px';
+            expandableCard.style.height = targetHeight + 'px';
+
+            setTimeout(() => {
+                calculatorContent.classList.add('opacity-100');
+            }, 100);
         });
 
+        // 🚀 축소(Collapse) 복귀 시스템 최적화
         function collapseCard() {
             if (!isExpanded) return;
             isExpanded = false;
             
-            calculatorContent.classList.remove('opacity-100', 'z-40');
-            calculatorContent.classList.add('opacity-0', 'pointer-events-none');
-            
-            // 대기하고 있던 더미 슬롯의 현재 화면 실시간 좌표를 역추적
+            calculatorContent.classList.remove('opacity-100');
+
+            const currentWidth = expandableCard.offsetWidth;
+            const currentHeight = expandableCard.offsetHeight;
+
+            // 역행 스캔: 축소 애니메이션이 깨지지 않도록 현재 크기를 고정시킴
+            expandableCard.style.width = currentWidth + 'px';
+            expandableCard.style.height = currentHeight + 'px';
+
+            calculatorContent.classList.add('hidden');
+            cardContent.classList.remove('hidden');
+            cardContent.classList.remove('opacity-100');
+            cardContent.classList.add('opacity-0');
+
             const pRect = cardPlaceholder.getBoundingClientRect();
-            
-            // 6. 무조건 원래 버튼의 원래 빈자리 좌표로 타겟팅해서 축소 무빙 기동
-            expandableCard.style.transform = 'none';
+
+            expandableCard.offsetHeight; // 리플로우
+
+            modalBackdrop.classList.remove('opacity-100');
+            modalBackdrop.classList.add('pointer-events-none', 'opacity-0');
+
+            // 자석처럼 원래 위치와 크기로 부드럽게 돌아감
             expandableCard.style.top = pRect.top + 'px';
             expandableCard.style.left = pRect.left + 'px';
             expandableCard.style.width = pRect.width + 'px';
             expandableCard.style.height = pRect.height + 'px';
+            expandableCard.style.transform = 'none';
             expandableCard.classList.remove('shadow-2xl', 'border-zinc-400');
             
-            cardContent.classList.remove('opacity-0');
-            cardContent.classList.add('opacity-100');
-            
-            // 7. 애니메이션이 끝나는 시점(0.4초 후)에 원래 그리드 레이아웃 구조체로 복원 안착
             setTimeout(() => {
                 expandableCard.removeAttribute('style');
                 expandableCard.classList.remove('z-50');
                 cardPlaceholder.classList.add('hidden');
+                cardContent.classList.remove('opacity-0');
+                cardContent.classList.add('opacity-100');
             }, 400);
         }
 
-        // ✕ 버튼 클릭 시 카드 오픈 이벤트가 재발화(버블링)하는 유전병을 완벽 봉쇄
         closeExpandedBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
             collapseCard();
         });
         
-        // 창 외부 빈 격자 영역 클릭 시 자연스럽게 복귀 유도
         document.body.addEventListener('click', (e) => {
             if (isExpanded && !expandableCard.contains(e.target)) {
                 collapseCard();
             }
         });
 
-        // [인터랙션 2] 계산기 실시간 수식 연산 제어 로직 (동일하게 유지)
+        // 계산기 연산 로직
         const inputs = ['curPrice', 'curShares', 'buyPrice', 'buyShares'].map(id => document.getElementById(id));
         inputs.forEach(input => input.addEventListener('input', () => {
             const cp = parseFloat(document.getElementById('curPrice').value) || 0;
@@ -294,7 +327,7 @@
             }
         }));
 
-        // [인터랙션 3] 백그라운드 코어 다국어 번역 시스템 (동일하게 유지)
+        // 다국어 번역 시스템
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
