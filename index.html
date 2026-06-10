@@ -6,17 +6,37 @@
     <title>Super Fast Tool - Ultra-Fast Web Utilities</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+        html { overflow-y: scroll; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* í† ê¸€ ìŠ¤ìœ„ì¹˜ ì• ë‹ˆë©”ì´ì…˜ */
+        /* Toggle switch animation */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
         
-        /* âš¡ í¼ì„¼íŠ¸(%)ë‚˜ transformì„ ë°°ì œí•˜ê³  ìˆœìˆ˜ px ë‹¨ìœ„ë¡œ ìœ„ì¹˜/í¬ê¸°ë¥¼ ë§¤ë„ëŸ½ê²Œ ë³€í™˜í•˜ëŠ” í´ëž˜ìŠ¤ */
-        .expand-transition { transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease; }
+        /* Smooth px-based position and size transitions without percentage or transform interpolation */
+        .expand-transition { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease; }
+        .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
+        .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
+        .is-expanded .card-description { opacity: 0; max-height: 0; margin: 0; transform: translateY(-4px); }
+        .is-expanded .expand-close { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .star-toggle { opacity: 0; pointer-events: none; color: #a1a1aa; transform: translateY(-4px); transition: opacity 0.14s ease, color 0.14s ease, transform 0.18s ease; }
+        .expandable-card:hover .star-toggle, .star-toggle.is-starred, .is-expanded .star-toggle { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .star-toggle.is-starred { color: #facc15; }
+        .star-docked .star-toggle { top: 1.05rem; right: auto; left: 4rem; }
+        .star-toggle.is-wiggling { animation: starWiggle 0.28s ease-in-out; }
+        @keyframes starWiggle {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            20% { transform: translateY(-1px) rotate(-14deg) scale(1.18); }
+            40% { transform: translateY(1px) rotate(12deg) scale(1.12); }
+            60% { transform: translateY(-1px) rotate(-9deg) scale(1.16); }
+            80% { transform: translateY(0) rotate(7deg) scale(1.08); }
+            100% { transform: translateY(0) rotate(0deg) scale(1); }
+        }
+        .category-tab { transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease; }
+        .category-tab.is-active { background: #18181b; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
 
-        /* ë¬´í•œížˆ ëŒ€ê°ì„ ìœ¼ë¡œ ìžë™ ìŠ¤í¬ë¡¤ë§ë˜ëŠ” ê²©ìž ë°°ê²½ */
+        /* Infinite diagonal scrolling grid background */
         .bg-tech-grid {
             background-color: #f8fafc;
             background-image: 
@@ -31,7 +51,7 @@
             to { background-position: 40px 40px; }
         }
 
-        /* ì¤‘ì•™ ížˆì–´ë¡œ ì˜ì—­ ë°©ì‚¬í˜• ê´‘ì› íš¨ê³¼ */
+        /* Radial glow behind the central hero area */
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
         }
@@ -42,7 +62,7 @@
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2">
-                âš¡ Super Fast Tool
+                &#9889; Super Fast Tool
             </a>
             
             <div class="flex items-center gap-2 bg-gray-100/90 p-1.5 rounded-2xl border border-gray-200 shadow-inner">
@@ -51,9 +71,7 @@
                 </button>
                 
                 <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4.5 h-4.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138A14.25 14.25 0 0 0 9.25 12m5.341-7.124A17.912 17.912 0 0 1 12 11.25" />
-                    </svg>
+                    <img src="https://image.similarpng.com/file/similarpng/very-thumbnail/2020/12/Google-translate-logo-design-clipart-PNG.png" alt="Translate" class="w-5 h-5 object-contain">
                 </div>
             </div>
         </div>
@@ -72,25 +90,28 @@
             </p>
         </div>
 
+        <div class="flex justify-center mb-8">
+            <div class="flex flex-wrap items-center justify-center gap-1.5 bg-white/90 border border-gray-200 rounded-2xl p-1.5 shadow-sm backdrop-blur-md">
+                <button id="categoryAll" class="category-tab is-active px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="all">All</button>
+                <button id="categoryStarred" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="starred">Starred</button>
+                <button id="categoryFinance" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="finance">Finance</button>
+                <button id="categoryShopping" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="shopping">Shopping</button>
+                <button id="categoryEveryday" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="everyday">Everyday</button>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
             
-            <div id="expandableCard" class="expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="avgCostCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 
-                <div id="cardContent" class="p-6 opacity-100 transition-opacity duration-200 w-full h-full">
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">ðŸ“ˆ</div>
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128200;</div>
                     <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
-                    <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
+                    <p id="tool1Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
 
-                <div id="calculatorContent" class="hidden opacity-0 p-6 flex flex-col w-full transition-opacity duration-300 space-y-6">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3 bg-white z-10">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">ðŸ“ˆ</span>
-                            <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
-                        </div>
-                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none">âœ•</button>
-                    </div>
-
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -117,38 +138,441 @@
                     <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
                         <div class="flex justify-between items-center">
                             <span id="resAvgPrice" class="text-xs text-zinc-500 font-medium">New Expected Avg Cost</span>
-                            <span id="valAvgPrice" class="text-sm font-black text-zinc-900">â€”</span>
+                            <span id="valAvgPrice" class="text-sm font-black text-zinc-900">&mdash;</span>
                         </div>
                         <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
                             <span id="resTotalShares" class="text-xs text-zinc-500 font-medium">Total Shares</span>
-                            <span id="valTotalShares" class="text-sm font-bold text-zinc-800">â€”</span>
+                            <span id="valTotalShares" class="text-sm font-bold text-zinc-800">&mdash;</span>
                         </div>
                         <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
                             <span id="resTotalAmount" class="text-xs text-zinc-500 font-medium">Total Investment</span>
-                            <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">â€”</span>
+                            <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">&mdash;</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="cardPlaceholder" class="hidden bg-transparent border border-transparent w-full h-full"></div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full min-h-[170px]">
-                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">âš™ï¸</div>
-                <h3 id="tool2Title" class="text-lg font-bold text-zinc-400 mb-1">New Tools Coming Soon</h3>
-                <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
+            <div id="profitLossCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128176;</div>
+                    <h3 id="tool2Title" class="text-lg font-bold text-zinc-900 mb-1">Profit/Loss Calculator</h3>
+                    <p id="tool2Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate trade profit, loss, return rate, and final value from buy and sell prices.</p>
+                </div>
+
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="space-y-4 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblEntryPrice" class="block text-xs font-medium text-zinc-500 mb-1">Entry Price</label>
+                                <input type="number" id="entryPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblExitPrice" class="block text-xs font-medium text-zinc-500 mb-1">Exit Price</label>
+                                <input type="number" id="exitPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblTradeQty" class="block text-xs font-medium text-zinc-500 mb-1">Quantity</label>
+                                <input type="number" id="tradeQty" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblFees" class="block text-xs font-medium text-zinc-500 mb-1">Fees</label>
+                                <input type="number" id="tradeFees" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center">
+                            <span id="resProfitLoss" class="text-xs text-zinc-500 font-medium">Profit / Loss</span>
+                            <span id="valProfitLoss" class="text-sm font-black text-zinc-900">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resReturnPct" class="text-xs text-zinc-500 font-medium">Return Rate</span>
+                            <span id="valReturnPct" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resFinalValue" class="text-xs text-zinc-500 font-medium">Final Value</span>
+                            <span id="valFinalValue" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="percentageCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">%</div>
+                    <h3 id="tool3Title" class="text-lg font-bold text-zinc-900 mb-1">Percentage Calculator</h3>
+                    <p id="tool3Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find percentages, percentage change, and how much one value is of another.</p>
+                </div>
+
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="space-y-4 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblPercentValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label>
+                                <input type="number" id="percentValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblPercentTotal" class="block text-xs font-medium text-zinc-500 mb-1">Total</label>
+                                <input type="number" id="percentTotal" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblPercentFrom" class="block text-xs font-medium text-zinc-500 mb-1">Original Value</label>
+                                <input type="number" id="percentFrom" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblPercentTo" class="block text-xs font-medium text-zinc-500 mb-1">New Value</label>
+                                <input type="number" id="percentTo" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center">
+                            <span id="resPercentOfTotal" class="text-xs text-zinc-500 font-medium">Value as Percent of Total</span>
+                            <span id="valPercentOfTotal" class="text-sm font-black text-zinc-900">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resPercentChange" class="text-xs text-zinc-500 font-medium">Percentage Change</span>
+                            <span id="valPercentChange" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="compoundInterestCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128176;</div>
+                    <h3 id="tool4Title" class="text-lg font-bold text-zinc-900 mb-1">Compound Interest Calculator</h3>
+                    <p id="tool4Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate future value from principal, monthly contributions, time, and annual return.</p>
+                </div>
+
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="space-y-4 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblPrincipal" class="block text-xs font-medium text-zinc-500 mb-1">Initial Amount</label>
+                                <input type="number" id="principalAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblMonthlyContribution" class="block text-xs font-medium text-zinc-500 mb-1">Monthly Contribution</label>
+                                <input type="number" id="monthlyContribution" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblAnnualReturn" class="block text-xs font-medium text-zinc-500 mb-1">Annual Return (%)</label>
+                                <input type="number" id="annualReturn" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblYears" class="block text-xs font-medium text-zinc-500 mb-1">Years</label>
+                                <input type="number" id="investmentYears" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center">
+                            <span id="resFutureValue" class="text-xs text-zinc-500 font-medium">Future Value</span>
+                            <span id="valFutureValue" class="text-sm font-black text-zinc-900">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resTotalContributed" class="text-xs text-zinc-500 font-medium">Total Contributed</span>
+                            <span id="valTotalContributed" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resInterestEarned" class="text-xs text-zinc-500 font-medium">Interest Earned</span>
+                            <span id="valInterestEarned" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="loanPaymentCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128179;</div>
+                    <h3 id="tool5Title" class="text-lg font-bold text-zinc-900 mb-1">Loan Payment Calculator</h3>
+                    <p id="tool5Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate monthly payments, total repayment, and total interest for a loan.</p>
+                </div>
+
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="space-y-4 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblLoanAmount" class="block text-xs font-medium text-zinc-500 mb-1">Loan Amount</label>
+                                <input type="number" id="loanAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblLoanRate" class="block text-xs font-medium text-zinc-500 mb-1">Annual Interest (%)</label>
+                                <input type="number" id="loanRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                        </div>
+                        <div>
+                            <label id="lblLoanYears" class="block text-xs font-medium text-zinc-500 mb-1">Loan Term (Years)</label>
+                            <input type="number" id="loanYears" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center">
+                            <span id="resMonthlyPayment" class="text-xs text-zinc-500 font-medium">Monthly Payment</span>
+                            <span id="valMonthlyPayment" class="text-sm font-black text-zinc-900">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resTotalRepayment" class="text-xs text-zinc-500 font-medium">Total Repayment</span>
+                            <span id="valTotalRepayment" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
+                            <span id="resLoanInterest" class="text-xs text-zinc-500 font-medium">Total Interest</span>
+                            <span id="valLoanInterest" class="text-sm font-bold text-zinc-800">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="unitConverterCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#8644;</div>
+                    <h3 id="tool6Title" class="text-lg font-bold text-zinc-900 mb-1">Unit Converter</h3>
+                    <p id="tool6Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert common length, weight, and temperature units instantly.</p>
+                </div>
+
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="space-y-4 mb-2">
+                        <div>
+                            <label id="lblUnitType" class="block text-xs font-medium text-zinc-500 mb-1">Conversion Type</label>
+                            <select id="unitType" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                                <option value="length">Length</option>
+                                <option value="weight">Weight</option>
+                                <option value="temperature">Temperature</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label id="lblUnitValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label>
+                                <input type="number" id="unitValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                            </div>
+                            <div>
+                                <label id="lblUnitFrom" class="block text-xs font-medium text-zinc-500 mb-1">From</label>
+                                <select id="unitFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></select>
+                            </div>
+                        </div>
+                        <div>
+                            <label id="lblUnitTo" class="block text-xs font-medium text-zinc-500 mb-1">To</label>
+                            <select id="unitTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></select>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center">
+                            <span id="resConvertedValue" class="text-xs text-zinc-500 font-medium">Converted Value</span>
+                            <span id="valConvertedValue" class="text-sm font-black text-zinc-900">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="discountCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127991;</div>
+                    <h3 id="tool7Title" class="text-lg font-bold text-zinc-900 mb-1">Discount Calculator</h3>
+                    <p id="tool7Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate final price and savings from an original price and discount rate.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblDiscountPrice" class="block text-xs font-medium text-zinc-500 mb-1">Original Price</label><input type="number" id="discountPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblDiscountRate" class="block text-xs font-medium text-zinc-500 mb-1">Discount (%)</label><input type="number" id="discountRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resDiscountFinal" class="text-xs text-zinc-500 font-medium">Final Price</span><span id="valDiscountFinal" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resDiscountSaved" class="text-xs text-zinc-500 font-medium">You Save</span><span id="valDiscountSaved" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="salesTaxCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128179;</div>
+                    <h3 id="tool8Title" class="text-lg font-bold text-zinc-900 mb-1">Sales Tax Calculator</h3>
+                    <p id="tool8Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Add sales tax to a price and see the tax amount and final total.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblTaxPrice" class="block text-xs font-medium text-zinc-500 mb-1">Price Before Tax</label><input type="number" id="taxPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblTaxRate" class="block text-xs font-medium text-zinc-500 mb-1">Tax Rate (%)</label><input type="number" id="taxRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resTaxAmount" class="text-xs text-zinc-500 font-medium">Tax Amount</span><span id="valTaxAmount" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resTaxTotal" class="text-xs text-zinc-500 font-medium">Total Price</span><span id="valTaxTotal" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="tipCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127869;</div>
+                    <h3 id="tool9Title" class="text-lg font-bold text-zinc-900 mb-1">Tip Calculator</h3>
+                    <p id="tool9Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Split a bill with tip across any number of people.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblBillAmount" class="block text-xs font-medium text-zinc-500 mb-1">Bill Amount</label><input type="number" id="billAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblTipRate" class="block text-xs font-medium text-zinc-500 mb-1">Tip (%)</label><input type="number" id="tipRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblSplitCount" class="block text-xs font-medium text-zinc-500 mb-1">People</label><input type="number" id="splitCount" placeholder="1" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resTipAmount" class="text-xs text-zinc-500 font-medium">Tip Amount</span><span id="valTipAmount" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resTipTotal" class="text-xs text-zinc-500 font-medium">Total Bill</span><span id="valTipTotal" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resTipEach" class="text-xs text-zinc-500 font-medium">Per Person</span><span id="valTipEach" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="dateDifferenceCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128197;</div>
+                    <h3 id="tool10Title" class="text-lg font-bold text-zinc-900 mb-1">Date Difference Calculator</h3>
+                    <p id="tool10Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find the number of days between two calendar dates.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblStartDate" class="block text-xs font-medium text-zinc-500 mb-1">Start Date</label><input type="date" id="startDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblEndDate" class="block text-xs font-medium text-zinc-500 mb-1">End Date</label><input type="date" id="endDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resDateDays" class="text-xs text-zinc-500 font-medium">Days Between</span><span id="valDateDays" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resDateWeeks" class="text-xs text-zinc-500 font-medium">Weeks</span><span id="valDateWeeks" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="timeDurationCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9201;</div>
+                    <h3 id="tool11Title" class="text-lg font-bold text-zinc-900 mb-1">Time Duration Calculator</h3>
+                    <p id="tool11Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate hours and minutes between two times, including overnight spans.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblStartTime" class="block text-xs font-medium text-zinc-500 mb-1">Start Time</label><input type="time" id="startTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblEndTime" class="block text-xs font-medium text-zinc-500 mb-1">End Time</label><input type="time" id="endTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resDuration" class="text-xs text-zinc-500 font-medium">Duration</span><span id="valDuration" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resDurationDecimal" class="text-xs text-zinc-500 font-medium">Decimal Hours</span><span id="valDurationDecimal" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="bmiCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9878;</div>
+                    <h3 id="tool12Title" class="text-lg font-bold text-zinc-900 mb-1">BMI Calculator</h3>
+                    <p id="tool12Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate body mass index from height and weight.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblBmiHeight" class="block text-xs font-medium text-zinc-500 mb-1">Height (cm)</label><input type="number" id="bmiHeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblBmiWeight" class="block text-xs font-medium text-zinc-500 mb-1">Weight (kg)</label><input type="number" id="bmiWeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resBmi" class="text-xs text-zinc-500 font-medium">BMI</span><span id="valBmi" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resBmiCategory" class="text-xs text-zinc-500 font-medium">Category</span><span id="valBmiCategory" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="fuelCostCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9981;</div>
+                    <h3 id="tool13Title" class="text-lg font-bold text-zinc-900 mb-1">Fuel Cost Calculator</h3>
+                    <p id="tool13Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate trip fuel usage and cost from distance, efficiency, and fuel price.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblFuelDistance" class="block text-xs font-medium text-zinc-500 mb-1">Distance</label><input type="number" id="fuelDistance" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblFuelEfficiency" class="block text-xs font-medium text-zinc-500 mb-1">Efficiency</label><input type="number" id="fuelEfficiency" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblFuelPrice" class="block text-xs font-medium text-zinc-500 mb-1">Fuel Price</label><input type="number" id="fuelPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <p id="fuelHint" class="text-[11px] text-zinc-400">Uses distance, fuel price per unit, and efficiency in distance per fuel unit.</p>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resFuelUsed" class="text-xs text-zinc-500 font-medium">Fuel Used</span><span id="valFuelUsed" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resFuelCost" class="text-xs text-zinc-500 font-medium">Total Cost</span><span id="valFuelCost" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+        </div>
+
+        <div class="mt-10">
+            <div class="min-h-[90px] bg-white/85 border border-gray-200 rounded-xl flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm backdrop-blur-md">
+                Advertisement
             </div>
         </div>
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-20">
         <div class="max-w-6xl mx-auto px-4">
-            <p>Â© 2026 Super Fast Tool. All rights reserved.</p>
+            <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.4</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.23</p>
         </div>
     </footer>
 
+    <script src="./stock-crypto-avg-cost-calculator.js"></script>
+    <script src="./profit-loss-calculator.js"></script>
+    <script src="./percentage-calculator.js"></script>
+    <script src="./compound-interest-calculator.js"></script>
+    <script src="./loan-payment-calculator.js"></script>
+    <script src="./unit-converter.js"></script>
+    <script src="./discount-calculator.js"></script>
+    <script src="./sales-tax-calculator.js"></script>
+    <script src="./tip-calculator.js"></script>
+    <script src="./date-difference-calculator.js"></script>
+    <script src="./time-duration-calculator.js"></script>
+    <script src="./bmi-calculator.js"></script>
+    <script src="./fuel-cost-calculator.js"></script>
     <script type="text/javascript">
         function getBrowserLanguage() {
             const lang = navigator.language || navigator.userLanguage;
@@ -171,160 +595,269 @@
         const toggleBtn = document.getElementById('langToggleBtn');
         const toggleHandle = document.getElementById('toggleHandle');
         const translateIcon = document.getElementById('translateIcon');
-        const expandableCard = document.getElementById('expandableCard');
-        const cardPlaceholder = document.getElementById('cardPlaceholder');
-        const cardContent = document.getElementById('cardContent');
-        const calculatorContent = document.getElementById('calculatorContent');
-        const closeExpandedBtn = document.getElementById('closeExpandedBtn');
+        const expandableCards = document.querySelectorAll('.expandable-card');
+        const categoryTabs = document.querySelectorAll('.category-tab');
         
         const targetIds = [
-            'heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc',
-            'calcTitle', 'closeExpandedBtn', 'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount'
+            'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryFinance', 'categoryShopping', 'categoryEveryday',
+            'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc',
+            'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount',
+            'lblEntryPrice', 'lblExitPrice', 'lblTradeQty', 'lblFees', 'resProfitLoss', 'resReturnPct', 'resFinalValue',
+            'tool3Title', 'tool3Desc', 'lblPercentValue', 'lblPercentTotal', 'lblPercentFrom', 'lblPercentTo', 'resPercentOfTotal', 'resPercentChange',
+            'tool4Title', 'tool4Desc', 'lblPrincipal', 'lblMonthlyContribution', 'lblAnnualReturn', 'lblYears', 'resFutureValue', 'resTotalContributed', 'resInterestEarned',
+            'tool5Title', 'tool5Desc', 'lblLoanAmount', 'lblLoanRate', 'lblLoanYears', 'resMonthlyPayment', 'resTotalRepayment', 'resLoanInterest',
+            'tool6Title', 'tool6Desc', 'lblUnitType', 'lblUnitValue', 'lblUnitFrom', 'lblUnitTo', 'resConvertedValue',
+            'tool7Title', 'tool7Desc', 'lblDiscountPrice', 'lblDiscountRate', 'resDiscountFinal', 'resDiscountSaved',
+            'tool8Title', 'tool8Desc', 'lblTaxPrice', 'lblTaxRate', 'resTaxAmount', 'resTaxTotal',
+            'tool9Title', 'tool9Desc', 'lblBillAmount', 'lblTipRate', 'lblSplitCount', 'resTipAmount', 'resTipTotal', 'resTipEach',
+            'tool10Title', 'tool10Desc', 'lblStartDate', 'lblEndDate', 'resDateDays', 'resDateWeeks',
+            'tool11Title', 'tool11Desc', 'lblStartTime', 'lblEndTime', 'resDuration', 'resDurationDecimal',
+            'tool12Title', 'tool12Desc', 'lblBmiHeight', 'lblBmiWeight', 'resBmi', 'resBmiCategory',
+            'tool13Title', 'tool13Desc', 'lblFuelDistance', 'lblFuelEfficiency', 'lblFuelPrice', 'fuelHint', 'resFuelUsed', 'resFuelCost'
         ];
         
         const originalTexts = {};
         const translatedTexts = {}; 
         let isTranslated = true;
         let isLoopBlocking = false;
-        let isExpanded = false;
+        let expandedCard = null;
+        const starredStorageKey = 'superFastToolStarredCards';
+        let starredCards = JSON.parse(localStorage.getItem(starredStorageKey) || '[]');
 
-        // [í•µì‹¬ ë¡œì§] ë²„ê·¸ ì—†ëŠ” ìˆœìˆ˜ í”½ì…€(px) ë§¤ì¹­ FLIP í™•ìž¥ ì—”ì§„
-        expandableCard.addEventListener('click', () => {
-            if (isExpanded) return;
-            isExpanded = true;
+        function saveStarredCards() {
+            localStorage.setItem(starredStorageKey, JSON.stringify(starredCards));
+        }
+
+        function setStarredState(card, isStarred) {
+            const starButton = card.querySelector('.star-toggle');
+            card.dataset.starred = isStarred ? 'true' : 'false';
+            starButton.classList.toggle('is-starred', isStarred);
+            starButton.setAttribute('aria-label', isStarred ? 'Remove from Starred' : 'Add to Starred');
+        }
+
+        function getActiveCategory() {
+            return document.querySelector('.category-tab.is-active')?.dataset.categoryFilter || 'all';
+        }
+
+        function flyStarToNewPosition(card, updatePosition) {
+            const starButton = card.querySelector('.star-toggle');
+            const startRect = starButton.getBoundingClientRect();
+
+            updatePosition();
+
+            const endRect = starButton.getBoundingClientRect();
+            const deltaX = startRect.left - endRect.left;
+            const deltaY = startRect.top - endRect.top;
+
+            starButton.animate([
+                { transform: `translate(${deltaX}px, ${deltaY}px) rotate(0deg)` },
+                { transform: `translate(${deltaX * 0.45}px, ${deltaY - 10}px) rotate(220deg)` },
+                { transform: 'translate(0, 0) rotate(360deg)' }
+            ], {
+                duration: 260,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            });
+        }
+
+        function applyCategoryFilter(selectedCategory = getActiveCategory()) {
+            expandableCards.forEach(card => {
+                const isVisible = selectedCategory === 'all'
+                    || (selectedCategory === 'starred' && card.dataset.starred === 'true')
+                    || card.dataset.category === selectedCategory;
+                card.classList.toggle('hidden', !isVisible);
+                card.nextElementSibling.classList.add('hidden');
+            });
+        }
+
+        function playStarClickFeedback(starButton) {
+            starButton.classList.remove('is-wiggling');
+            starButton.offsetHeight;
+            starButton.classList.add('is-wiggling');
+            setTimeout(() => starButton.classList.remove('is-wiggling'), 300);
+        }
+
+        expandableCards.forEach(card => {
+            const starButton = document.createElement('button');
+            starButton.type = 'button';
+            starButton.className = 'star-toggle absolute top-5 right-5 text-xl leading-none cursor-pointer focus:outline-none';
+            starButton.innerHTML = '&#9733;';
+            card.querySelector('.card-content').appendChild(starButton);
+
+            setStarredState(card, starredCards.includes(card.id));
+
+            starButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playStarClickFeedback(starButton);
+                const isStarred = !starredCards.includes(card.id);
+                starredCards = isStarred ? [...starredCards, card.id] : starredCards.filter(id => id !== card.id);
+                setStarredState(card, isStarred);
+                saveStarredCards();
+                if (getActiveCategory() === 'starred') applyCategoryFilter('starred');
+            });
+        });
+
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (expandedCard) collapseCard(expandedCard);
+                const selectedCategory = tab.dataset.categoryFilter;
+
+                categoryTabs.forEach(item => item.classList.toggle('is-active', item === tab));
+                applyCategoryFilter(selectedCategory);
+            });
+        });
+
+        // Core FLIP-style expansion engine using exact pixel values.
+        expandableCards.forEach(card => {
+            const closeBtn = card.querySelector('.close-expanded-btn');
+
+            card.addEventListener('click', () => {
+                if (expandedCard) return;
+                expandCard(card);
+            });
+
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                collapseCard(card);
+            });
+        });
+
+        function expandCard(card) {
+            expandedCard = card;
+            const placeholder = card.nextElementSibling;
+            const calculatorContent = card.querySelector('.calculator-content');
+
+            // 1. Capture the original size and position before expansion.
+            const rect = card.getBoundingClientRect();
             
-            // 1. í´ë¦­ ì „ ì˜¤ë¦¬ì§€ë„ í¬ê¸° ë° ìœ„ì¹˜ ì¢Œí‘œ ìŠ¤ìº”
-            const rect = expandableCard.getBoundingClientRect();
-            
-            cardPlaceholder.style.width = rect.width + 'px';
-            cardPlaceholder.style.height = rect.height + 'px';
-            cardPlaceholder.classList.remove('hidden');
+            placeholder.style.width = rect.width + 'px';
+            placeholder.style.height = rect.height + 'px';
+            placeholder.classList.remove('hidden');
 
-            // 2. í˜„ìž¬ ìƒíƒœ ê·¸ëŒ€ë¡œ í™”ë©´ì— fixed ë°•ì œ (ê¸€ë¦¬ì¹˜ íŠ€ëŠ” í˜„ìƒ ë°©ì§€)
-            expandableCard.style.position = 'fixed';
-            expandableCard.style.top = rect.top + 'px';
-            expandableCard.style.left = rect.left + 'px';
-            expandableCard.style.width = rect.width + 'px';
-            expandableCard.style.height = rect.height + 'px';
-            expandableCard.style.margin = '0';
-            expandableCard.style.maxWidth = 'none';
-            expandableCard.style.transform = 'none';
+            // 2. Pin the card to the viewport at its current position to prevent layout jumps.
+            card.style.position = 'fixed';
+            card.style.top = rect.top + 'px';
+            card.style.left = rect.left + 'px';
+            card.style.width = rect.width + 'px';
+            card.style.height = rect.height + 'px';
+            card.style.margin = '0';
+            card.style.maxWidth = 'none';
+            card.style.transform = 'none';
 
-            cardContent.classList.add('hidden');
+            flyStarToNewPosition(card, () => {
+                card.classList.add('star-docked');
+                card.classList.add('is-expanded');
+            });
             calculatorContent.classList.remove('hidden');
+            calculatorContent.classList.remove('opacity-100', 'translate-y-0');
+            calculatorContent.classList.add('opacity-0', 'translate-y-2');
 
-            // 3. 타겟 크기 계산. 모바일에서는 너무 좁아지지 않도록 여백을 남긴 전체 폭을 사용.
+            // 3. Calculate the target size. On small screens, keep usable side padding.
             const targetWidth = Math.min(Math.max(window.innerWidth / 3, 320), window.innerWidth - 32);
 
-            // 4. 타겟 높이 측정 중에는 transition을 잠깐 꺼서 "확 커졌다가 줄어드는" 중간 장면이 보이지 않게 함.
-            expandableCard.style.transition = 'none';
-            expandableCard.style.width = targetWidth + 'px';
-            expandableCard.style.height = 'auto';
-            const targetHeight = expandableCard.offsetHeight;
+            // 4. Disable transitions while measuring the target height to avoid visible jumps.
+            card.style.transition = 'none';
+            card.style.width = targetWidth + 'px';
+            card.style.height = 'auto';
+            const targetHeight = card.offsetHeight;
 
-            // 5. 실제 애니메이션 시작점은 클릭 당시 버튼 크기로 고정.
-            expandableCard.style.width = rect.width + 'px';
-            expandableCard.style.height = rect.height + 'px';
-            expandableCard.offsetHeight;
-            expandableCard.style.transition = '';
+            // 5. Restore the clicked button size as the real animation starting point.
+            card.style.width = rect.width + 'px';
+            card.style.height = rect.height + 'px';
+            card.offsetHeight;
+            card.style.transition = '';
 
-            expandableCard.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
+            card.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
 
-            // 6. 정확한 타겟 픽셀 위치를 계산해서 정중앙 배치.
+            // 6. Calculate the exact target position in pixels.
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
 
-            // 7. 다음 프레임에 타겟 값을 넣어 버튼 크기에서 자연스럽게 확장되도록 함.
+            // 7. Apply the target values on the next frame for a smooth expansion.
             requestAnimationFrame(() => {
-                expandableCard.style.top = targetTop + 'px';
-                expandableCard.style.left = targetLeft + 'px';
-                expandableCard.style.width = targetWidth + 'px';
-                expandableCard.style.height = targetHeight + 'px';
+                card.style.top = targetTop + 'px';
+                card.style.left = targetLeft + 'px';
+                card.style.width = targetWidth + 'px';
+                card.style.height = targetHeight + 'px';
             });
 
             setTimeout(() => {
                 calculatorContent.classList.add('opacity-100');
-            }, 100);
-        });
-
-        // ðŸš€ ì¶•ì†Œ(Collapse) ë³µê·€ ì‹œìŠ¤í…œ ìµœì í™”
-        function collapseCard() {
-            if (!isExpanded) return;
-            isExpanded = false;
-            
-            calculatorContent.classList.remove('opacity-100');
-
-            const currentWidth = expandableCard.offsetWidth;
-            const currentHeight = expandableCard.offsetHeight;
-            const currentLeft = expandableCard.getBoundingClientRect().left;
-            const currentTop = expandableCard.getBoundingClientRect().top;
-
-            // ì—­í–‰ ìŠ¤ìº”: ì¶•ì†Œ ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•´ í˜„ìž¬ í¬ê¸°ë¥¼ í”½ì…€ë¡œ ê³ ì •
-            expandableCard.style.width = currentWidth + 'px';
-            expandableCard.style.height = currentHeight + 'px';
-            expandableCard.style.left = currentLeft + 'px';
-            expandableCard.style.top = currentTop + 'px';
-
-            calculatorContent.classList.add('hidden');
-            cardContent.classList.remove('hidden');
-            cardContent.classList.remove('opacity-100');
-            cardContent.classList.add('opacity-0');
-
-            const pRect = cardPlaceholder.getBoundingClientRect();
-
-            expandableCard.offsetHeight; // ë¦¬í”Œë¡œìš°
-
-            // ìžì„ì²˜ëŸ¼ ì›ëž˜ ê·¸ë¦¬ë“œ í”½ì…€ ìœ„ì¹˜ì™€ í¬ê¸°ë¡œ ë¶€ë“œëŸ½ê²Œ ëŒì•„ê°
-            expandableCard.style.top = pRect.top + 'px';
-            expandableCard.style.left = pRect.left + 'px';
-            expandableCard.style.width = pRect.width + 'px';
-            expandableCard.style.height = pRect.height + 'px';
-            expandableCard.classList.remove('shadow-2xl', 'border-zinc-400');
-            
-            setTimeout(() => {
-                expandableCard.removeAttribute('style');
-                expandableCard.classList.remove('z-50');
-                cardPlaceholder.classList.add('hidden');
-                cardContent.classList.remove('opacity-0');
-                cardContent.classList.add('opacity-100');
-            }, 400);
+                calculatorContent.classList.remove('opacity-0', 'translate-y-2');
+                calculatorContent.classList.add('translate-y-0');
+            }, 60);
         }
 
-        closeExpandedBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            collapseCard();
-        });
+        // Optimized collapse flow.
+        function collapseCard(card) {
+            if (expandedCard !== card) return;
+            const placeholder = card.nextElementSibling;
+            const calculatorContent = card.querySelector('.calculator-content');
+            card.classList.remove('is-expanded');
+            flyStarToNewPosition(card, () => {
+                card.classList.remove('star-docked');
+            });
+            
+            calculatorContent.classList.remove('opacity-100', 'translate-y-0');
+            calculatorContent.classList.add('opacity-0', 'translate-y-2');
+
+            const currentWidth = card.offsetWidth;
+            const currentHeight = card.offsetHeight;
+            const currentLeft = card.getBoundingClientRect().left;
+            const currentTop = card.getBoundingClientRect().top;
+
+            // Lock the current size in pixels before starting the collapse animation.
+            card.style.width = currentWidth + 'px';
+            card.style.height = currentHeight + 'px';
+            card.style.left = currentLeft + 'px';
+            card.style.top = currentTop + 'px';
+
+            const pRect = placeholder.getBoundingClientRect();
+
+            card.offsetHeight; // Force reflow.
+
+            card.style.top = pRect.top + 'px';
+            card.style.left = pRect.left + 'px';
+            card.style.width = pRect.width + 'px';
+            card.style.height = pRect.height + 'px';
+            card.classList.remove('shadow-2xl', 'border-zinc-400');
+            
+            setTimeout(() => {
+                card.removeAttribute('style');
+                card.classList.remove('z-50');
+                card.classList.remove('star-docked');
+                calculatorContent.classList.add('hidden');
+                placeholder.classList.add('hidden');
+                expandedCard = null;
+            }, 200);
+        }
         
         document.body.addEventListener('click', (e) => {
-            if (isExpanded && !expandableCard.contains(e.target)) {
-                collapseCard();
+            if (expandedCard && !expandedCard.contains(e.target)) {
+                collapseCard(expandedCard);
             }
         });
 
-        // ê³„ì‚°ê¸° ì—°ì‚° ë¡œì§
-        const inputs = ['curPrice', 'curShares', 'buyPrice', 'buyShares'].map(id => document.getElementById(id));
-        inputs.forEach(input => input.addEventListener('input', () => {
-            const cp = parseFloat(document.getElementById('curPrice').value) || 0;
-            const cs = parseFloat(document.getElementById('curShares').value) || 0;
-            const bp = parseFloat(document.getElementById('buyPrice').value) || 0;
-            const bs = parseFloat(document.getElementById('buyShares').value) || 0;
-
-            const currentTotal = cp * cs;
-            const buyTotal = bp * bs;
-            const totalShares = cs + bs;
-            const totalAmount = currentTotal + buyTotal;
-
-            if (totalShares > 0) {
-                const finalAvg = totalAmount / totalShares;
-                document.getElementById('valAvgPrice').innerText = finalAvg % 1 === 0 ? finalAvg.toLocaleString() : finalAvg.toFixed(2);
-                document.getElementById('valTotalShares').innerText = totalShares.toLocaleString();
-                document.getElementById('valTotalAmount').innerText = totalAmount.toLocaleString();
-            } else {
-                ['valAvgPrice', 'valTotalShares', 'valTotalAmount'].forEach(id => document.getElementById(id).innerText = 'â€”');
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && expandedCard) {
+                collapseCard(expandedCard);
             }
-        }));
+        });
 
-        // ë‹¤êµ­ì–´ ë²ˆì—­ ì‹œìŠ¤í…œ
+        initAverageCostCalculator();
+        initProfitLossCalculator();
+        initPercentageCalculator();
+        initCompoundInterestCalculator();
+        initLoanPaymentCalculator();
+        initUnitConverter();
+        initDiscountCalculator();
+        initSalesTaxCalculator();
+        initTipCalculator();
+        initDateDifferenceCalculator();
+        initTimeDurationCalculator();
+        initBmiCalculator();
+        initFuelCostCalculator();
+
+        // Multilingual translation system.
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
