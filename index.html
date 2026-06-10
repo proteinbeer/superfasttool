@@ -22,15 +22,11 @@
                 ⚡ SuperFastTool
             </a>
             
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2.5 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
-                    <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
-                        <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
-                    </button>
-                    <span id="labelAuto" class="text-xs font-medium text-zinc-900 transition-colors">Auto-Translate</span>
-                </div>
-                
-                <span class="text-xs bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-full font-bold border border-zinc-200 shadow-sm">v1.0.3</span>
+            <div class="flex items-center gap-2.5 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
+                <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
+                    <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
+                </button>
+                <span id="labelAuto" class="text-xs font-medium text-zinc-900 transition-colors">Auto-Translate</span>
             </div>
         </div>
     </header>
@@ -67,6 +63,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 SuperFastTool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.4</p>
         </div>
     </footer>
 
@@ -145,8 +142,6 @@
                 toggleBtn.classList.remove('bg-zinc-900');
                 toggleBtn.classList.add('bg-gray-300');
                 toggleHandle.classList.remove('translate-x-5');
-                
-                // 폰트 두께 변경 없이 색상만 스위칭하여 미니멀함 유지
                 labelAuto.classList.remove('text-zinc-900');
                 labelAuto.classList.add('text-gray-400');
 
@@ -162,8 +157,6 @@
                 toggleBtn.classList.remove('bg-gray-300');
                 toggleBtn.classList.add('bg-zinc-900');
                 toggleHandle.classList.add('translate-x-5');
-                
-                // 폰트 두께 변경 없이 색상만 스위칭하여 미니멀함 유지
                 labelAuto.classList.remove('text-gray-400');
                 labelAuto.classList.add('text-zinc-900');
 
