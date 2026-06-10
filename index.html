@@ -9,14 +9,9 @@
         .tool-card { transition: all 0.2s ease-in-out; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 🚨 구글 번역기 오리지널 UI 요소를 완전히 숨김 */
-        #google_translate_element, 
-        .goog-te-banner-frame, 
-        .goog-te-balloon-frame, 
-        .skiptranslate { 
-            display: none !important; 
-        }
-        body { top: 0px !important; }
+        /* 토글 스위치 부드러운 애니메이션 */
+        .toggle-bg { transition: background-color 0.2s ease; }
+        .toggle-dot { transition: transform 0.2s ease; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen font-sans">
@@ -30,8 +25,8 @@
             <div class="flex items-center gap-3 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
                 <span id="labelEN" class="text-xs font-bold text-indigo-600 transition-colors">English</span>
                 
-                <button id="langToggleBtn" class="w-10 h-5 bg-gray-300 rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none relative cursor-pointer">
-                    <div id="toggleHandle" class="w-4 h-4 bg-white rounded-full shadow duration-200 ease-in-out transform pointer-events-none"></div>
+                <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-gray-300 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
+                    <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform pointer-events-none"></div>
                 </button>
                 
                 <span id="labelAuto" class="text-xs font-medium text-gray-400 transition-colors">Auto-Translate</span>
@@ -39,52 +34,62 @@
         </div>
     </header>
 
-    <div id="google_translate_element"></div>
-
     <main class="max-w-6xl mx-auto px-4 py-12">
         <div class="text-center max-w-2xl mx-auto mb-12">
             <h1 class="text-4xl font-black text-gray-900 tracking-tight sm:text-5xl mb-4">
-                No Install, No Signup<br><span class="text-indigo-600">Done in 1 Second</span>
+                <span id="heroTitle1">No Install, No Signup</span><br>
+                <span id="heroTitle2" class="text-indigo-600">Done in 1 Second</span>
             </h1>
-            <p class="text-lg text-gray-500">
+            <p id="heroDesc" class="text-lg text-gray-500">
                 Solve your repetitive daily calculations and data conversions instantly.
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
             <a href="/stock-calculator" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-300">
                 <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
-                <h3 class="text-lg font-bold text-gray-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
-                <p class="text-sm text-gray-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
+                <h3 id="tool1Title" class="text-lg font-bold text-gray-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
+                <p id="tool1Desc" class="text-sm text-gray-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
             </a>
 
             <div class="block p-6 bg-gray-100/50 rounded-2xl border border-dashed border-gray-200 opacity-60">
                 <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
-                <h3 class="text-lg font-bold text-gray-400 mb-1">New Tools Coming Soon</h3>
+                <h3 id="tool2Title" class="text-lg font-bold text-gray-400 mb-1">New Tools Coming Soon</h3>
                 <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
             </div>
+
         </div>
     </main>
 
     <footer class="bg-white border-t border-gray-200 mt-24 py-12 text-center text-sm text-gray-400">
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 SuperFastTool. All rights reserved.</p>
-            <p class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within the user's browser.</p>
+            <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within the user's browser.</p>
         </div>
     </footer>
 
     <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en', 
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-
+        // 1. 브라우저 국가 코드 감지
         function getBrowserLanguage() {
             const lang = navigator.language || navigator.userLanguage;
             return lang.split('-')[0];
+        }
+
+        // 2. 유니티 스타일의 다이렉트 구글 데이터 요청 함수
+        async function fetchTranslation(text, targetLang) {
+            if (!text.trim() || targetLang === 'en') return text;
+            
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data[0][0][0];
+            } catch (error) {
+                console.error("Fail:", error);
+                return text; // 에러 발생 시 원본 반환 안전장치
+            }
         }
 
         const toggleBtn = document.getElementById('langToggleBtn');
@@ -92,47 +97,79 @@
         const labelEN = document.getElementById('labelEN');
         const labelAuto = document.getElementById('labelAuto');
         
+        // 번역 대상 엘리먼트 ID 목록
+        const targetIds = ['heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc'];
+        const originalTexts = {};
         let isTranslated = false;
+        let isLoopBlocking = false; // 연타 방지 플래그
 
-        toggleBtn.addEventListener('click', () => {
-            // 🚀 [핵심 방어선] 구글 셀렉트 박스가 정상적으로 로드되었는지 체크
-            const googleSelect = document.querySelector('.goog-te-combo');
+        toggleBtn.addEventListener('click', async () => {
+            if (isLoopBlocking) return;
             
-            if (!googleSelect) {
-                // 애드블록 등으로 차단되었거나 로드가 안 되었을 때 띄우는 친절한 안내
-                alert("Translation engine could not be loaded.\nIf you are using an Adblocker or Brave browser, please disable it for this site to use Auto-Translate!");
+            const userLang = getBrowserLanguage();
+            
+            // 영미권 유저가 켰을 때는 작동 안 고 원본 유지
+            if (userLang === 'en' && !isTranslated) {
+                alert("Your browser language is already set to English.");
                 return;
             }
 
-            if (!isTranslated) {
-                const userLang = getBrowserLanguage();
-                googleSelect.value = userLang; 
-                googleSelect.dispatchEvent(new Event('change')); 
+            isLoopBlocking = true;
 
-                toggleBtn.classList.remove('bg-gray-300');
+            if (!isTranslated) {
+                // [ON] 초고속 병렬 번역 모드 가동
+                toggleBtn.classList.add('opacity-50');
+                
+                // 원본 백업 및 번역 태스크 생성
+                const translationPromises = targetIds.map(async (id) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (!originalTexts[id]) originalTexts[id] = el.innerText; // 원본 백업
+                        const translatedText = await fetchTranslation(originalTexts[id], userLang);
+                        return { id, text: translatedText };
+                    }
+                    return null;
+                });
+
+                // 모든 엘리먼트 동시 번역 처리 (Promise.all)
+                const results = await Promise.all(translationPromises);
+                results.forEach(result => {
+                    if (result) document.getElementById(result.id).innerText = result.text;
+                });
+
+                // UI 스위치 토글 온 상태 변경
+                toggleBtn.classList.remove('bg-gray-300', 'opacity-50');
                 toggleBtn.classList.add('bg-indigo-600');
                 toggleHandle.classList.add('translate-x-5');
+                
                 labelEN.classList.remove('text-indigo-600', 'font-bold');
                 labelEN.classList.add('text-gray-400', 'font-medium');
                 labelAuto.classList.remove('text-gray-400', 'font-medium');
                 labelAuto.classList.add('text-indigo-600', 'font-bold');
+
                 isTranslated = true;
             } else {
-                googleSelect.value = ''; 
-                googleSelect.dispatchEvent(new Event('change'));
+                // [OFF] 메모리에 저장된 원본 데이터로 즉시 복구 (재요청 없음)
+                targetIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && originalTexts[id]) el.innerText = originalTexts[id];
+                });
 
+                // UI 스위치 토글 오프 상태 변경
                 toggleBtn.classList.remove('bg-indigo-600');
                 toggleBtn.classList.add('bg-gray-300');
                 toggleHandle.classList.remove('translate-x-5');
+                
                 labelAuto.classList.remove('text-indigo-600', 'font-bold');
                 labelAuto.classList.add('text-gray-400', 'font-medium');
                 labelEN.classList.remove('text-gray-400', 'font-medium');
                 labelEN.classList.add('text-indigo-600', 'font-bold');
+
                 isTranslated = false;
             }
+
+            isLoopBlocking = false;
         });
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 </body>
 </html>
