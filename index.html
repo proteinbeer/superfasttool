@@ -67,9 +67,9 @@
     </footer>
 
     <script type="text/javascript">
+        // 🚀 [테스트 변경] 브라우저 언어 설정을 무시하고 무조건 한국어('ko')를 반환하도록 고정
         function getBrowserLanguage() {
-            const lang = navigator.language || navigator.userLanguage;
-            return lang.split('-')[0];
+            return 'ko'; 
         }
 
         async function fetchTranslation(text, targetLang) {
@@ -101,7 +101,7 @@
                 if (el) originalTexts[id] = el.innerText;
             });
 
-            const userLang = getBrowserLanguage();
+            const userLang = getBrowserLanguage(); // 무조건 'ko' 로 작동
 
             if (userLang !== 'en') {
                 toggleBtn.classList.add('opacity-50');
