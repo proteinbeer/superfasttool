@@ -126,6 +126,7 @@
         .footer-action { transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease; }
         .footer-action:hover { transform: translateY(-1px); }
         .info-panel { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease; }
+        .active-panel { z-index: 70; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
         .calculator-content, .info-panel-scroll { overscroll-behavior: contain; }
@@ -158,9 +159,9 @@
         }
 
         @media (max-width: 640px) {
-            .calculator-content { max-height: calc(100vh - 11rem); overflow-y: auto; }
-            .info-panel-content { max-height: calc(100vh - 2rem); overflow-y: hidden; }
-            .info-panel-scroll { max-height: calc(100vh - 12rem); }
+            .calculator-content { max-height: calc(100dvh - 12rem); overflow-y: auto; }
+            .info-panel-content { max-height: calc(100dvh - 6rem); overflow-y: hidden; }
+            .info-panel-scroll { max-height: calc(100dvh - 16rem); }
         }
     </style>
 </head>
@@ -659,7 +660,7 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-20">
+    <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-0">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="aboutPanel">
@@ -677,7 +678,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.45</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.47</p>
         </div>
     </footer>
 
@@ -712,7 +713,7 @@
                 <p>This policy may be updated as new tools, analytics, advertising, or hosting features are added.</p>
             </div>
 
-            <form id="contactPanel" class="info-panel-section hidden space-y-3" action="https://formspree.io/f/mjggknek" method="POST">
+            <form id="contactPanel" class="info-panel-section info-panel-scroll hidden space-y-3" action="https://formspree.io/f/mjggknek" method="POST">
                 <p class="text-sm leading-6 text-zinc-600">Send feedback, bug reports, or calculator ideas.</p>
                 <input name="name" type="text" placeholder="Name" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
                 <input name="email" type="email" placeholder="Email" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400" required>
@@ -815,6 +816,19 @@
             return document.querySelector('.category-tab.is-active')?.dataset.categoryFilter || 'all';
         }
 
+        function getPanelBounds(preferredHeight) {
+            const isMobile = window.innerWidth <= 640;
+            const topPadding = isMobile ? 72 : 16;
+            const bottomPadding = 16;
+            const availableHeight = window.innerHeight - topPadding - bottomPadding;
+            const height = Math.min(preferredHeight, availableHeight);
+
+            return {
+                height,
+                top: Math.max(topPadding, topPadding + (availableHeight - height) / 2)
+            };
+        }
+
         function flyStarToNewPosition(card, updatePosition) {
             const starButton = card.querySelector('.star-toggle');
             const startRect = starButton.getBoundingClientRect();
@@ -902,15 +916,17 @@
             activeInfoSourceButton = sourceButton;
             const rect = sourceButton.getBoundingClientRect();
             const targetWidth = Math.min(520, window.innerWidth - 32);
-            const targetHeight = Math.min(panelId === 'contactPanel' ? 440 : 330, window.innerHeight - 32);
+            const panelBounds = getPanelBounds(panelId === 'contactPanel' ? 440 : 330);
+            const targetHeight = panelBounds.height;
             const targetLeft = (window.innerWidth - targetWidth) / 2;
-            const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
+            const targetTop = panelBounds.top;
 
             infoPanelSections.forEach(section => section.classList.toggle('hidden', section.id !== panelId));
             infoPanelTitle.innerText = infoPanelData[panelId].title;
             infoPanelIcon.innerHTML = infoPanelData[panelId].icon;
 
             infoPanel.classList.remove('hidden', 'is-open');
+            infoPanel.classList.add('active-panel');
             infoPanel.style.top = rect.top + 'px';
             infoPanel.style.left = rect.left + 'px';
             infoPanel.style.width = rect.width + 'px';
@@ -939,6 +955,7 @@
 
             if (!animate) {
                 infoPanel.classList.add('hidden');
+                infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
                 if (sourceButton) sourceButton.style.visibility = '';
                 return;
@@ -955,6 +972,7 @@
 
             setTimeout(() => {
                 infoPanel.classList.add('hidden');
+                infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
                 if (sourceButton) sourceButton.style.visibility = '';
             }, 180);
@@ -1047,7 +1065,8 @@
             card.style.transition = 'none';
             card.style.width = targetWidth + 'px';
             card.style.height = 'auto';
-            const targetHeight = Math.min(card.offsetHeight, window.innerHeight - 32);
+            const panelBounds = getPanelBounds(card.offsetHeight);
+            const targetHeight = panelBounds.height;
 
             // 5. Restore the clicked button size as the real animation starting point.
             card.style.width = rect.width + 'px';
@@ -1055,11 +1074,11 @@
             card.offsetHeight;
             card.style.transition = '';
 
-            card.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
+            card.classList.add('shadow-2xl', 'active-panel', 'border-zinc-400');
 
             // 6. Calculate the exact target position in pixels.
             const targetLeft = (window.innerWidth - targetWidth) / 2;
-            const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
+            const targetTop = panelBounds.top;
 
             // 7. Apply the target values on the next frame for a smooth expansion.
             requestAnimationFrame(() => {
@@ -1112,7 +1131,7 @@
             
             setTimeout(() => {
                 card.removeAttribute('style');
-                card.classList.remove('z-50');
+                card.classList.remove('active-panel');
                 card.classList.remove('star-docked');
                 calculatorContent.classList.add('hidden');
                 placeholder.classList.add('hidden');
