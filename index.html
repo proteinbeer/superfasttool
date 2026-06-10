@@ -75,8 +75,65 @@
             80% { transform: translateY(0) rotate(7deg) scale(1.08); }
             100% { transform: translateY(0) rotate(0deg) scale(1); }
         }
+        .logo-bolt { display: inline-block; animation: boltFlash 4.2s ease-in-out infinite; transform-origin: center; }
+        .logo-text { position: relative; display: inline-block; overflow: hidden; vertical-align: bottom; }
+        .logo-text::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(249, 115, 22, 0.06) 22%, rgba(250, 204, 21, 0.28) 48%, rgba(249, 115, 22, 0.06) 74%, transparent 100%);
+            mix-blend-mode: multiply;
+            transform: translateX(-120%) skewX(-16deg);
+            animation: logoElectricWave 4.2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .logo-letter { display: inline-block; animation: logoLetterShock 4.2s ease-in-out infinite; }
+        .logo-letter:nth-child(1) { animation-delay: 0s; }
+        .logo-letter:nth-child(2) { animation-delay: 0.025s; }
+        .logo-letter:nth-child(3) { animation-delay: 0.05s; }
+        .logo-letter:nth-child(4) { animation-delay: 0.075s; }
+        .logo-letter:nth-child(5) { animation-delay: 0.1s; }
+        .logo-letter:nth-child(6) { animation-delay: 0.125s; }
+        .logo-letter:nth-child(7) { animation-delay: 0.15s; }
+        .logo-letter:nth-child(8) { animation-delay: 0.175s; }
+        .logo-letter:nth-child(9) { animation-delay: 0.2s; }
+        .logo-letter:nth-child(10) { animation-delay: 0.225s; }
+        .logo-letter:nth-child(11) { animation-delay: 0.25s; }
+        .logo-letter:nth-child(12) { animation-delay: 0.275s; }
+        .logo-letter:nth-child(13) { animation-delay: 0.3s; }
+        .logo-letter:nth-child(14) { animation-delay: 0.325s; }
+        .logo-letter:nth-child(15) { animation-delay: 0.35s; }
+        @keyframes boltFlash {
+            0%, 78%, 100% { color: inherit; filter: none; transform: translateY(0) rotate(0deg) scale(1); }
+            81% { color: #f97316; filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.75)); transform: translateY(-3px) rotate(-12deg) scale(1.3); }
+            84% { color: #facc15; filter: drop-shadow(0 0 13px rgba(250, 204, 21, 0.9)); transform: translateY(1px) rotate(10deg) scale(1.12); }
+            87% { color: #fb923c; filter: drop-shadow(0 0 9px rgba(251, 146, 60, 0.72)); transform: translateY(0) rotate(0deg) scale(1.18); }
+        }
+        @keyframes logoElectricWave {
+            0%, 82%, 100% { transform: translateX(-120%) skewX(-16deg); opacity: 0; }
+            86% { opacity: 1; }
+            94% { transform: translateX(120%) skewX(-16deg); opacity: 0; }
+        }
+        @keyframes logoLetterShock {
+            0%, 82%, 100% { color: inherit; text-shadow: none; transform: translateY(0); }
+            86% { color: #27272a; text-shadow: 0 0 5px rgba(249, 115, 22, 0.22); transform: translateY(-1px); }
+            90% { color: #18181b; text-shadow: 0 0 6px rgba(250, 204, 21, 0.24); transform: translateY(1px); }
+            94% { color: inherit; text-shadow: none; transform: translateY(0); }
+        }
         .category-tab { transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease; }
         .category-tab.is-active { background: #18181b; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+        .footer-action { transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease; }
+        .footer-action:hover { transform: translateY(-1px); }
+        .info-panel { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease; }
+        .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
+        .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
+        .info-panel-scroll { max-height: 18rem; overflow-y: auto; overscroll-behavior: contain; padding-right: 0.25rem; }
+        .info-panel-scroll::-webkit-scrollbar { width: 8px; }
+        .info-panel-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 999px; }
+        .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
+        .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
+        .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
+        .sent-toast.is-visible { opacity: 1; transform: translateY(0); }
 
         /* Infinite diagonal scrolling grid background */
         .bg-tech-grid {
@@ -104,7 +161,7 @@
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2">
-                &#9889; Super Fast Tool
+                <span class="logo-bolt">&#9889;</span> <span class="logo-text" aria-label="Super Fast Tool"><span class="logo-letter">S</span><span class="logo-letter">u</span><span class="logo-letter">p</span><span class="logo-letter">e</span><span class="logo-letter">r</span><span class="logo-letter">&nbsp;</span><span class="logo-letter">F</span><span class="logo-letter">a</span><span class="logo-letter">s</span><span class="logo-letter">t</span><span class="logo-letter">&nbsp;</span><span class="logo-letter">T</span><span class="logo-letter">o</span><span class="logo-letter">o</span><span class="logo-letter">l</span></span>
             </a>
             
             <div class="flex items-center gap-2 bg-gray-100/90 p-1.5 rounded-2xl border border-gray-200 shadow-inner">
@@ -134,11 +191,11 @@
 
         <div class="flex justify-center mb-8">
             <div class="flex flex-wrap items-center justify-center gap-1.5 bg-white/90 border border-gray-200 rounded-2xl p-1.5 shadow-sm backdrop-blur-md">
-                <button id="categoryAll" class="category-tab is-active px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="all">All</button>
-                <button id="categoryStarred" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="starred">Starred</button>
-                <button id="categoryFinance" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="finance">Finance</button>
-                <button id="categoryShopping" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="shopping">Shopping</button>
-                <button id="categoryEveryday" class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer" data-category-filter="everyday">Everyday</button>
+                <button class="category-tab is-active px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="all"><span aria-hidden="true">&#9638;</span><span id="categoryAll">All</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="starred"><span aria-hidden="true">&#9733;</span><span id="categoryStarred">Starred</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="finance"><span aria-hidden="true">&#128200;</span><span id="categoryFinance">Finance</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="shopping"><span aria-hidden="true">&#128722;</span><span id="categoryShopping">Shopping</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="everyday"><span aria-hidden="true">&#128736;</span><span id="categoryEveryday">Everyday</span></button>
             </div>
         </div>
 
@@ -199,7 +256,7 @@
             <div id="profitLossCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128176;</div>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128181;</div>
                     <h3 id="tool2Title" class="text-lg font-bold text-zinc-900 mb-1">Profit/Loss Calculator</h3>
                     <p id="tool2Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate trade profit, loss, return rate, and final value from buy and sell prices.</p>
                 </div>
@@ -297,7 +354,7 @@
             <div id="compoundInterestCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128176;</div>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127793;</div>
                     <h3 id="tool4Title" class="text-lg font-bold text-zinc-900 mb-1">Compound Interest Calculator</h3>
                     <p id="tool4Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate future value from principal, monthly contributions, time, and annual return.</p>
                 </div>
@@ -348,7 +405,7 @@
             <div id="loanPaymentCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128179;</div>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127970;</div>
                     <h3 id="tool5Title" class="text-lg font-bold text-zinc-900 mb-1">Loan Payment Calculator</h3>
                     <p id="tool5Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate monthly payments, total repayment, and total interest for a loan.</p>
                 </div>
@@ -459,7 +516,7 @@
             <div id="salesTaxCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128179;</div>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129534;</div>
                     <h3 id="tool8Title" class="text-lg font-bold text-zinc-900 mb-1">Sales Tax Calculator</h3>
                     <p id="tool8Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Add sales tax to a price and see the tax amount and final total.</p>
                 </div>
@@ -589,18 +646,76 @@
 
         <div class="mt-10">
             <div class="min-h-[90px] bg-white/85 border border-gray-200 rounded-xl flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm backdrop-blur-md">
-                Advertisement
+                Coming soon
             </div>
         </div>
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-20">
         <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
+                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="aboutPanel">
+                    <span aria-hidden="true">&#9432;</span>
+                    <span id="footerAbout">About</span>
+                </button>
+                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="policyPanel">
+                    <span aria-hidden="true">&#128274;</span>
+                    <span id="footerPolicy">Policy</span>
+                </button>
+                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="contactPanel">
+                    <span aria-hidden="true">&#9993;</span>
+                    <span id="footerContact">Contact</span>
+                </button>
+            </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.27</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.42</p>
         </div>
     </footer>
+
+    <div id="infoPanel" class="info-panel hidden fixed z-[60] bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
+        <div class="info-panel-content p-6 text-left">
+            <div class="flex items-start justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
+                <div>
+                    <div id="infoPanelIcon" class="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center text-xl mb-3">&#9432;</div>
+                    <h2 id="infoPanelTitle" class="text-xl font-black text-zinc-900">About</h2>
+                </div>
+                <button id="closeInfoPanelBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close information panel">&times;</button>
+            </div>
+
+            <div id="aboutPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
+                <p><strong class="text-zinc-900">Super Fast Tool</strong> is a collection of quick calculators and utility tools for everyday tasks.</p>
+                <p>It is designed for fast answers without signup, installation, or complicated menus.</p>
+                <p>All calculator inputs are processed in your browser. The site does not send your calculation data to a server.</p>
+            </div>
+
+            <div id="policyPanel" class="info-panel-section info-panel-scroll hidden space-y-3 text-sm leading-6 text-zinc-600">
+                <p><strong class="text-zinc-900">Privacy Policy</strong></p>
+                <p>Super Fast Tool does not require accounts and does not collect calculator input values.</p>
+                <p>Some external services may be loaded for site functionality, such as translation, styling, icons, or future advertising. These services may use their own cookies or request logs according to their policies.</p>
+                <p>If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.</p>
+                <p><strong class="text-zinc-900">Local data</strong></p>
+                <p>Starred tools are saved only in your browser using local storage, so your favorites can stay available after a refresh.</p>
+                <p><strong class="text-zinc-900">Contact form</strong></p>
+                <p>The contact form opens your email app. Messages are not submitted to a Super Fast Tool server.</p>
+                <p><strong class="text-zinc-900">No financial advice</strong></p>
+                <p>Finance-related calculators are provided for quick estimates only and should not be treated as investment, tax, or legal advice.</p>
+                <p><strong class="text-zinc-900">Updates</strong></p>
+                <p>This policy may be updated as new tools, analytics, advertising, or hosting features are added.</p>
+            </div>
+
+            <form id="contactPanel" class="info-panel-section hidden space-y-3" action="https://formspree.io/f/mjggknek" method="POST">
+                <p class="text-sm leading-6 text-zinc-600">Send feedback, bug reports, or calculator ideas.</p>
+                <input name="name" type="text" placeholder="Name" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                <input name="email" type="email" placeholder="Email" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400" required>
+                <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required></textarea>
+                <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Send Message</button>
+            </form>
+            <div id="contactSentMessage" class="sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
+                Sent
+            </div>
+        </div>
+    </div>
 
     <script src="./stock-crypto-avg-cost-calculator.js"></script>
     <script src="./profit-loss-calculator.js"></script>
@@ -639,9 +754,18 @@
         const translateIcon = document.getElementById('translateIcon');
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
+        const footerActions = document.querySelectorAll('.footer-action');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoPanelIcon = document.getElementById('infoPanelIcon');
+        const infoPanelTitle = document.getElementById('infoPanelTitle');
+        const closeInfoPanelBtn = document.getElementById('closeInfoPanelBtn');
+        const infoPanelSections = document.querySelectorAll('.info-panel-section');
+        const contactForm = document.getElementById('contactPanel');
+        const contactSentMessage = document.getElementById('contactSentMessage');
         
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryFinance', 'categoryShopping', 'categoryEveryday',
+            'footerAbout', 'footerPolicy', 'footerContact',
             'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc',
             'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount',
             'lblEntryPrice', 'lblExitPrice', 'lblTradeQty', 'lblFees', 'resProfitLoss', 'resReturnPct', 'resFinalValue',
@@ -663,6 +787,8 @@
         let isTranslated = true;
         let isLoopBlocking = false;
         let expandedCard = null;
+        let activeInfoPanel = null;
+        let activeInfoSourceButton = null;
         const starredStorageKey = 'superFastToolStarredCards';
         let starredCards = JSON.parse(localStorage.getItem(starredStorageKey) || '[]');
 
@@ -741,11 +867,123 @@
         categoryTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 if (expandedCard) collapseCard(expandedCard);
+                if (activeInfoPanel) closeInfoPanel();
                 const selectedCategory = tab.dataset.categoryFilter;
 
                 categoryTabs.forEach(item => item.classList.toggle('is-active', item === tab));
                 applyCategoryFilter(selectedCategory);
             });
+        });
+
+        const infoPanelData = {
+            aboutPanel: { title: 'About', icon: '&#9432;' },
+            policyPanel: { title: 'Policy', icon: '&#128274;' },
+            contactPanel: { title: 'Contact', icon: '&#9993;' }
+        };
+
+        footerActions.forEach(button => {
+            button.addEventListener('click', () => {
+                if (expandedCard) collapseCard(expandedCard);
+                if (activeInfoPanel) closeInfoPanel(false);
+                openInfoPanel(button, button.dataset.infoPanel);
+            });
+        });
+
+        function openInfoPanel(sourceButton, panelId) {
+            activeInfoPanel = panelId;
+            activeInfoSourceButton = sourceButton;
+            const rect = sourceButton.getBoundingClientRect();
+            const targetWidth = Math.min(520, window.innerWidth - 32);
+            const targetHeight = panelId === 'contactPanel' ? 440 : 330;
+            const targetLeft = (window.innerWidth - targetWidth) / 2;
+            const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
+
+            infoPanelSections.forEach(section => section.classList.toggle('hidden', section.id !== panelId));
+            infoPanelTitle.innerText = infoPanelData[panelId].title;
+            infoPanelIcon.innerHTML = infoPanelData[panelId].icon;
+
+            infoPanel.classList.remove('hidden', 'is-open');
+            infoPanel.style.top = rect.top + 'px';
+            infoPanel.style.left = rect.left + 'px';
+            infoPanel.style.width = rect.width + 'px';
+            infoPanel.style.height = rect.height + 'px';
+            infoPanel.style.opacity = '0.4';
+            sourceButton.style.visibility = 'hidden';
+
+            infoPanel.offsetHeight;
+
+            requestAnimationFrame(() => {
+                infoPanel.style.top = targetTop + 'px';
+                infoPanel.style.left = targetLeft + 'px';
+                infoPanel.style.width = targetWidth + 'px';
+                infoPanel.style.height = targetHeight + 'px';
+                infoPanel.style.opacity = '1';
+                infoPanel.classList.add('is-open');
+            });
+        }
+
+        function closeInfoPanel(animate = true) {
+            if (!activeInfoPanel) return;
+            const sourceButton = activeInfoSourceButton;
+            infoPanel.classList.remove('is-open');
+            activeInfoPanel = null;
+            activeInfoSourceButton = null;
+
+            if (!animate) {
+                infoPanel.classList.add('hidden');
+                infoPanel.removeAttribute('style');
+                if (sourceButton) sourceButton.style.visibility = '';
+                return;
+            }
+
+            if (animate && sourceButton) {
+                const rect = sourceButton.getBoundingClientRect();
+                infoPanel.style.top = rect.top + 'px';
+                infoPanel.style.left = rect.left + 'px';
+                infoPanel.style.width = rect.width + 'px';
+                infoPanel.style.height = rect.height + 'px';
+                infoPanel.style.opacity = '0.4';
+            }
+
+            setTimeout(() => {
+                infoPanel.classList.add('hidden');
+                infoPanel.removeAttribute('style');
+                if (sourceButton) sourceButton.style.visibility = '';
+            }, 180);
+        }
+
+        closeInfoPanelBtn.addEventListener('click', closeInfoPanel);
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fields = contactForm.querySelectorAll('input, textarea, button');
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const formData = new FormData(contactForm);
+            contactSentMessage.classList.remove('is-visible');
+            contactForm.classList.add('is-sending');
+            fields.forEach(field => field.disabled = true);
+            submitButton.innerText = 'Sending...';
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { Accept: 'application/json' }
+                });
+
+                if (response.ok) {
+                    contactForm.reset();
+                    contactSentMessage.classList.add('is-visible');
+                    setTimeout(() => contactSentMessage.classList.remove('is-visible'), 1500);
+                }
+            } catch (error) {
+                console.error('Contact form submit failed:', error);
+            } finally {
+                contactForm.classList.remove('is-sending');
+                fields.forEach(field => field.disabled = false);
+                submitButton.innerText = 'Send Message';
+            }
         });
 
         // Core FLIP-style expansion engine using exact pixel values.
@@ -754,6 +992,7 @@
 
             card.addEventListener('click', () => {
                 if (expandedCard) return;
+                if (activeInfoPanel) closeInfoPanel();
                 expandCard(card);
             });
 
@@ -877,11 +1116,17 @@
             if (expandedCard && !expandedCard.contains(e.target)) {
                 collapseCard(expandedCard);
             }
+            if (activeInfoPanel && !infoPanel.contains(e.target) && !e.target.closest('.footer-action')) {
+                closeInfoPanel();
+            }
         });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && expandedCard) {
                 collapseCard(expandedCard);
+            }
+            if (e.key === 'Escape' && activeInfoPanel) {
+                closeInfoPanel();
             }
         });
 
