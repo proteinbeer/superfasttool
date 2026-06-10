@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,14 +9,14 @@
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 토글 스위치 애니메이션 */
+        /* í† ê¸€ ìŠ¤ìœ„ì¹˜ ì• ë‹ˆë©”ì´ì…˜ */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
         
-        /* ⚡ 퍼센트(%)나 transform을 배제하고 순수 px 단위로 위치/크기를 매끄럽게 변환하는 클래스 */
+        /* âš¡ í¼ì„¼íŠ¸(%)ë‚˜ transformì„ ë°°ì œí•˜ê³  ìˆœìˆ˜ px ë‹¨ìœ„ë¡œ ìœ„ì¹˜/í¬ê¸°ë¥¼ ë§¤ë„ëŸ½ê²Œ ë³€í™˜í•˜ëŠ” í´ëž˜ìŠ¤ */
         .expand-transition { transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease; }
 
-        /* 무한히 대각선으로 자동 스크롤링되는 격자 배경 */
+        /* ë¬´í•œížˆ ëŒ€ê°ì„ ìœ¼ë¡œ ìžë™ ìŠ¤í¬ë¡¤ë§ë˜ëŠ” ê²©ìž ë°°ê²½ */
         .bg-tech-grid {
             background-color: #f8fafc;
             background-image: 
@@ -31,7 +31,7 @@
             to { background-position: 40px 40px; }
         }
 
-        /* 중앙 히어로 영역 방사형 광원 효과 */
+        /* ì¤‘ì•™ ížˆì–´ë¡œ ì˜ì—­ ë°©ì‚¬í˜• ê´‘ì› íš¨ê³¼ */
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
         }
@@ -42,7 +42,7 @@
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2">
-                ⚡ Super Fast Tool
+                âš¡ Super Fast Tool
             </a>
             
             <div class="flex items-center gap-2 bg-gray-100/90 p-1.5 rounded-2xl border border-gray-200 shadow-inner">
@@ -77,7 +77,7 @@
             <div id="expandableCard" class="expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 
                 <div id="cardContent" class="p-6 opacity-100 transition-opacity duration-200 w-full h-full">
-                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">ðŸ“ˆ</div>
                     <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
                     <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
@@ -85,10 +85,10 @@
                 <div id="calculatorContent" class="hidden opacity-0 p-6 flex flex-col w-full transition-opacity duration-300 space-y-6">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-3 bg-white z-10">
                         <div class="flex items-center gap-2">
-                            <span class="text-xl">📈</span>
+                            <span class="text-xl">ðŸ“ˆ</span>
                             <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
                         </div>
-                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none">✕</button>
+                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none">âœ•</button>
                     </div>
 
                     <div class="space-y-4 mb-2">
@@ -117,15 +117,15 @@
                     <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
                         <div class="flex justify-between items-center">
                             <span id="resAvgPrice" class="text-xs text-zinc-500 font-medium">New Expected Avg Cost</span>
-                            <span id="valAvgPrice" class="text-sm font-black text-zinc-900">—</span>
+                            <span id="valAvgPrice" class="text-sm font-black text-zinc-900">â€”</span>
                         </div>
                         <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
                             <span id="resTotalShares" class="text-xs text-zinc-500 font-medium">Total Shares</span>
-                            <span id="valTotalShares" class="text-sm font-bold text-zinc-800">—</span>
+                            <span id="valTotalShares" class="text-sm font-bold text-zinc-800">â€”</span>
                         </div>
                         <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5">
                             <span id="resTotalAmount" class="text-xs text-zinc-500 font-medium">Total Investment</span>
-                            <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">—</span>
+                            <span id="valTotalAmount" class="text-sm font-bold text-zinc-800">â€”</span>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
             <div id="cardPlaceholder" class="hidden bg-transparent border border-transparent w-full h-full"></div>
 
             <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full min-h-[170px]">
-                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">âš™ï¸</div>
                 <h3 id="tool2Title" class="text-lg font-bold text-zinc-400 mb-1">New Tools Coming Soon</h3>
                 <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
             </div>
@@ -143,7 +143,7 @@
 
     <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-20">
         <div class="max-w-6xl mx-auto px-4">
-            <p>© 2026 Super Fast Tool. All rights reserved.</p>
+            <p>Â© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
             <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.4</p>
         </div>
@@ -188,19 +188,19 @@
         let isLoopBlocking = false;
         let isExpanded = false;
 
-        // [핵심 로직] 버그 없는 순수 픽셀(px) 매칭 FLIP 확장 엔진
+        // [í•µì‹¬ ë¡œì§] ë²„ê·¸ ì—†ëŠ” ìˆœìˆ˜ í”½ì…€(px) ë§¤ì¹­ FLIP í™•ìž¥ ì—”ì§„
         expandableCard.addEventListener('click', () => {
             if (isExpanded) return;
             isExpanded = true;
             
-            // 1. 클릭 전 오리지널 크기 및 위치 좌표 스캔
+            // 1. í´ë¦­ ì „ ì˜¤ë¦¬ì§€ë„ í¬ê¸° ë° ìœ„ì¹˜ ì¢Œí‘œ ìŠ¤ìº”
             const rect = expandableCard.getBoundingClientRect();
             
             cardPlaceholder.style.width = rect.width + 'px';
             cardPlaceholder.style.height = rect.height + 'px';
             cardPlaceholder.classList.remove('hidden');
 
-            // 2. 현재 상태 그대로 화면에 fixed 박제 (글리치 튀는 현상 방지)
+            // 2. í˜„ìž¬ ìƒíƒœ ê·¸ëŒ€ë¡œ í™”ë©´ì— fixed ë°•ì œ (ê¸€ë¦¬ì¹˜ íŠ€ëŠ” í˜„ìƒ ë°©ì§€)
             expandableCard.style.position = 'fixed';
             expandableCard.style.top = rect.top + 'px';
             expandableCard.style.left = rect.left + 'px';
@@ -213,39 +213,41 @@
             cardContent.classList.add('hidden');
             calculatorContent.classList.remove('hidden');
 
-            // 3. 멤버의 지시대로 "전체 화면 가로 크기의 1/3" 계산
-            const targetWidth = window.innerWidth / 3;
-            
-            // 4. 자바스크립트가 요소들에 딱 맞는 높이를 보이지 않게 스캔
+            // 3. 타겟 크기 계산. 모바일에서는 너무 좁아지지 않도록 여백을 남긴 전체 폭을 사용.
+            const targetWidth = Math.min(Math.max(window.innerWidth / 3, 320), window.innerWidth - 32);
+
+            // 4. 타겟 높이 측정 중에는 transition을 잠깐 꺼서 "확 커졌다가 줄어드는" 중간 장면이 보이지 않게 함.
+            expandableCard.style.transition = 'none';
             expandableCard.style.width = targetWidth + 'px';
             expandableCard.style.height = 'auto';
-            const targetHeight = expandableCard.offsetHeight; 
+            const targetHeight = expandableCard.offsetHeight;
 
-            // 5. 스캔이 끝나면 유저 눈에 보이기 전에 원래 크기로 돌려놓음
+            // 5. 실제 애니메이션 시작점은 클릭 당시 버튼 크기로 고정.
             expandableCard.style.width = rect.width + 'px';
             expandableCard.style.height = rect.height + 'px';
-
-            // 강제 리플로우 (브라우저에게 여기서부터 애니메이션을 시작하라고 못 박음)
-            expandableCard.offsetHeight; 
+            expandableCard.offsetHeight;
+            expandableCard.style.transition = '';
 
             expandableCard.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
 
-            // 6. 정확한 타겟 픽셀 위치를 수학적으로 계산하여 정중앙 배치 (translate에 의존하지 않음)
+            // 6. 정확한 타겟 픽셀 위치를 계산해서 정중앙 배치.
             const targetLeft = (window.innerWidth - targetWidth) / 2;
-            const targetTop = (window.innerHeight - targetHeight) / 2;
+            const targetTop = Math.max(16, (window.innerHeight - targetHeight) / 2);
 
-            // 7. 계산된 픽셀값으로 물 흐르듯 변환 트리거
-            expandableCard.style.top = targetTop + 'px';
-            expandableCard.style.left = targetLeft + 'px';
-            expandableCard.style.width = targetWidth + 'px';
-            expandableCard.style.height = targetHeight + 'px';
+            // 7. 다음 프레임에 타겟 값을 넣어 버튼 크기에서 자연스럽게 확장되도록 함.
+            requestAnimationFrame(() => {
+                expandableCard.style.top = targetTop + 'px';
+                expandableCard.style.left = targetLeft + 'px';
+                expandableCard.style.width = targetWidth + 'px';
+                expandableCard.style.height = targetHeight + 'px';
+            });
 
             setTimeout(() => {
                 calculatorContent.classList.add('opacity-100');
             }, 100);
         });
 
-        // 🚀 축소(Collapse) 복귀 시스템 최적화
+        // ðŸš€ ì¶•ì†Œ(Collapse) ë³µê·€ ì‹œìŠ¤í…œ ìµœì í™”
         function collapseCard() {
             if (!isExpanded) return;
             isExpanded = false;
@@ -257,7 +259,7 @@
             const currentLeft = expandableCard.getBoundingClientRect().left;
             const currentTop = expandableCard.getBoundingClientRect().top;
 
-            // 역행 스캔: 축소 애니메이션을 위해 현재 크기를 픽셀로 고정
+            // ì—­í–‰ ìŠ¤ìº”: ì¶•ì†Œ ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•´ í˜„ìž¬ í¬ê¸°ë¥¼ í”½ì…€ë¡œ ê³ ì •
             expandableCard.style.width = currentWidth + 'px';
             expandableCard.style.height = currentHeight + 'px';
             expandableCard.style.left = currentLeft + 'px';
@@ -270,9 +272,9 @@
 
             const pRect = cardPlaceholder.getBoundingClientRect();
 
-            expandableCard.offsetHeight; // 리플로우
+            expandableCard.offsetHeight; // ë¦¬í”Œë¡œìš°
 
-            // 자석처럼 원래 그리드 픽셀 위치와 크기로 부드럽게 돌아감
+            // ìžì„ì²˜ëŸ¼ ì›ëž˜ ê·¸ë¦¬ë“œ í”½ì…€ ìœ„ì¹˜ì™€ í¬ê¸°ë¡œ ë¶€ë“œëŸ½ê²Œ ëŒì•„ê°
             expandableCard.style.top = pRect.top + 'px';
             expandableCard.style.left = pRect.left + 'px';
             expandableCard.style.width = pRect.width + 'px';
@@ -299,7 +301,7 @@
             }
         });
 
-        // 계산기 연산 로직
+        // ê³„ì‚°ê¸° ì—°ì‚° ë¡œì§
         const inputs = ['curPrice', 'curShares', 'buyPrice', 'buyShares'].map(id => document.getElementById(id));
         inputs.forEach(input => input.addEventListener('input', () => {
             const cp = parseFloat(document.getElementById('curPrice').value) || 0;
@@ -318,11 +320,11 @@
                 document.getElementById('valTotalShares').innerText = totalShares.toLocaleString();
                 document.getElementById('valTotalAmount').innerText = totalAmount.toLocaleString();
             } else {
-                ['valAvgPrice', 'valTotalShares', 'valTotalAmount'].forEach(id => document.getElementById(id).innerText = '—');
+                ['valAvgPrice', 'valTotalShares', 'valTotalAmount'].forEach(id => document.getElementById(id).innerText = 'â€”');
             }
         }));
 
-        // 다국어 번역 시스템
+        // ë‹¤êµ­ì–´ ë²ˆì—­ ì‹œìŠ¤í…œ
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
