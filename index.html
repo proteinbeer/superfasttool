@@ -9,12 +9,14 @@
         .tool-card { transition: all 0.2s ease-in-out; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 🚨 구글 번역기 오리지널 UI 요소를 완전히 숨기는 마법의 CSS */
-        #google_translate_element { display: none !important; }
-        .goog-te-banner-frame { display: none !important; }
-        .goog-te-balloon-frame { display: none !important; }
+        /* 🚨 구글 번역기 본체 및 위젯 UI를 완전히 파괴하여 숨김 */
+        #google_translate_element, 
+        .goog-te-banner-frame, 
+        .goog-te-balloon-frame, 
+        .skiptranslate { 
+            display: none !important; 
+        }
         body { top: 0px !important; }
-        .skiptranslate { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen font-sans">
@@ -24,11 +26,15 @@
             <a href="/" class="text-xl font-extrabold tracking-tight text-indigo-600 flex items-center gap-2">
                 ⚡ SuperFastTool
             </a>
-            <div class="flex items-center gap-4">
-                <button id="customLangToggle" class="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 shadow-sm">
-                    🌐 Auto-Translate
+            
+            <div class="flex items-center gap-3 bg-gray-100 px-3 py-1.5 rounded-2xl border border-gray-200 shadow-inner">
+                <span id="labelEN" class="text-xs font-bold text-indigo-600 transition-colors">English</span>
+                
+                <button id="langToggleBtn" class="w-10 h-5 bg-gray-300 rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-none relative">
+                    <div id="toggleHandle" class="w-4 h-4 bg-white rounded-full shadow duration-200 ease-in-out transform pointer-events-none"></div>
                 </button>
-                <span class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full font-medium">v1.0.0</span>
+                
+                <span id="labelAuto" class="text-xs font-medium text-gray-400 transition-colors">Auto-Translate</span>
             </div>
         </div>
     </header>
@@ -62,71 +68,4 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 mt-24 py-12 text-center text-sm text-gray-400">
-        <div class="max-w-6xl mx-auto px-4">
-            <p>© 2026 SuperFastTool. All rights reserved.</p>
-            <p class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within the user's browser.</p>
-        </div>
-    </footer>
-
-    <script type="text/javascript">
-        // 구글 번역 초기화
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en', 
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-
-        // 유저의 브라우저 국가 코드 감지 (ko, ja, es, fr 등)
-        function getBrowserLanguage() {
-            const lang = navigator.language || navigator.userLanguage;
-            return lang.split('-')[0];
-        }
-
-        let isTranslated = false;
-        const toggleBtn = document.getElementById('customLangToggle');
-
-        // 토글 버튼 클릭 이벤트
-        toggleBtn.addEventListener('click', () => {
-            // 구글 번역기가 생성한 진짜 셀렉트 박스 찾아오기
-            const googleSelect = document.querySelector('.goog-te-combo');
-            
-            if (!googleSelect) {
-                alert("Translation engine is initializing. Please try again in a second!");
-                return;
-            }
-
-            if (!isTranslated) {
-                // [ON] 자동 번역 활성화 단계
-                const userLang = getBrowserLanguage();
-                
-                if (userLang === 'en') {
-                    alert("Your browser language is already set to English!");
-                    return;
-                }
-
-                googleSelect.value = userLang; // 유저 국가 언어로 값 변경
-                googleSelect.dispatchEvent(new Event('change')); // 변경 이벤트 강제 트리거 (실시간 번역 반영)
-                
-                toggleBtn.innerHTML = "🇺🇸 Show Original (EN)";
-                toggleBtn.classList.remove('bg-gray-900', 'hover:bg-gray-800');
-                toggleBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700'); // 활성화 시 색상 변형
-                isTranslated = true;
-            } else {
-                // [OFF] 기본 영어 원본 복구 단계
-                googleSelect.value = ''; // 구글 번역에서 빈값은 오리지널 언어(영어)를 뜻함
-                googleSelect.dispatchEvent(new Event('change'));
-                
-                toggleBtn.innerHTML = "🌐 Auto-Translate";
-                toggleBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                toggleBtn.classList.add('bg-gray-900', 'hover:bg-gray-800');
-                isTranslated = false;
-            }
-        });
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-</body>
-</html>
+    <footer class="bg-white border-t border-gray-200 mt-24
