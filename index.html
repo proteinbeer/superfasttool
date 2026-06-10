@@ -62,7 +62,7 @@
     <footer class="bg-white border-t border-gray-200 mt-24 py-12 text-center text-sm text-gray-400">
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 SuperFastTool. All rights reserved.</p>
-            <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within the user's browser.</p>
+            <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
         </div>
     </footer>
 
@@ -92,13 +92,10 @@
         const targetIds = ['heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc'];
         const originalTexts = {};
         
-        // 디폴트가 ON(트루) 상태로 초기화됩니다.
         let isTranslated = true;
         let isLoopBlocking = false;
 
-        // [핵심] 페이지 로드 직후 원본 백업 및 자동 번역 실행
         window.addEventListener('DOMContentLoaded', async () => {
-            // 1. 순수 영문 원본 데이터 먼저 메모리에 확보
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) originalTexts[id] = el.innerText;
@@ -106,7 +103,6 @@
 
             const userLang = getBrowserLanguage();
 
-            // 2. 만약 영어 사용자가 아니라면 즉시 백그라운드 번역 진행
             if (userLang !== 'en') {
                 toggleBtn.classList.add('opacity-50');
                 
@@ -128,20 +124,17 @@
             }
         });
 
-        // 토글 버튼 제어 인터랙션 (경고창 완전 제거)
         toggleBtn.addEventListener('click', async () => {
             if (isLoopBlocking) return;
             const userLang = getBrowserLanguage();
             isLoopBlocking = true;
 
             if (isTranslated) {
-                // [ON ➡️ OFF] 번역 끄기: 무조건 처음 영어 원본으로 원상 복구
                 targetIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && originalTexts[id]) el.innerText = originalTexts[id];
                 });
 
-                // 스위치 오프 비활성화 비주얼 처리
                 toggleBtn.classList.remove('bg-indigo-600');
                 toggleBtn.classList.add('bg-gray-300');
                 toggleHandle.classList.remove('translate-x-5');
@@ -150,7 +143,6 @@
 
                 isTranslated = false;
             } else {
-                // [OFF ➡️ ON] 번역 켜기: 영어 사용자가 아닐 때만 실제 텍스트 치환 작동
                 toggleBtn.classList.add('opacity-50');
 
                 if (userLang !== 'en') {
@@ -168,9 +160,7 @@
                         if (result) document.getElementById(result.id).innerText = result.text;
                     });
                 } 
-                // 영어 사용자라면 텍스트 변화 없이 스위치만 켜짐 (경고창 없음)
 
-                // 스위치 온 활성화 비주얼 처리
                 toggleBtn.classList.remove('bg-gray-300', 'opacity-50');
                 toggleBtn.classList.add('bg-indigo-600');
                 toggleHandle.classList.add('translate-x-5');
