@@ -13,10 +13,10 @@
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
         
-        /* ⚡ 카드가 자연스럽게 늘어나고 줄어드는 플루이드 모션 CSS */
-        .expand-transition { transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease; }
+        /* ⚡ 퍼센트(%)나 transform을 배제하고 순수 px 단위로 위치/크기를 매끄럽게 변환하는 클래스 */
+        .expand-transition { transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease; }
 
-        /* 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
+        /* 무한히 대각선으로 자동 스크롤링되는 격자 배경 */
         .bg-tech-grid {
             background-color: #f8fafc;
             background-image: 
@@ -35,14 +35,9 @@
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
         }
-
-        /* 암전 백드롭 애니메이션 제어 */
-        .backdrop-fade { transition: opacity 0.4s ease; }
     </style>
 </head>
 <body class="bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
-
-    <div id="modalBackdrop" class="backdrop-fade fixed inset-0 bg-zinc-950/20 backdrop-blur-xs opacity-0 pointer-events-none z-40"></div>
 
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -150,7 +145,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.3</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.4</p>
         </div>
     </footer>
 
@@ -181,7 +176,6 @@
         const cardContent = document.getElementById('cardContent');
         const calculatorContent = document.getElementById('calculatorContent');
         const closeExpandedBtn = document.getElementById('closeExpandedBtn');
-        const modalBackdrop = document.getElementById('modalBackdrop');
         
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc',
@@ -194,19 +188,19 @@
         let isLoopBlocking = false;
         let isExpanded = false;
 
-        // [핵심 로직] 크기가 물 흐르듯 변하는 정밀 플루이드 확장 계산 엔진
+        // [핵심 로직] 버그 없는 순수 픽셀(px) 매칭 FLIP 확장 엔진
         expandableCard.addEventListener('click', () => {
             if (isExpanded) return;
             isExpanded = true;
             
-            // 1. 클릭 전 카드의 오리지널 좌표 확보
+            // 1. 클릭 전 오리지널 크기 및 위치 좌표 스캔
             const rect = expandableCard.getBoundingClientRect();
             
             cardPlaceholder.style.width = rect.width + 'px';
             cardPlaceholder.style.height = rect.height + 'px';
             cardPlaceholder.classList.remove('hidden');
 
-            // 2. 확장 시작을 위해 오리지널 좌표 고정
+            // 2. 현재 상태 그대로 화면에 fixed 박제 (글리치 튀는 현상 방지)
             expandableCard.style.position = 'fixed';
             expandableCard.style.top = rect.top + 'px';
             expandableCard.style.left = rect.left + 'px';
@@ -214,34 +208,35 @@
             expandableCard.style.height = rect.height + 'px';
             expandableCard.style.margin = '0';
             expandableCard.style.maxWidth = 'none';
+            expandableCard.style.transform = 'none';
 
             cardContent.classList.add('hidden');
             calculatorContent.classList.remove('hidden');
 
-            // 3. 내부 요소에 딱 맞는 높이를 자바스크립트로 강제 선행 스캔
-            expandableCard.style.width = 'calc(100% - 2rem)';
-            expandableCard.style.maxWidth = '672px';
+            // 3. 멤버의 지시대로 "전체 화면 가로 크기의 1/3" 계산
+            const targetWidth = window.innerWidth / 3;
+            
+            // 4. 자바스크립트가 요소들에 딱 맞는 높이를 보이지 않게 스캔
+            expandableCard.style.width = targetWidth + 'px';
             expandableCard.style.height = 'auto';
+            const targetHeight = expandableCard.offsetHeight; 
 
-            const targetWidth = expandableCard.offsetWidth;
-            const targetHeight = expandableCard.offsetHeight; // 내부 요소 높이를 완벽하게 읽어옴
-
-            // 4. 스캔을 끝내고 눈에 보이기 전에 0.001초 만에 다시 원본 크기로 복구
+            // 5. 스캔이 끝나면 유저 눈에 보이기 전에 원래 크기로 돌려놓음
             expandableCard.style.width = rect.width + 'px';
             expandableCard.style.height = rect.height + 'px';
-            expandableCard.style.maxWidth = 'none';
 
-            // 강제 리플로우 (브라우저에게 시작 크기를 각인시킴)
+            // 강제 리플로우 (브라우저에게 여기서부터 애니메이션을 시작하라고 못 박음)
             expandableCard.offsetHeight; 
 
-            modalBackdrop.classList.remove('pointer-events-none', 'opacity-0');
-            modalBackdrop.classList.add('opacity-100');
             expandableCard.classList.add('shadow-2xl', 'z-50', 'border-zinc-400');
 
-            // 5. 정해진 정확한 높이(targetHeight)를 향해 부드럽게 무빙 기동
-            expandableCard.style.top = '50%';
-            expandableCard.style.left = '50%';
-            expandableCard.style.transform = 'translate(-50%, -50%)';
+            // 6. 정확한 타겟 픽셀 위치를 수학적으로 계산하여 정중앙 배치 (translate에 의존하지 않음)
+            const targetLeft = (window.innerWidth - targetWidth) / 2;
+            const targetTop = (window.innerHeight - targetHeight) / 2;
+
+            // 7. 계산된 픽셀값으로 물 흐르듯 변환 트리거
+            expandableCard.style.top = targetTop + 'px';
+            expandableCard.style.left = targetLeft + 'px';
             expandableCard.style.width = targetWidth + 'px';
             expandableCard.style.height = targetHeight + 'px';
 
@@ -259,10 +254,14 @@
 
             const currentWidth = expandableCard.offsetWidth;
             const currentHeight = expandableCard.offsetHeight;
+            const currentLeft = expandableCard.getBoundingClientRect().left;
+            const currentTop = expandableCard.getBoundingClientRect().top;
 
-            // 역행 스캔: 축소 애니메이션이 깨지지 않도록 현재 크기를 고정시킴
+            // 역행 스캔: 축소 애니메이션을 위해 현재 크기를 픽셀로 고정
             expandableCard.style.width = currentWidth + 'px';
             expandableCard.style.height = currentHeight + 'px';
+            expandableCard.style.left = currentLeft + 'px';
+            expandableCard.style.top = currentTop + 'px';
 
             calculatorContent.classList.add('hidden');
             cardContent.classList.remove('hidden');
@@ -273,15 +272,11 @@
 
             expandableCard.offsetHeight; // 리플로우
 
-            modalBackdrop.classList.remove('opacity-100');
-            modalBackdrop.classList.add('pointer-events-none', 'opacity-0');
-
-            // 자석처럼 원래 위치와 크기로 부드럽게 돌아감
+            // 자석처럼 원래 그리드 픽셀 위치와 크기로 부드럽게 돌아감
             expandableCard.style.top = pRect.top + 'px';
             expandableCard.style.left = pRect.left + 'px';
             expandableCard.style.width = pRect.width + 'px';
             expandableCard.style.height = pRect.height + 'px';
-            expandableCard.style.transform = 'none';
             expandableCard.classList.remove('shadow-2xl', 'border-zinc-400');
             
             setTimeout(() => {
