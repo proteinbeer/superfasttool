@@ -6,12 +6,15 @@
     <title>Super Fast Tool - Ultra-Fast Web Utilities</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        .tool-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         
-        /* 토글 스위치 부드러운 애니메이션 */
+        /* 토글 스위치 및 카드 인터랙션 애니메이션 */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
         .toggle-dot { transition: transform 0.2s ease; }
+        
+        /* ⚡ 카드가 그 자리에서 확장되는 플루이드 모션 CSS */
+        .expand-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* ⚡ 무한히 대각선으로 자동 스크롤링되는 미니멀 테크 격자 배경 */
         .bg-tech-grid {
@@ -32,14 +35,9 @@
         .bg-radial-glow {
             background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 65%);
         }
-
-        /* 암전 백드롭 애니메이션 제어 */
-        .backdrop-fade { transition: opacity 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
-
-    <div id="modalBackdrop" class="backdrop-fade fixed inset-0 bg-zinc-950/20 backdrop-blur-xs opacity-0 pointer-events-none z-40"></div>
 
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -76,27 +74,25 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
             
-            <div id="expandableCard" class="tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs relative overflow-hidden transition-all duration-300">
+            <div id="expandableCard" class="expand-transition relative z-10 block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 
-                <div id="cardContent" class="opacity-100 transition-opacity duration-200 h-full flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
-                        <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
-                        <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
-                    </div>
+                <div id="cardContent" class="opacity-100 transition-opacity duration-300">
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">📈</div>
+                    <h3 id="tool1Title" class="text-lg font-bold text-zinc-900 mb-1">Stock/Crypto Avg Cost Calculator</h3>
+                    <p id="tool1Desc" class="text-sm text-zinc-500">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
 
-                <div id="calculatorContent" class="hidden opacity-0 p-6 flex flex-col h-full overflow-y-auto space-y-5">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3 sticky top-0 bg-white z-20">
+                <div id="calculatorContent" class="absolute inset-0 p-6 opacity-0 pointer-events-none transition-opacity duration-300 space-y-6 overflow-y-auto">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3 sticky top-0 bg-white z-10">
                         <div class="flex items-center gap-2">
                             <span class="text-xl">📈</span>
                             <h3 id="calcTitle" class="text-lg font-bold text-zinc-900">Stock/Crypto Avg Cost Calculator</h3>
                         </div>
-                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-lg cursor-pointer p-1.5 focus:outline-none">✕</button>
+                        <button id="closeExpandedBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none">✕</button>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-4 mb-6">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label id="lblCurPrice" class="block text-xs font-medium text-zinc-500 mb-1">Current Avg Price</label>
                                 <input type="number" id="curPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
@@ -106,7 +102,7 @@
                                 <input type="number" id="curShares" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label id="lblBuyPrice" class="block text-xs font-medium text-zinc-500 mb-1">New Purchase Price</label>
                                 <input type="number" id="buyPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
@@ -135,7 +131,7 @@
                 </div>
             </div>
 
-            <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full min-h-[160px]">
+            <div class="block p-6 bg-gray-100/60 rounded-2xl border border-dashed border-gray-200 opacity-60 backdrop-blur-xs w-full h-full min-h-[170px]">
                 <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
                 <h3 id="tool2Title" class="text-lg font-bold text-zinc-400 mb-1">New Tools Coming Soon</h3>
                 <p class="text-sm text-gray-400">Useful utility tools will be added here shortly for all visitors.</p>
@@ -147,7 +143,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.5.0</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.4.1</p>
         </div>
     </footer>
 
@@ -170,7 +166,6 @@
             }
         }
 
-        // DOM 인스턴스 홀더
         const toggleBtn = document.getElementById('langToggleBtn');
         const toggleHandle = document.getElementById('toggleHandle');
         const translateIcon = document.getElementById('translateIcon');
@@ -178,11 +173,10 @@
         const cardContent = document.getElementById('cardContent');
         const calculatorContent = document.getElementById('calculatorContent');
         const closeExpandedBtn = document.getElementById('closeExpandedBtn');
-        const modalBackdrop = document.getElementById('modalBackdrop');
         
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc', 'footerDesc',
-            'calcTitle', 'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount'
+            'calcTitle', 'closeExpandedBtn', 'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount'
         ];
         
         const originalTexts = {};
@@ -191,52 +185,48 @@
         let isLoopBlocking = false;
         let isExpanded = false;
 
-        // [인터랙션 1] 🚀 카드 클릭 시 중앙 집중형 3배 크기 대형 창 확장 제어 로직
-        expandableCard.addEventListener('click', () => {
+        // [인터랙션 1] 카드 자체의 클래스를 조작하여 중앙 집중형 3배 크기로 확대/축소
+        expandableCard.addEventListener('click', (e) => {
             if (isExpanded) return;
             isExpanded = true;
             
-            cardContent.classList.add('hidden');
+            cardContent.classList.remove('opacity-100');
+            cardContent.classList.add('opacity-0');
             
-            // 암전 오버레이 가동
-            modalBackdrop.classList.remove('pointer-events-none', 'opacity-0');
-            modalBackdrop.classList.add('opacity-100');
-
-            // ⚡ 버튼 x3배 규격의 정중앙 고성능 컨테이너 폼 레이아웃 클래스 동적 변환 주입
-            expandableCard.className = "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-2xl h-[520px] bg-white rounded-3xl p-6 shadow-2xl border border-gray-200 z-50 transition-all duration-300";
+            // ⚡ 새로 창을 띄우지 않고, 원본 엘리먼트의 클래스를 조작해 정중앙 3배급 크기 창으로 직격 변환
+            expandableCard.className = "expand-transition fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-2xl h-[560px] bg-white rounded-3xl p-6 shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden";
             
-            calculatorContent.classList.remove('hidden');
-            setTimeout(() => { calculatorContent.classList.add('opacity-100'); }, 50);
+            calculatorContent.classList.remove('opacity-0', 'pointer-events-none');
+            calculatorContent.classList.add('opacity-100', 'z-40');
         });
 
-        // 🚀 카드 축소(Collapse) 프로세스 복구
         function collapseCard() {
             if (!isExpanded) return;
             isExpanded = false;
             
-            calculatorContent.classList.remove('opacity-100');
-            calculatorContent.classList.add('hidden');
+            calculatorContent.classList.remove('opacity-100', 'z-40');
+            calculatorContent.classList.add('opacity-0', 'pointer-events-none');
             
-            // 암전 오버레이 제거
-            modalBackdrop.classList.remove('opacity-100');
-            modalBackdrop.classList.add('pointer-events-none', 'opacity-0');
-
-            // 원래 카드 컴포넌트 크기 및 격자 위치로의 복원 변환 클래스 주입
-            expandableCard.className = "tool-card block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs relative overflow-hidden transition-all duration-300";
+            // 오리지널 카드 격자 클래스로 완벽 롤백
+            expandableCard.className = "expand-transition relative z-10 block p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0";
             
-            cardContent.classList.remove('hidden');
+            cardContent.classList.remove('opacity-0');
+            cardContent.classList.add('opacity-100');
         }
 
-        // ⚡ [버그 진압] 닫기 버튼 클릭 시 이벤트 전파를 차단하여 카드 재오픈 오작동 원천 차단
+        // ⚡ [버그 진압] 닫기 버튼 클릭 시 버블링을 방지하여 카드가 다시 확장되는 현상 전면 차단
         closeExpandedBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
             collapseCard();
         });
         
-        // 창 바깥쪽 배경(암전 백드롭) 클릭 시 축소 연동 완벽 처리
-        modalBackdrop.addEventListener('click', collapseCard);
+        document.body.addEventListener('click', (e) => {
+            if (isExpanded && !expandableCard.contains(e.target)) {
+                collapseCard();
+            }
+        });
 
-        // [인터랙션 2] 계산기 실시간 연산 로직 (정상 가동)
+        // [인터랙션 2] 계산기 실시간 수식 연산 제어 로직
         const inputs = ['curPrice', 'curShares', 'buyPrice', 'buyShares'].map(id => document.getElementById(id));
         inputs.forEach(input => input.addEventListener('input', () => {
             const cp = parseFloat(document.getElementById('curPrice').value) || 0;
@@ -259,7 +249,7 @@
             }
         }));
 
-        // [인터랙션 3] 백그라운드 우회 다국어 번역 시스템
+        // [인터랙션 3] 백그라운드 코어 다국어 번역 시스템
         window.addEventListener('DOMContentLoaded', async () => {
             targetIds.forEach(id => {
                 const el = document.getElementById(id);
