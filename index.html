@@ -60,6 +60,7 @@
         /* Smooth px-based position and size transitions without percentage or transform interpolation */
         .expand-transition { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease; }
         .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
+        .is-measuring .card-description { transition: none; }
         .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
         .is-expanded .card-description { opacity: 0; max-height: 0; margin: 0; transform: translateY(-4px); }
         .is-expanded .expand-close { opacity: 1; pointer-events: auto; transform: translateY(0); }
@@ -159,9 +160,9 @@
         }
 
         @media (max-width: 640px) {
-            .calculator-content { max-height: calc(100dvh - 12rem); overflow-y: auto; }
-            .info-panel-content { max-height: calc(100dvh - 6rem); overflow-y: hidden; }
-            .info-panel-scroll { max-height: calc(100dvh - 16rem); }
+            .calculator-content { overflow-y: auto; }
+            .info-panel-content { max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
+            .info-panel-scroll { overflow-y: auto; }
         }
     </style>
 </head>
@@ -678,7 +679,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.47</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.51</p>
         </div>
     </footer>
 
@@ -818,8 +819,8 @@
 
         function getPanelBounds(preferredHeight) {
             const isMobile = window.innerWidth <= 640;
-            const topPadding = isMobile ? 72 : 16;
-            const bottomPadding = 16;
+            const topPadding = isMobile ? 96 : 28;
+            const bottomPadding = isMobile ? 28 : 28;
             const availableHeight = window.innerHeight - topPadding - bottomPadding;
             const height = Math.min(preferredHeight, availableHeight);
 
@@ -827,6 +828,28 @@
                 height,
                 top: Math.max(topPadding, topPadding + (availableHeight - height) / 2)
             };
+        }
+
+        function sizeCalculatorContent(card, calculatorContent, panelHeight) {
+            if (window.innerWidth > 640) {
+                calculatorContent.style.maxHeight = '';
+                return;
+            }
+
+            const cardHeader = card.querySelector('.card-content');
+            const headerHeight = cardHeader.offsetHeight;
+            const bottomPadding = 24;
+            calculatorContent.style.maxHeight = Math.max(120, panelHeight - headerHeight - bottomPadding) + 'px';
+        }
+
+        function sizeInfoPanelContent(panelHeight) {
+            const header = infoPanel.querySelector('.info-panel-content > div:first-child');
+            const activeSection = infoPanel.querySelector('.info-panel-section:not(.hidden)');
+            if (!activeSection) return;
+
+            const headerHeight = header.offsetHeight;
+            const paddingBuffer = 64;
+            activeSection.style.maxHeight = Math.max(140, panelHeight - headerHeight - paddingBuffer) + 'px';
         }
 
         function flyStarToNewPosition(card, updatePosition) {
@@ -942,6 +965,7 @@
                 infoPanel.style.width = targetWidth + 'px';
                 infoPanel.style.height = targetHeight + 'px';
                 infoPanel.style.opacity = '1';
+                sizeInfoPanelContent(targetHeight);
                 infoPanel.classList.add('is-open');
             });
         }
@@ -957,6 +981,7 @@
                 infoPanel.classList.add('hidden');
                 infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
+                infoPanelSections.forEach(section => section.style.maxHeight = '');
                 if (sourceButton) sourceButton.style.visibility = '';
                 return;
             }
@@ -974,6 +999,7 @@
                 infoPanel.classList.add('hidden');
                 infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
+                infoPanelSections.forEach(section => section.style.maxHeight = '');
                 if (sourceButton) sourceButton.style.visibility = '';
             }, 180);
         }
@@ -1055,6 +1081,7 @@
                 card.classList.add('is-expanded');
             });
             calculatorContent.classList.remove('hidden');
+            calculatorContent.style.maxHeight = '';
             calculatorContent.classList.remove('opacity-100', 'translate-y-0');
             calculatorContent.classList.add('opacity-0', 'translate-y-2');
 
@@ -1063,10 +1090,13 @@
 
             // 4. Disable transitions while measuring the target height to avoid visible jumps.
             card.style.transition = 'none';
+            card.classList.add('is-measuring');
             card.style.width = targetWidth + 'px';
             card.style.height = 'auto';
+            card.offsetHeight;
             const panelBounds = getPanelBounds(card.offsetHeight);
             const targetHeight = panelBounds.height;
+            card.classList.remove('is-measuring');
 
             // 5. Restore the clicked button size as the real animation starting point.
             card.style.width = rect.width + 'px';
@@ -1086,6 +1116,7 @@
                 card.style.left = targetLeft + 'px';
                 card.style.width = targetWidth + 'px';
                 card.style.height = targetHeight + 'px';
+                sizeCalculatorContent(card, calculatorContent, targetHeight);
             });
 
             setTimeout(() => {
@@ -1133,6 +1164,7 @@
                 card.removeAttribute('style');
                 card.classList.remove('active-panel');
                 card.classList.remove('star-docked');
+                calculatorContent.style.maxHeight = '';
                 calculatorContent.classList.add('hidden');
                 placeholder.classList.add('hidden');
                 expandedCard = null;
