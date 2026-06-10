@@ -62,7 +62,7 @@
         .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
         .is-measuring .card-description { transition: none; }
         .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
-        .is-expanded .card-description { opacity: 0; max-height: 0; margin: 0; transform: translateY(-4px); }
+        .is-expanded .card-description { display: none; }
         .is-expanded .expand-close { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .star-toggle { opacity: 0; pointer-events: none; color: #a1a1aa; transform: translateY(-4px); transition: opacity 0.14s ease, color 0.14s ease, transform 0.18s ease; }
         .expandable-card:hover .star-toggle, .star-toggle.is-starred, .is-expanded .star-toggle { opacity: 1; pointer-events: auto; transform: translateY(0); }
@@ -220,7 +220,7 @@
                     <p id="tool1Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -271,7 +271,7 @@
                     <p id="tool2Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate trade profit, loss, return rate, and final value from buy and sell prices.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -322,7 +322,7 @@
                     <p id="tool3Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find percentages, percentage change, and how much one value is of another.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -369,7 +369,7 @@
                     <p id="tool4Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate future value from principal, monthly contributions, time, and annual return.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -420,7 +420,7 @@
                     <p id="tool5Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate monthly payments, total repayment, and total interest for a loan.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -465,7 +465,7 @@
                     <p id="tool6Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert common length, weight, and temperature units instantly.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div>
                             <label id="lblUnitType" class="block text-xs font-medium text-zinc-500 mb-1">Conversion Type</label>
@@ -509,7 +509,7 @@
                     <h3 id="tool7Title" class="text-lg font-bold text-zinc-900 mb-1">Discount Calculator</h3>
                     <p id="tool7Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate final price and savings from an original price and discount rate.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblDiscountPrice" class="block text-xs font-medium text-zinc-500 mb-1">Original Price</label><input type="number" id="discountPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblDiscountRate" class="block text-xs font-medium text-zinc-500 mb-1">Discount (%)</label><input type="number" id="discountRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -530,7 +530,7 @@
                     <h3 id="tool8Title" class="text-lg font-bold text-zinc-900 mb-1">Sales Tax Calculator</h3>
                     <p id="tool8Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Add sales tax to a price and see the tax amount and final total.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblTaxPrice" class="block text-xs font-medium text-zinc-500 mb-1">Price Before Tax</label><input type="number" id="taxPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblTaxRate" class="block text-xs font-medium text-zinc-500 mb-1">Tax Rate (%)</label><input type="number" id="taxRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -551,7 +551,7 @@
                     <h3 id="tool9Title" class="text-lg font-bold text-zinc-900 mb-1">Tip Calculator</h3>
                     <p id="tool9Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Split a bill with tip across any number of people.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div><label id="lblBillAmount" class="block text-xs font-medium text-zinc-500 mb-1">Bill Amount</label><input type="number" id="billAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblTipRate" class="block text-xs font-medium text-zinc-500 mb-1">Tip (%)</label><input type="number" id="tipRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -574,7 +574,7 @@
                     <h3 id="tool10Title" class="text-lg font-bold text-zinc-900 mb-1">Date Difference Calculator</h3>
                     <p id="tool10Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find the number of days between two calendar dates.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblStartDate" class="block text-xs font-medium text-zinc-500 mb-1">Start Date</label><input type="date" id="startDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblEndDate" class="block text-xs font-medium text-zinc-500 mb-1">End Date</label><input type="date" id="endDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -595,7 +595,7 @@
                     <h3 id="tool11Title" class="text-lg font-bold text-zinc-900 mb-1">Time Duration Calculator</h3>
                     <p id="tool11Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate hours and minutes between two times, including overnight spans.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblStartTime" class="block text-xs font-medium text-zinc-500 mb-1">Start Time</label><input type="time" id="startTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblEndTime" class="block text-xs font-medium text-zinc-500 mb-1">End Time</label><input type="time" id="endTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -616,7 +616,7 @@
                     <h3 id="tool12Title" class="text-lg font-bold text-zinc-900 mb-1">BMI Calculator</h3>
                     <p id="tool12Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate body mass index from height and weight.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblBmiHeight" class="block text-xs font-medium text-zinc-500 mb-1">Height (cm)</label><input type="number" id="bmiHeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblBmiWeight" class="block text-xs font-medium text-zinc-500 mb-1">Weight (kg)</label><input type="number" id="bmiWeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -637,7 +637,7 @@
                     <h3 id="tool13Title" class="text-lg font-bold text-zinc-900 mb-1">Fuel Cost Calculator</h3>
                     <p id="tool13Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate trip fuel usage and cost from distance, efficiency, and fuel price.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-6 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div><label id="lblFuelDistance" class="block text-xs font-medium text-zinc-500 mb-1">Distance</label><input type="number" id="fuelDistance" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblFuelEfficiency" class="block text-xs font-medium text-zinc-500 mb-1">Efficiency</label><input type="number" id="fuelEfficiency" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -679,7 +679,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.51</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.52</p>
         </div>
     </footer>
 
@@ -1267,3 +1267,4 @@
     </script>
 </body>
 </html>
+
