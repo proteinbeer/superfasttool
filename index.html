@@ -62,6 +62,41 @@
         .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
         .is-measuring .card-description { transition: none; }
         .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
+        .close-expanded-btn, #closeInfoPanelBtn {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f4f5;
+            border: 1px solid #e4e4e7;
+            color: #71717a;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.16s ease, color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+            font-size: 0;
+            line-height: 1;
+            padding: 0;
+        }
+        .close-expanded-btn::before,
+        .close-expanded-btn::after,
+        #closeInfoPanelBtn::before,
+        #closeInfoPanelBtn::after {
+            content: "";
+            position: absolute;
+            width: 0.75rem;
+            height: 2px;
+            border-radius: 999px;
+            background: currentColor;
+        }
+        .close-expanded-btn::before, #closeInfoPanelBtn::before { transform: rotate(45deg); }
+        .close-expanded-btn::after, #closeInfoPanelBtn::after { transform: rotate(-45deg); }
+        .close-expanded-btn:hover, #closeInfoPanelBtn:hover {
+            background: #18181b;
+            color: #fff;
+            transform: scale(1.04);
+            box-shadow: 0 3px 8px rgba(15, 23, 42, 0.18);
+        }
         .is-expanded .card-description { display: none; }
         .is-expanded .expand-close { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .star-toggle { opacity: 0; pointer-events: none; color: #a1a1aa; transform: translateY(-4px); transition: opacity 0.14s ease, color 0.14s ease, transform 0.18s ease; }
@@ -134,8 +169,10 @@
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         .info-panel-scroll::-webkit-scrollbar { width: 8px; }
         .info-panel-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 999px; }
+        #policyPanel > :last-child { margin-bottom: 1.5rem; }
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
+        .calculator-content > :last-child { margin-bottom: 0; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.is-visible { opacity: 1; transform: translateY(0); }
 
@@ -160,15 +197,17 @@
         }
 
         @media (max-width: 640px) {
-            .calculator-content { overflow-y: auto; }
+            .calculator-content { overflow-y: auto; padding-bottom: 0 !important; }
+            .calculator-content > :last-child { margin-bottom: 0; }
+            #avgCostCard .calculator-content { padding-bottom: 27px !important; }
             .info-panel-content { max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
-            .info-panel-scroll { overflow-y: auto; }
+            .info-panel-scroll { overflow-y: scroll; scrollbar-gutter: stable; padding-bottom: 0; }
         }
     </style>
 </head>
 <body class="bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
 
-    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 relative z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2">
                 <span class="logo-bolt">&#9889;</span> <span class="logo-text" aria-label="Super Fast Tool"><span class="logo-letter">S</span><span class="logo-letter">u</span><span class="logo-letter">p</span><span class="logo-letter">e</span><span class="logo-letter">r</span><span class="logo-letter">&nbsp;</span><span class="logo-letter">F</span><span class="logo-letter">a</span><span class="logo-letter">s</span><span class="logo-letter">t</span><span class="logo-letter">&nbsp;</span><span class="logo-letter">T</span><span class="logo-letter">o</span><span class="logo-letter">o</span><span class="logo-letter">l</span></span>
@@ -220,7 +259,7 @@
                     <p id="tool1Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Simulate your final average price and total investment in real-time when buying more shares.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -271,7 +310,7 @@
                     <p id="tool2Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate trade profit, loss, return rate, and final value from buy and sell prices.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -322,7 +361,7 @@
                     <p id="tool3Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find percentages, percentage change, and how much one value is of another.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -369,7 +408,7 @@
                     <p id="tool4Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate future value from principal, monthly contributions, time, and annual return.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -420,7 +459,7 @@
                     <p id="tool5Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate monthly payments, total repayment, and total interest for a loan.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
@@ -465,7 +504,7 @@
                     <p id="tool6Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert common length, weight, and temperature units instantly.</p>
                 </div>
 
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="space-y-4 mb-2">
                         <div>
                             <label id="lblUnitType" class="block text-xs font-medium text-zinc-500 mb-1">Conversion Type</label>
@@ -509,7 +548,7 @@
                     <h3 id="tool7Title" class="text-lg font-bold text-zinc-900 mb-1">Discount Calculator</h3>
                     <p id="tool7Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate final price and savings from an original price and discount rate.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblDiscountPrice" class="block text-xs font-medium text-zinc-500 mb-1">Original Price</label><input type="number" id="discountPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblDiscountRate" class="block text-xs font-medium text-zinc-500 mb-1">Discount (%)</label><input type="number" id="discountRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -530,7 +569,7 @@
                     <h3 id="tool8Title" class="text-lg font-bold text-zinc-900 mb-1">Sales Tax Calculator</h3>
                     <p id="tool8Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Add sales tax to a price and see the tax amount and final total.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblTaxPrice" class="block text-xs font-medium text-zinc-500 mb-1">Price Before Tax</label><input type="number" id="taxPrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblTaxRate" class="block text-xs font-medium text-zinc-500 mb-1">Tax Rate (%)</label><input type="number" id="taxRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -551,7 +590,7 @@
                     <h3 id="tool9Title" class="text-lg font-bold text-zinc-900 mb-1">Tip Calculator</h3>
                     <p id="tool9Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Split a bill with tip across any number of people.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div><label id="lblBillAmount" class="block text-xs font-medium text-zinc-500 mb-1">Bill Amount</label><input type="number" id="billAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblTipRate" class="block text-xs font-medium text-zinc-500 mb-1">Tip (%)</label><input type="number" id="tipRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -574,7 +613,7 @@
                     <h3 id="tool10Title" class="text-lg font-bold text-zinc-900 mb-1">Date Difference Calculator</h3>
                     <p id="tool10Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Find the number of days between two calendar dates.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblStartDate" class="block text-xs font-medium text-zinc-500 mb-1">Start Date</label><input type="date" id="startDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblEndDate" class="block text-xs font-medium text-zinc-500 mb-1">End Date</label><input type="date" id="endDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -595,7 +634,7 @@
                     <h3 id="tool11Title" class="text-lg font-bold text-zinc-900 mb-1">Time Duration Calculator</h3>
                     <p id="tool11Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate hours and minutes between two times, including overnight spans.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblStartTime" class="block text-xs font-medium text-zinc-500 mb-1">Start Time</label><input type="time" id="startTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblEndTime" class="block text-xs font-medium text-zinc-500 mb-1">End Time</label><input type="time" id="endTime" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -616,7 +655,7 @@
                     <h3 id="tool12Title" class="text-lg font-bold text-zinc-900 mb-1">BMI Calculator</h3>
                     <p id="tool12Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate body mass index from height and weight.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label id="lblBmiHeight" class="block text-xs font-medium text-zinc-500 mb-1">Height (cm)</label><input type="number" id="bmiHeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblBmiWeight" class="block text-xs font-medium text-zinc-500 mb-1">Weight (kg)</label><input type="number" id="bmiWeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -637,7 +676,7 @@
                     <h3 id="tool13Title" class="text-lg font-bold text-zinc-900 mb-1">Fuel Cost Calculator</h3>
                     <p id="tool13Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate trip fuel usage and cost from distance, efficiency, and fuel price.</p>
                 </div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-4 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div><label id="lblFuelDistance" class="block text-xs font-medium text-zinc-500 mb-1">Distance</label><input type="number" id="fuelDistance" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                         <div><label id="lblFuelEfficiency" class="block text-xs font-medium text-zinc-500 mb-1">Efficiency</label><input type="number" id="fuelEfficiency" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
@@ -679,7 +718,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.52</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.86</p>
         </div>
     </footer>
 
@@ -819,10 +858,11 @@
 
         function getPanelBounds(preferredHeight) {
             const isMobile = window.innerWidth <= 640;
-            const topPadding = isMobile ? 96 : 28;
+            const topPadding = isMobile ? 48 : 28;
             const bottomPadding = isMobile ? 28 : 28;
             const availableHeight = window.innerHeight - topPadding - bottomPadding;
-            const height = Math.min(preferredHeight, availableHeight);
+            const maxHeight = isMobile ? availableHeight : preferredHeight;
+            const height = Math.min(preferredHeight, maxHeight);
 
             return {
                 height,
@@ -830,16 +870,50 @@
             };
         }
 
-        function sizeCalculatorContent(card, calculatorContent, panelHeight) {
+        function sizeCalculatorContent(card, calculatorContent, panelHeight, needsScroll = true) {
             if (window.innerWidth > 640) {
+                calculatorContent.style.maxHeight = '';
+                return;
+            }
+
+            const mobileBottomGap = 24;
+            if (!needsScroll) {
                 calculatorContent.style.maxHeight = '';
                 return;
             }
 
             const cardHeader = card.querySelector('.card-content');
             const headerHeight = cardHeader.offsetHeight;
-            const bottomPadding = 24;
-            calculatorContent.style.maxHeight = Math.max(120, panelHeight - headerHeight - bottomPadding) + 'px';
+            const cardStyles = getComputedStyle(card);
+            const cardBorder = parseFloat(cardStyles.borderTopWidth) + parseFloat(cardStyles.borderBottomWidth);
+            const availableContentHeight = Math.max(120, panelHeight - headerHeight - cardBorder - mobileBottomGap);
+            const naturalContentHeight = calculatorContent.scrollHeight;
+
+            calculatorContent.style.maxHeight = Math.min(naturalContentHeight, availableContentHeight) + 'px';
+        }
+
+        function measureExpandedCard(card, calculatorContent, targetWidth) {
+            calculatorContent.style.maxHeight = '';
+            card.style.width = targetWidth + 'px';
+            card.style.height = 'auto';
+            card.offsetHeight;
+
+            let naturalHeight = card.scrollHeight;
+            if (window.innerWidth <= 640) {
+                const mobileBottomGap = 24;
+                const cardHeader = card.querySelector('.card-content');
+                const cardStyles = getComputedStyle(card);
+                const cardBorder = parseFloat(cardStyles.borderTopWidth) + parseFloat(cardStyles.borderBottomWidth);
+                naturalHeight = cardHeader.offsetHeight + calculatorContent.scrollHeight + cardBorder + mobileBottomGap;
+            }
+            const panelBounds = getPanelBounds(naturalHeight);
+
+            return {
+                naturalHeight,
+                targetHeight: panelBounds.height,
+                targetTop: panelBounds.top,
+                needsScroll: naturalHeight > panelBounds.height
+            };
         }
 
         function sizeInfoPanelContent(panelHeight) {
@@ -848,7 +922,13 @@
             if (!activeSection) return;
 
             const headerHeight = header.offsetHeight;
-            const paddingBuffer = 64;
+            const mobilePanelBuffer = {
+                aboutPanel: 67,
+                policyPanel: 67,
+                contactPanel: 67
+            };
+            const desktopPanelBuffer = activeSection.id === 'policyPanel' ? 68 : 40;
+            const paddingBuffer = window.innerWidth <= 640 ? mobilePanelBuffer[activeSection.id] : desktopPanelBuffer;
             activeSection.style.maxHeight = Math.max(140, panelHeight - headerHeight - paddingBuffer) + 'px';
         }
 
@@ -939,7 +1019,10 @@
             activeInfoSourceButton = sourceButton;
             const rect = sourceButton.getBoundingClientRect();
             const targetWidth = Math.min(520, window.innerWidth - 32);
-            const panelBounds = getPanelBounds(panelId === 'contactPanel' ? 440 : 330);
+            const contactPreferredHeight = window.innerWidth > 640 ? 452 : 456;
+            const infoPreferredHeight = window.innerWidth > 640 ? 330 : 330;
+            const preferredHeight = panelId === 'contactPanel' ? contactPreferredHeight : infoPreferredHeight;
+            const panelBounds = getPanelBounds(preferredHeight);
             const targetHeight = panelBounds.height;
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = panelBounds.top;
@@ -1091,11 +1174,8 @@
             // 4. Disable transitions while measuring the target height to avoid visible jumps.
             card.style.transition = 'none';
             card.classList.add('is-measuring');
-            card.style.width = targetWidth + 'px';
-            card.style.height = 'auto';
-            card.offsetHeight;
-            const panelBounds = getPanelBounds(card.offsetHeight);
-            const targetHeight = panelBounds.height;
+            const measuredCard = measureExpandedCard(card, calculatorContent, targetWidth);
+            const targetHeight = measuredCard.targetHeight;
             card.classList.remove('is-measuring');
 
             // 5. Restore the clicked button size as the real animation starting point.
@@ -1108,7 +1188,7 @@
 
             // 6. Calculate the exact target position in pixels.
             const targetLeft = (window.innerWidth - targetWidth) / 2;
-            const targetTop = panelBounds.top;
+            const targetTop = measuredCard.targetTop;
 
             // 7. Apply the target values on the next frame for a smooth expansion.
             requestAnimationFrame(() => {
@@ -1116,7 +1196,7 @@
                 card.style.left = targetLeft + 'px';
                 card.style.width = targetWidth + 'px';
                 card.style.height = targetHeight + 'px';
-                sizeCalculatorContent(card, calculatorContent, targetHeight);
+                sizeCalculatorContent(card, calculatorContent, targetHeight, measuredCard.needsScroll);
             });
 
             setTimeout(() => {
@@ -1267,4 +1347,6 @@
     </script>
 </body>
 </html>
+
+
 
