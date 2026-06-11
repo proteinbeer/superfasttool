@@ -708,7 +708,7 @@
                     <span aria-hidden="true">&#9432;</span>
                     <span id="footerAbout">About</span>
                 </button>
-                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="policyPanel">
+                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="privacyPanel">
                     <span aria-hidden="true">&#128274;</span>
                     <span id="footerPolicy">Policy</span>
                 </button>
@@ -719,7 +719,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.93</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.94</p>
         </div>
     </footer>
 
@@ -739,7 +739,7 @@
                 <p>All calculator inputs are processed in your browser. The site does not send your calculation data to a server.</p>
             </div>
 
-            <div id="policyPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
+            <div id="privacyPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
                 <p><strong class="text-zinc-900">Privacy Policy</strong></p>
                 <p>Super Fast Tool does not require accounts and does not collect calculator input values.</p>
                 <p>Some external services may be loaded for site functionality, such as translation, styling, icons, or future advertising. These services may use their own cookies or request logs according to their policies.</p>
@@ -934,7 +934,7 @@
             const headerHeight = header.offsetHeight + parseFloat(headerStyles.marginBottom);
             const contentPadding = parseFloat(contentStyles.paddingTop) + parseFloat(contentStyles.paddingBottom);
             const mobileBottomGap = 2;
-            const desktopPanelBuffer = activeSection.id === 'policyPanel' ? 68 : 40;
+            const desktopPanelBuffer = activeSection.id === 'privacyPanel' ? 68 : 40;
             const availableHeight = window.innerWidth <= 640
                 ? panelHeight - headerHeight - contentPadding - mobileBottomGap
                 : panelHeight - header.offsetHeight - desktopPanelBuffer;
@@ -1011,7 +1011,7 @@
 
         const infoPanelData = {
             aboutPanel: { title: 'About', icon: '&#9432;' },
-            policyPanel: { title: 'Policy', icon: '&#128274;' },
+            privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
 
