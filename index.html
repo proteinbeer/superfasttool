@@ -169,7 +169,6 @@
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         .info-panel-scroll::-webkit-scrollbar { width: 8px; }
         .info-panel-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 999px; }
-        #policyPanel > :last-child { margin-bottom: 0; }
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
@@ -720,7 +719,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.90</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.92</p>
         </div>
     </footer>
 
@@ -1031,7 +1030,11 @@
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = panelBounds.top;
 
-            infoPanelSections.forEach(section => section.classList.toggle('hidden', section.id !== panelId));
+            infoPanelSections.forEach(section => {
+                const isActiveSection = section.id === panelId;
+                section.classList.toggle('hidden', !isActiveSection);
+                section.style.display = isActiveSection ? '' : 'none';
+            });
             infoPanelTitle.innerText = infoPanelData[panelId].title;
             infoPanelIcon.innerHTML = infoPanelData[panelId].icon;
 
@@ -1068,7 +1071,10 @@
                 infoPanel.classList.add('hidden');
                 infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
-                infoPanelSections.forEach(section => section.style.maxHeight = '');
+                infoPanelSections.forEach(section => {
+                    section.style.maxHeight = '';
+                    section.style.display = '';
+                });
                 if (sourceButton) sourceButton.style.visibility = '';
                 return;
             }
@@ -1086,7 +1092,10 @@
                 infoPanel.classList.add('hidden');
                 infoPanel.classList.remove('active-panel');
                 infoPanel.removeAttribute('style');
-                infoPanelSections.forEach(section => section.style.maxHeight = '');
+                infoPanelSections.forEach(section => {
+                    section.style.maxHeight = '';
+                    section.style.display = '';
+                });
                 if (sourceButton) sourceButton.style.visibility = '';
             }, 180);
         }
