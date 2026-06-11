@@ -719,7 +719,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.92</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.93</p>
         </div>
     </footer>
 
@@ -739,7 +739,7 @@
                 <p>All calculator inputs are processed in your browser. The site does not send your calculation data to a server.</p>
             </div>
 
-            <div id="policyPanel" class="info-panel-section info-panel-scroll hidden space-y-3 text-sm leading-6 text-zinc-600">
+            <div id="policyPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
                 <p><strong class="text-zinc-900">Privacy Policy</strong></p>
                 <p>Super Fast Tool does not require accounts and does not collect calculator input values.</p>
                 <p>Some external services may be loaded for site functionality, such as translation, styling, icons, or future advertising. These services may use their own cookies or request logs according to their policies.</p>
@@ -812,6 +812,12 @@
         const infoPanelSections = document.querySelectorAll('.info-panel-section');
         const contactForm = document.getElementById('contactPanel');
         const contactSentMessage = document.getElementById('contactSentMessage');
+
+        infoPanelSections.forEach(section => {
+            const isDefaultSection = section.id === 'aboutPanel';
+            section.classList.toggle('hidden', !isDefaultSection);
+            section.style.display = isDefaultSection ? '' : 'none';
+        });
         
         const targetIds = [
             'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryFinance', 'categoryShopping', 'categoryEveryday',
