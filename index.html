@@ -200,7 +200,8 @@
             .calculator-content { overflow-y: auto; padding-bottom: 0 !important; }
             .calculator-content > :last-child { margin-bottom: 0; }
             #avgCostCard .calculator-content { padding-bottom: 27px !important; }
-            .info-panel-content { max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
+            .info-panel-content { height: 100%; max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
+            .info-panel-section { min-height: 0; }
             .info-panel-scroll { overflow-y: scroll; scrollbar-gutter: stable; padding-bottom: 0; }
         }
     </style>
@@ -718,7 +719,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.86</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.88</p>
         </div>
     </footer>
 
@@ -921,15 +922,17 @@
             const activeSection = infoPanel.querySelector('.info-panel-section:not(.hidden)');
             if (!activeSection) return;
 
-            const headerHeight = header.offsetHeight;
-            const mobilePanelBuffer = {
-                aboutPanel: 67,
-                policyPanel: 67,
-                contactPanel: 67
-            };
+            const headerStyles = getComputedStyle(header);
+            const content = infoPanel.querySelector('.info-panel-content');
+            const contentStyles = getComputedStyle(content);
+            const headerHeight = header.offsetHeight + parseFloat(headerStyles.marginBottom);
+            const contentPadding = parseFloat(contentStyles.paddingTop) + parseFloat(contentStyles.paddingBottom);
+            const mobileBottomGap = 2;
             const desktopPanelBuffer = activeSection.id === 'policyPanel' ? 68 : 40;
-            const paddingBuffer = window.innerWidth <= 640 ? mobilePanelBuffer[activeSection.id] : desktopPanelBuffer;
-            activeSection.style.maxHeight = Math.max(140, panelHeight - headerHeight - paddingBuffer) + 'px';
+            const availableHeight = window.innerWidth <= 640
+                ? panelHeight - headerHeight - contentPadding - mobileBottomGap
+                : panelHeight - header.offsetHeight - desktopPanelBuffer;
+            activeSection.style.maxHeight = Math.max(140, availableHeight) + 'px';
         }
 
         function flyStarToNewPosition(card, updatePosition) {
