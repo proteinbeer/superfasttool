@@ -62,6 +62,19 @@
         .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
         .is-measuring .card-description { transition: none; }
         .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
+        .page-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 65;
+            background: rgba(15, 23, 42, 0.18);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.09s ease;
+        }
+        .page-backdrop.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
         .close-expanded-btn, #closeInfoPanelBtn {
             width: 2rem;
             height: 2rem;
@@ -162,7 +175,9 @@
         .footer-action { transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease; }
         .footer-action:hover { transform: translateY(-1px); }
         .info-panel { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease; }
-        .active-panel { z-index: 70; }
+        .active-panel { z-index: 70 !important; }
+        .expandable-card.active-panel,
+        .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
         .calculator-content, .info-panel-scroll { overscroll-behavior: contain; }
@@ -207,6 +222,7 @@
     </style>
 </head>
 <body class="bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+    <div id="pageBackdrop" class="page-backdrop" aria-hidden="true"></div>
 
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 relative z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -226,7 +242,7 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-16 flex-1 w-full relative z-10">
+    <main class="max-w-6xl mx-auto px-4 py-16 flex-1 w-full relative">
         <div class="bg-radial-glow absolute inset-0 -z-10 pointer-events-none"></div>
 
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -719,7 +735,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.99</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.06</p>
         </div>
     </footer>
 
@@ -805,6 +821,7 @@
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
         const footerActions = document.querySelectorAll('.footer-action');
+        const pageBackdrop = document.getElementById('pageBackdrop');
         const infoPanel = document.getElementById('infoPanel');
         const infoPanelIcon = document.getElementById('infoPanelIcon');
         const infoPanelTitle = document.getElementById('infoPanelTitle');
@@ -847,6 +864,16 @@
         let activeInfoSourceButton = null;
         const starredStorageKey = 'superFastToolStarredCards';
         let starredCards = JSON.parse(localStorage.getItem(starredStorageKey) || '[]');
+
+        function showBackdrop() {
+            pageBackdrop.classList.add('is-visible');
+        }
+
+        function hideBackdrop(force = false) {
+            if (force || (!expandedCard && !activeInfoPanel)) {
+                pageBackdrop.classList.remove('is-visible');
+            }
+        }
 
         function saveStarredCards() {
             localStorage.setItem(starredStorageKey, JSON.stringify(starredCards));
@@ -1024,6 +1051,7 @@
         });
 
         function openInfoPanel(sourceButton, panelId) {
+            showBackdrop();
             activeInfoPanel = panelId;
             activeInfoSourceButton = sourceButton;
             const rect = sourceButton.getBoundingClientRect();
@@ -1072,6 +1100,7 @@
             infoPanel.classList.remove('is-open');
             activeInfoPanel = null;
             activeInfoSourceButton = null;
+            hideBackdrop(true);
 
             if (!animate) {
                 infoPanel.classList.add('hidden');
@@ -1157,6 +1186,7 @@
         });
 
         function expandCard(card) {
+            showBackdrop();
             expandedCard = card;
             const placeholder = card.nextElementSibling;
             const calculatorContent = card.querySelector('.calculator-content');
@@ -1231,6 +1261,7 @@
             const placeholder = card.nextElementSibling;
             const calculatorContent = card.querySelector('.calculator-content');
             card.classList.remove('is-expanded');
+            hideBackdrop(true);
             flyStarToNewPosition(card, () => {
                 card.classList.remove('star-docked');
             });
@@ -1277,6 +1308,11 @@
             if (activeInfoPanel && !infoPanel.contains(e.target) && !e.target.closest('.footer-action')) {
                 closeInfoPanel();
             }
+        });
+
+        pageBackdrop.addEventListener('click', () => {
+            if (expandedCard) collapseCard(expandedCard);
+            if (activeInfoPanel) closeInfoPanel();
         });
 
         document.addEventListener('keydown', (e) => {
