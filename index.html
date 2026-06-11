@@ -200,8 +200,9 @@
             .calculator-content { overflow-y: auto; padding-bottom: 0 !important; }
             .calculator-content > :last-child { margin-bottom: 0; }
             #avgCostCard .calculator-content { padding-bottom: 27px !important; }
-            .info-panel-content { height: 100%; max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
-            .info-panel-section { min-height: 0; }
+            .info-panel-content { box-sizing: border-box; display: flex; flex-direction: column; height: 100%; max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
+            .info-panel-content > div:first-child { flex: 0 0 auto; }
+            .info-panel-section { flex: 1 1 auto; min-height: 0; }
             .info-panel-scroll { overflow-y: scroll; scrollbar-gutter: stable; padding-bottom: 0; }
         }
     </style>
@@ -719,7 +720,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.89</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.0.90</p>
         </div>
     </footer>
 
