@@ -214,6 +214,64 @@
         .calculator-content > :last-child { margin-bottom: 0; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.is-visible { opacity: 1; transform: translateY(0); }
+        .image-preview-large {
+            width: 100%;
+            height: min(42vh, 360px);
+            min-height: 14rem;
+            object-fit: contain;
+            background: #f4f4f5;
+        }
+        .image-workspace {
+            position: relative;
+            width: 100%;
+            min-height: 14rem;
+            max-height: min(42vh, 360px);
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            background: #f4f4f5;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-workspace canvas {
+            max-width: 100%;
+            max-height: min(42vh, 360px);
+        }
+        .crop-selection {
+            position: absolute;
+            border: 2px solid #f97316;
+            background: rgba(249, 115, 22, 0.16);
+            box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.18);
+            cursor: move;
+            pointer-events: auto;
+            touch-action: none;
+        }
+        .crop-handle {
+            position: absolute;
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 999px;
+            border: 2px solid #fff;
+            background: #f97316;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
+        }
+        .crop-handle[data-handle="nw"] { left: -0.4rem; top: -0.4rem; cursor: nwse-resize; }
+        .crop-handle[data-handle="n"] { left: 50%; top: -0.4rem; transform: translateX(-50%); cursor: ns-resize; }
+        .crop-handle[data-handle="ne"] { right: -0.4rem; top: -0.4rem; cursor: nesw-resize; }
+        .crop-handle[data-handle="e"] { right: -0.4rem; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+        .crop-handle[data-handle="se"] { right: -0.4rem; bottom: -0.4rem; cursor: nwse-resize; }
+        .crop-handle[data-handle="s"] { left: 50%; bottom: -0.4rem; transform: translateX(-50%); cursor: ns-resize; }
+        .crop-handle[data-handle="sw"] { left: -0.4rem; bottom: -0.4rem; cursor: nesw-resize; }
+        .crop-handle[data-handle="w"] { left: -0.4rem; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+        .image-workspace canvas {
+            touch-action: none;
+        }
+        .transform-btn.is-active {
+            background: #18181b;
+            color: #fff;
+            border-color: #18181b;
+        }
 
         /* Infinite diagonal scrolling grid background */
         .bg-tech-grid {
@@ -276,7 +334,7 @@
                 <span id="heroTitle2" class="text-slate-500">Done in 1 Second</span>
             </h1>
             <p id="heroDesc" class="text-lg text-zinc-500">
-                Generate, solve your repetitive daily calculations and data conversions instantly.
+                Generate, calculate, and convert instantly.
             </p>
         </div>
 
@@ -676,6 +734,54 @@
                 </div>
             </div>
 
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="timeZoneConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127758;</div><h3 id="tool46Title" class="text-lg font-bold text-zinc-900 mb-1">Time Zone Converter</h3><p id="tool46Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert a time between common UTC offsets.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Time</label><input type="time" id="timeZoneValue" value="12:00" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="timeZoneFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="-8">UTC-8</option><option value="-5">UTC-5</option><option value="0" selected>UTC</option><option value="1">UTC+1</option><option value="9">UTC+9</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="timeZoneTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="-8">UTC-8</option><option value="-5">UTC-5</option><option value="0">UTC</option><option value="1" selected>UTC+1</option><option value="9">UTC+9</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valTimeZoneConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="numberBaseConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-[11px] font-black mb-4">1010</div><h3 id="tool47Title" class="text-lg font-bold text-zinc-900 mb-1">Number Base Converter</h3><p id="tool47Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert numbers between decimal, binary, hex, and octal.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input id="baseValue" value="255" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="baseFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="10">Decimal</option><option value="2">Binary</option><option value="16">Hex</option><option value="8">Octal</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="baseTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="10">Decimal</option><option value="2">Binary</option><option value="16" selected>Hex</option><option value="8">Octal</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valBaseConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="angleConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#8736;</div><h3 id="tool48Title" class="text-lg font-bold text-zinc-900 mb-1">Angle Converter</h3><p id="tool48Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert degrees, radians, and gradians.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="angleValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="angleFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="deg">Degrees</option><option value="rad">Radians</option><option value="grad">Gradians</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="angleTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="deg">Degrees</option><option value="rad" selected>Radians</option><option value="grad">Gradians</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valAngleConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="powerConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9889;</div><h3 id="tool49Title" class="text-lg font-bold text-zinc-900 mb-1">Power Converter</h3><p id="tool49Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert watts, kilowatts, and horsepower.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="powerValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="powerFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="w">W</option><option value="kw">kW</option><option value="hp">hp</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="powerTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="w">W</option><option value="kw" selected>kW</option><option value="hp">hp</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valPowerConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="pressureConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128202;</div><h3 id="tool50Title" class="text-lg font-bold text-zinc-900 mb-1">Pressure Converter</h3><p id="tool50Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert pascal, bar, PSI, and atmosphere.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="pressureValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="pressureFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="pa">Pa</option><option value="bar">bar</option><option value="psi">PSI</option><option value="atm">atm</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="pressureTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="pa">Pa</option><option value="bar">bar</option><option value="psi" selected>PSI</option><option value="atm">atm</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valPressureConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="energyConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128293;</div><h3 id="tool51Title" class="text-lg font-bold text-zinc-900 mb-1">Energy Converter</h3><p id="tool51Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert joules, calories, kWh, and BTU.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="energyValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="energyFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="j">J</option><option value="cal">cal</option><option value="kwh">kWh</option><option value="btu">BTU</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="energyTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="j">J</option><option value="cal" selected>cal</option><option value="kwh">kWh</option><option value="btu">BTU</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valEnergyConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="frequencyConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-[12px] font-black mb-4">Hz</div><h3 id="tool52Title" class="text-lg font-bold text-zinc-900 mb-1">Frequency Converter</h3><p id="tool52Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert Hz, kHz, MHz, and GHz.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="frequencyValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="frequencyFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz">kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="frequencyTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz" selected>kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valFrequencyConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="paceConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127939;</div><h3 id="tool53Title" class="text-lg font-bold text-zinc-900 mb-1">Pace Converter</h3><p id="tool53Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert running pace and speed units.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="paceValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="paceFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="kmh">km/h</option><option value="mph">mph</option><option value="minkm">min/km</option><option value="minmi">min/mile</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="paceTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="kmh">km/h</option><option value="mph">mph</option><option value="minkm" selected>min/km</option><option value="minmi">min/mile</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Converted</span><span id="valPaceConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
+            </div>
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
             <div id="discountCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
@@ -1094,7 +1200,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="pngToJpgInput" accept="image/png" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <img id="pngToJpgPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="pngToJpgPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadPngToJpg" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
                 </div>
             </div>
@@ -1110,7 +1216,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="jpgToPngInput" accept="image/jpeg" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <img id="jpgToPngPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="jpgToPngPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadJpgToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
                 </div>
             </div>
@@ -1127,7 +1233,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="imageResizerInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><label class="block text-xs font-medium text-zinc-500 mb-1" for="resizeWidth">Width</label><input type="number" id="resizeWidth" value="800" min="1" max="5000" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
-                    <img id="imageResizerPreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="imageResizerPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadResizedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Resized Image</button>
                 </div>
             </div>
@@ -1144,7 +1250,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="imageCompressorInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="compressQuality">Quality</label><span id="compressQualityValue" class="text-xs font-bold text-zinc-700">80%</span></div><input type="range" id="compressQuality" value="80" min="10" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
-                    <img id="imageCompressorPreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="imageCompressorPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadCompressedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
                 </div>
             </div>
@@ -1160,7 +1266,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="webpConverterInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <img id="webpConverterPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="webpConverterPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadWebpImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download WebP</button>
                 </div>
             </div>
@@ -1176,8 +1282,145 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="webpToPngInput" accept="image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <img id="webpToPngPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <img id="webpToPngPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
                     <button id="downloadWebpToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageCropperCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-lime-50 border border-lime-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9986;</div>
+                    <h3 id="tool39Title" class="text-lg font-bold text-zinc-900 mb-1">Image Cropper</h3>
+                    <p id="tool39Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Crop one image by position and size, then download the result.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageCropperInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <div id="imageCropperWorkspace" class="image-workspace hidden">
+                        <canvas id="imageCropperCanvas"></canvas>
+                        <span id="cropSelection" class="crop-selection hidden"></span>
+                    </div>
+                    <button id="downloadCroppedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Crop</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageRotateFlipCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-cyan-50 border border-cyan-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#8635;</div>
+                    <h3 id="tool40Title" class="text-lg font-bold text-zinc-900 mb-1">Rotate / Flip Image</h3>
+                    <p id="tool40Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Rotate or flip one image and save it as a PNG file.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageRotateFlipInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <div id="imageTransformButtons" class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        <button type="button" class="transform-btn is-active rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-black text-zinc-600" data-transform-mode="default" title="Default">ORG</button>
+                        <button type="button" class="transform-btn rounded-xl border border-gray-200 bg-white px-3 py-2 text-base font-bold text-zinc-600" data-transform-mode="rotate90" title="Rotate 90">&#8635;</button>
+                        <button type="button" class="transform-btn rounded-xl border border-gray-200 bg-white px-3 py-2 text-base font-bold text-zinc-600" data-transform-mode="rotate180" title="Rotate 180">&#8635;&#8635;</button>
+                        <button type="button" class="transform-btn rounded-xl border border-gray-200 bg-white px-3 py-2 text-base font-bold text-zinc-600" data-transform-mode="rotate270" title="Rotate 270">&#8634;</button>
+                        <button type="button" class="transform-btn rounded-xl border border-gray-200 bg-white px-3 py-2 text-base font-bold text-zinc-600" data-transform-mode="flipX" title="Flip horizontal">&#8596;</button>
+                        <button type="button" class="transform-btn rounded-xl border border-gray-200 bg-white px-3 py-2 text-base font-bold text-zinc-600" data-transform-mode="flipY" title="Flip vertical">&#8597;</button>
+                    </div>
+                    <div id="imageRotateFlipWorkspace" class="image-workspace hidden">
+                        <canvas id="imageRotateFlipCanvas"></canvas>
+                    </div>
+                    <button id="downloadRotatedFlippedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageToBase64Card" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-[11px] font-black text-indigo-700 mb-4">64</div>
+                    <h3 id="tool41Title" class="text-lg font-bold text-zinc-900 mb-1">Image to Base64</h3>
+                    <p id="tool41Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert one image into a Base64 data URL text file.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageToBase64Input" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <textarea id="imageBase64Output" readonly rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-zinc-400 resize-none" placeholder="Base64 output"></textarea>
+                    <button id="downloadImageBase64" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download TXT</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="base64ToImageCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-fuchsia-50 border border-fuchsia-100 rounded-xl flex items-center justify-center text-[11px] font-black text-fuchsia-700 mb-4">IMG</div>
+                    <h3 id="tool42Title" class="text-lg font-bold text-zinc-900 mb-1">Base64 to Image</h3>
+                    <p id="tool42Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Paste a Base64 data URL and download it as an image.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <textarea id="base64ImageInput" rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-zinc-400 resize-none" placeholder="Paste data:image/...;base64,..."></textarea>
+                    <img id="base64ImagePreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadBase64Image" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Image</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageMetadataCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center text-2xl mb-4">&#8505;</div>
+                    <h3 id="tool43Title" class="text-lg font-bold text-zinc-900 mb-1">Image Metadata Viewer</h3>
+                    <p id="tool43Desc" class="card-description text-sm text-zinc-500 overflow-hidden">View image type, file size, dimensions, and ratio.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageMetadataInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <button id="downloadImageMetadata" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download TXT</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageColorPickerCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-rose-50 border border-rose-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127912;</div>
+                    <h3 id="tool44Title" class="text-lg font-bold text-zinc-900 mb-1">Image Color Picker</h3>
+                    <p id="tool44Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Click an image preview to pick HEX and RGB colors.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageColorPickerInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <div id="imageColorWorkspace" class="image-workspace hidden cursor-crosshair">
+                        <canvas id="imageColorCanvas"></canvas>
+                    </div>
+                    <div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-zinc-50 p-3">
+                        <span id="pickedColorSwatch" class="h-8 w-8 rounded-lg border border-gray-200 bg-white"></span>
+                        <span id="pickedColorValue" class="text-xs font-bold text-zinc-600">Click the image</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageFilterCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-orange-50 border border-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9681;</div>
+                    <h3 id="tool45Title" class="text-lg font-bold text-zinc-900 mb-1">Image Filter Tool</h3>
+                    <p id="tool45Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Apply grayscale, sepia, brightness, or contrast and download.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageFilterInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <select id="imageFilterMode" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                        <option value="grayscale(1)">Grayscale</option>
+                        <option value="sepia(1)">Sepia</option>
+                        <option value="brightness(1.25)">Brighter</option>
+                        <option value="contrast(1.35)">High contrast</option>
+                    </select>
+                    <div id="imageFilterWorkspace" class="image-workspace hidden">
+                        <canvas id="imageFilterCanvas"></canvas>
+                    </div>
+                    <button id="downloadFilteredImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
                 </div>
             </div>
 
@@ -1211,7 +1454,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.77</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.83</p>
         </div>
     </footer>
 
@@ -1350,7 +1593,10 @@
             'tool28Title', 'tool28Desc', 'lblSpeedValue', 'lblSpeedFrom', 'lblSpeedTo', 'resSpeedConverted',
             'tool29Title', 'tool29Desc', 'lblAreaValue', 'lblAreaFrom', 'lblAreaTo', 'resAreaConverted',
             'tool30Title', 'tool30Desc', 'lblVolumeValue', 'lblVolumeFrom', 'lblVolumeTo', 'resVolumeConverted',
-            'tool33Title', 'tool33Desc', 'tool34Title', 'tool34Desc', 'tool35Title', 'tool35Desc', 'tool36Title', 'tool36Desc', 'tool37Title', 'tool37Desc', 'tool38Title', 'tool38Desc'
+            'tool46Title', 'tool46Desc', 'tool47Title', 'tool47Desc', 'tool48Title', 'tool48Desc', 'tool49Title', 'tool49Desc',
+            'tool50Title', 'tool50Desc', 'tool51Title', 'tool51Desc', 'tool52Title', 'tool52Desc', 'tool53Title', 'tool53Desc',
+            'tool33Title', 'tool33Desc', 'tool34Title', 'tool34Desc', 'tool35Title', 'tool35Desc', 'tool36Title', 'tool36Desc', 'tool37Title', 'tool37Desc', 'tool38Title', 'tool38Desc',
+            'tool39Title', 'tool39Desc', 'tool40Title', 'tool40Desc', 'tool41Title', 'tool41Desc', 'tool42Title', 'tool42Desc', 'tool43Title', 'tool43Desc', 'tool44Title', 'tool44Desc', 'tool45Title', 'tool45Desc'
         ];
         
         const originalTexts = {};
