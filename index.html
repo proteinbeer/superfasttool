@@ -53,6 +53,18 @@
         html { overflow-y: scroll; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
+        @keyframes cardPageIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .card-page-in { animation: cardPageIn 0.18s ease-out both; }
+        #cardsGrid { position: relative; }
+        #cardsGrid.is-pinned > .expandable-card:not(.active-panel),
+        #cardsGrid.is-pinned > .temp-card,
+        #cardsGrid.is-pinned > .card-placeholder:not(.hidden) { position: absolute; margin: 0; }
+        #cardsGrid.is-pinning > .expand-transition,
+        #cardsGrid.is-pinning > .temp-card { transition: none !important; }
+        #paginationControls { min-height: 2rem; }
         
         /* Toggle switch animation */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
@@ -60,6 +72,13 @@
         
         /* Smooth px-based position and size transitions without percentage or transform interpolation */
         .expand-transition { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease; }
+        .expandable-card:not(.active-panel):not(.is-expanded) { height: calc(10.875rem + 7px); align-self: start; }
+        .expandable-card:not(.active-panel):not(.is-expanded) .card-content { height: 100%; }
+        .expandable-card:not(.active-panel):not(.is-expanded) h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(0.9rem, 4vw, 1.125rem); }
+        .expandable-card.is-expanded h3,
+        .expandable-card.active-panel h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 3.5rem; }
+        .expandable-card:not(.active-panel):not(.is-expanded) .card-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: clamp(0.76rem, 3.2vw, 0.875rem); line-height: 1.2rem; }
+        .temp-card { height: calc(10.875rem + 7px); align-self: start; pointer-events: none; }
         .card-description { max-height: 3rem; transition: opacity 0.14s ease, max-height 0.18s ease, margin 0.18s ease, transform 0.18s ease; }
         .is-measuring .card-description { transition: none; }
         .expand-close { opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.14s ease, transform 0.18s ease; }
@@ -173,6 +192,11 @@
         }
         .category-tab { transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease; }
         .category-tab.is-active { background: #18181b; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+        .category-tab.is-hidden { display: none !important; }
+        .page-arrow-icon { width: 0; height: 0; display: block; }
+        .page-arrow-icon.prev { border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 6px solid currentColor; }
+        .page-arrow-icon.next { border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 6px solid currentColor; }
+        .calculator-content input[type="range"][id$="Count"] { display: block; height: 2.5rem; margin-top: -0.125rem; }
         .footer-action { transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease; }
         .footer-action:hover { transform: translateY(-1px); }
         .info-panel { transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease; }
@@ -198,7 +222,7 @@
                 linear-gradient(to right, rgba(15, 23, 42, 0.09) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(15, 23, 42, 0.09) 1px, transparent 1px);
             background-size: 40px 40px;
-            animation: gridScrollLinear 8s linear infinite;
+            animation: gridScrollLinear 5.33s linear infinite;
         }
 
         @keyframes gridScrollLinear {
@@ -252,23 +276,24 @@
                 <span id="heroTitle2" class="text-slate-500">Done in 1 Second</span>
             </h1>
             <p id="heroDesc" class="text-lg text-zinc-500">
-                Solve your repetitive daily calculations and data conversions instantly.
+                Generate, solve your repetitive daily calculations and data conversions instantly.
             </p>
         </div>
 
         <div class="flex justify-center mb-8">
             <div class="flex flex-wrap items-center justify-center gap-1.5 bg-white/90 border border-gray-200 rounded-2xl p-1.5 shadow-sm backdrop-blur-md">
-                <button class="category-tab is-active px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="all"><span aria-hidden="true">&#9638;</span><span id="categoryAll">All</span></button>
-                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="starred"><span aria-hidden="true">&#9733;</span><span id="categoryStarred">Starred</span></button>
-                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="finance"><span aria-hidden="true">&#128200;</span><span id="categoryFinance">Finance</span></button>
-                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="shopping"><span aria-hidden="true">&#128722;</span><span id="categoryShopping">Shopping</span></button>
-                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="everyday"><span aria-hidden="true">&#128736;</span><span id="categoryEveryday">Everyday</span></button>
+                <button class="category-tab is-hidden px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="starred"><span aria-hidden="true">&#11088;</span><span id="categoryStarred">Starred</span></button>
+                <button class="category-tab is-active px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="all"><span aria-hidden="true">&#129520;</span><span id="categoryAll">All</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="generator"><span aria-hidden="true">&#127922;</span><span id="categoryGenerator">Generator</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="calculator"><span aria-hidden="true">&#129518;</span><span id="categoryCalculator">Calculator</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="converter"><span aria-hidden="true">&#128257;</span><span id="categoryConverter">Converter</span></button>
+                <button class="category-tab px-4 py-2 rounded-xl text-sm font-bold text-zinc-500 cursor-pointer inline-flex items-center gap-1.5" data-category-filter="image"><span aria-hidden="true">&#128444;</span><span id="categoryImage">Image</span></button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
             
-            <div id="avgCostCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="avgCostCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
@@ -320,7 +345,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="profitLossCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="profitLossCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128181;</div>
@@ -371,7 +396,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="percentageCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="percentageCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">%</div>
@@ -418,7 +443,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="compoundInterestCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="compoundInterestCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127793;</div>
@@ -469,7 +494,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="loanPaymentCard" data-category="finance" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="loanPaymentCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127970;</div>
@@ -514,7 +539,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="unitConverterCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="unitConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#8644;</div>
@@ -559,7 +584,101 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="discountCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="currencyConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128177;</div>
+                    <h3 id="tool26Title" class="text-lg font-bold text-zinc-900 mb-1">Currency Converter</h3>
+                    <p id="tool26Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert money using a manually entered exchange rate.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblCurrencyAmount" class="block text-xs font-medium text-zinc-500 mb-1">Amount</label><input type="number" id="currencyAmount" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblExchangeRate" class="block text-xs font-medium text-zinc-500 mb-1">Exchange Rate</label><input type="number" id="exchangeRate" placeholder="1.00" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span id="resCurrencyConverted" class="text-xs text-zinc-500 font-medium">Converted</span><span id="valCurrencyConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="dataStorageConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128190;</div>
+                    <h3 id="tool27Title" class="text-lg font-bold text-zinc-900 mb-1">Data Storage Converter</h3>
+                    <p id="tool27Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert bytes, KB, MB, GB, and TB quickly.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblDataValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="dataValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblDataFrom" class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="dataFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="B">B</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select></div>
+                        <div><label id="lblDataTo" class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="dataTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="B">B</option><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option></select></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span id="resDataConverted" class="text-xs text-zinc-500 font-medium">Converted</span><span id="valDataConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="speedConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128168;</div>
+                    <h3 id="tool28Title" class="text-lg font-bold text-zinc-900 mb-1">Speed Converter</h3>
+                    <p id="tool28Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert speed between mph, km/h, m/s, and knots.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblSpeedValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="speedValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblSpeedFrom" class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="speedFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="mph">mph</option><option value="kmh">km/h</option><option value="ms">m/s</option><option value="kn">knots</option></select></div>
+                        <div><label id="lblSpeedTo" class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="speedTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="mph">mph</option><option value="kmh" selected>km/h</option><option value="ms">m/s</option><option value="kn">knots</option></select></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span id="resSpeedConverted" class="text-xs text-zinc-500 font-medium">Converted</span><span id="valSpeedConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="areaConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128506;</div>
+                    <h3 id="tool29Title" class="text-lg font-bold text-zinc-900 mb-1">Area Converter</h3>
+                    <p id="tool29Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert common area units such as square meters, acres, and square feet.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblAreaValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="areaValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblAreaFrom" class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="areaFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="sqm">sq m</option><option value="sqft">sq ft</option><option value="acre">acre</option><option value="hectare">hectare</option></select></div>
+                        <div><label id="lblAreaTo" class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="areaTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="sqm">sq m</option><option value="sqft" selected>sq ft</option><option value="acre">acre</option><option value="hectare">hectare</option></select></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span id="resAreaConverted" class="text-xs text-zinc-500 font-medium">Converted</span><span id="valAreaConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="volumeConverterCard" data-category="converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close converter">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128167;</div>
+                    <h3 id="tool30Title" class="text-lg font-bold text-zinc-900 mb-1">Volume Converter</h3>
+                    <p id="tool30Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert liters, milliliters, gallons, cups, and fluid ounces.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label id="lblVolumeValue" class="block text-xs font-medium text-zinc-500 mb-1">Value</label><input type="number" id="volumeValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblVolumeFrom" class="block text-xs font-medium text-zinc-500 mb-1">From</label><select id="volumeFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="l">L</option><option value="ml">mL</option><option value="gal">gal</option><option value="cup">cup</option><option value="floz">fl oz</option></select></div>
+                        <div><label id="lblVolumeTo" class="block text-xs font-medium text-zinc-500 mb-1">To</label><select id="volumeTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="l">L</option><option value="ml" selected>mL</option><option value="gal">gal</option><option value="cup">cup</option><option value="floz">fl oz</option></select></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span id="resVolumeConverted" class="text-xs text-zinc-500 font-medium">Converted</span><span id="valVolumeConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="discountCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127991;</div>
@@ -580,7 +699,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="salesTaxCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="salesTaxCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129534;</div>
@@ -601,7 +720,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="tipCard" data-category="shopping" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="tipCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127869;</div>
@@ -624,7 +743,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="dateDifferenceCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="dateDifferenceCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128197;</div>
@@ -645,7 +764,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="timeDurationCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="timeDurationCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9201;</div>
@@ -666,7 +785,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="bmiCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="bmiCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9878;</div>
@@ -687,7 +806,7 @@
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="fuelCostCard" data-category="everyday" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="fuelCostCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
                     <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9981;</div>
@@ -709,7 +828,363 @@
             </div>
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="mortgageCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127968;</div>
+                    <h3 id="tool14Title" class="text-lg font-bold text-zinc-900 mb-1">Mortgage Calculator</h3>
+                    <p id="tool14Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate monthly mortgage payments from home price, down payment, rate, and term.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblHomePrice" class="block text-xs font-medium text-zinc-500 mb-1">Home Price</label><input type="number" id="homePrice" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblDownPayment" class="block text-xs font-medium text-zinc-500 mb-1">Down Payment</label><input type="number" id="downPayment" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblMortgageRate" class="block text-xs font-medium text-zinc-500 mb-1">Interest Rate (%)</label><input type="number" id="mortgageRate" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblMortgageYears" class="block text-xs font-medium text-zinc-500 mb-1">Loan Term (Years)</label><input type="number" id="mortgageYears" placeholder="30" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resMortgageMonthly" class="text-xs text-zinc-500 font-medium">Monthly Payment</span><span id="valMortgageMonthly" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resMortgageLoan" class="text-xs text-zinc-500 font-medium">Loan Amount</span><span id="valMortgageLoan" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resMortgageInterest" class="text-xs text-zinc-500 font-medium">Total Interest</span><span id="valMortgageInterest" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="ageCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127874;</div>
+                    <h3 id="tool15Title" class="text-lg font-bold text-zinc-900 mb-1">Age Calculator</h3>
+                    <p id="tool15Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate exact age in years, months, and days from a birth date.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblBirthDate" class="block text-xs font-medium text-zinc-500 mb-1">Birth Date</label><input type="date" id="birthDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblAgeAsOfDate" class="block text-xs font-medium text-zinc-500 mb-1">Age On</label><input type="date" id="ageAsOfDate" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resAgeYears" class="text-xs text-zinc-500 font-medium">Age</span><span id="valAgeYears" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resAgeDays" class="text-xs text-zinc-500 font-medium">Total Days</span><span id="valAgeDays" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="calorieCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128293;</div>
+                    <h3 id="tool16Title" class="text-lg font-bold text-zinc-900 mb-1">Calorie Calculator</h3>
+                    <p id="tool16Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Estimate daily maintenance calories using age, height, weight, sex, and activity level.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label id="lblCalorieAge" class="block text-xs font-medium text-zinc-500 mb-1">Age</label><input type="number" id="calorieAge" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblCalorieSex" class="block text-xs font-medium text-zinc-500 mb-1">Sex</label><select id="calorieSex" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="male">Male</option><option value="female">Female</option></select></div>
+                        <div><label id="lblCalorieHeight" class="block text-xs font-medium text-zinc-500 mb-1">Height (cm)</label><input type="number" id="calorieHeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblCalorieWeight" class="block text-xs font-medium text-zinc-500 mb-1">Weight (kg)</label><input type="number" id="calorieWeight" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div class="sm:col-span-2"><label id="lblActivityLevel" class="block text-xs font-medium text-zinc-500 mb-1">Activity Level</label><select id="activityLevel" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"><option value="1.2">Sedentary</option><option value="1.375">Light</option><option value="1.55">Moderate</option><option value="1.725">Very Active</option></select></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resMaintenanceCalories" class="text-xs text-zinc-500 font-medium">Maintenance</span><span id="valMaintenanceCalories" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resWeightLossCalories" class="text-xs text-zinc-500 font-medium">Weight Loss</span><span id="valWeightLossCalories" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="gpaCard" data-category="calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close calculator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127891;</div>
+                    <h3 id="tool17Title" class="text-lg font-bold text-zinc-900 mb-1">GPA Calculator</h3>
+                    <p id="tool17Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Calculate weighted GPA from grades and credits for up to four classes.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label id="lblGpaGrade1" class="block text-xs font-medium text-zinc-500 mb-1">Grade 1</label><input type="number" id="gpaGrade1" placeholder="4.0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaCredits1" class="block text-xs font-medium text-zinc-500 mb-1">Credits 1</label><input type="number" id="gpaCredits1" placeholder="3" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaGrade2" class="block text-xs font-medium text-zinc-500 mb-1">Grade 2</label><input type="number" id="gpaGrade2" placeholder="4.0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaCredits2" class="block text-xs font-medium text-zinc-500 mb-1">Credits 2</label><input type="number" id="gpaCredits2" placeholder="3" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaGrade3" class="block text-xs font-medium text-zinc-500 mb-1">Grade 3</label><input type="number" id="gpaGrade3" placeholder="4.0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaCredits3" class="block text-xs font-medium text-zinc-500 mb-1">Credits 3</label><input type="number" id="gpaCredits3" placeholder="3" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaGrade4" class="block text-xs font-medium text-zinc-500 mb-1">Grade 4</label><input type="number" id="gpaGrade4" placeholder="4.0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                        <div><label id="lblGpaCredits4" class="block text-xs font-medium text-zinc-500 mb-1">Credits 4</label><input type="number" id="gpaCredits4" placeholder="3" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    </div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 space-y-2.5 shadow-inner mt-2">
+                        <div class="flex justify-between items-center"><span id="resGpa" class="text-xs text-zinc-500 font-medium">GPA</span><span id="valGpa" class="text-sm font-black text-zinc-900">&mdash;</span></div>
+                        <div class="flex justify-between items-center border-t border-gray-200/40 pt-2.5"><span id="resGpaCredits" class="text-xs text-zinc-500 font-medium">Total Credits</span><span id="valGpaCredits" class="text-sm font-bold text-zinc-800">&mdash;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="fantasyNameCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9876;</div>
+                    <h3 id="tool18Title" class="text-lg font-bold text-zinc-900 mb-1">Fantasy Person Name Generator</h3>
+                    <p id="tool18Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate fantasy character names for games, stories, and worlds.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="fantasyPersonCount">Count</label><span id="fantasyPersonCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="fantasyPersonCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateFantasyPersonName" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadFantasyPersonName" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valFantasyPersonName" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="fantasyPlaceCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#127984;</div>
+                    <h3 id="tool31Title" class="text-lg font-bold text-zinc-900 mb-1">Fantasy Place Name Generator</h3>
+                    <p id="tool31Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Create names for kingdoms, towns, forests, ruins, and magical places.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="fantasyPlaceCount">Count</label><span id="fantasyPlaceCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="fantasyPlaceCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateFantasyPlaceName" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadFantasyPlaceName" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valFantasyPlaceName" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="sciFiNameCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128640;</div>
+                    <h3 id="tool19Title" class="text-lg font-bold text-zinc-900 mb-1">Sci-Fi Person Name Generator</h3>
+                    <p id="tool19Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Create futuristic character, pilot, android, and explorer names.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="sciFiPersonCount">Count</label><span id="sciFiPersonCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="sciFiPersonCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateSciFiPersonName" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadSciFiPersonName" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valSciFiPersonName" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="sciFiPlaceCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129680;</div>
+                    <h3 id="tool32Title" class="text-lg font-bold text-zinc-900 mb-1">Sci-Fi Place Name Generator</h3>
+                    <p id="tool32Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate names for planets, stations, sectors, colonies, and ships.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="sciFiPlaceCount">Count</label><span id="sciFiPlaceCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="sciFiPlaceCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateSciFiPlaceName" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadSciFiPlaceName" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valSciFiPlaceName" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="businessNameCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128188;</div>
+                    <h3 id="tool20Title" class="text-lg font-bold text-zinc-900 mb-1">Business Name Generator</h3>
+                    <p id="tool20Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate simple brand and business name ideas instantly.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="businessNameCount">Count</label><span id="businessNameCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="businessNameCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateBusinessName" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadBusinessName" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valBusinessName" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="usernameCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">@</div>
+                    <h3 id="tool21Title" class="text-lg font-bold text-zinc-900 mb-1">Username Generator</h3>
+                    <p id="tool21Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Create quick username ideas for games, apps, and profiles.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="usernameCount">Count</label><span id="usernameCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="usernameCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateUsername" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadUsername" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner max-h-44 overflow-y-auto"><pre id="valUsername" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="passwordCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128273;</div>
+                    <h3 id="tool22Title" class="text-lg font-bold text-zinc-900 mb-1">Password Generator</h3>
+                    <p id="tool22Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate a random password locally in your browser.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-2 gap-3"><div><label id="lblPasswordLength" class="block text-xs font-medium text-zinc-500 mb-1">Length</label><input type="number" id="passwordLength" value="25" min="6" max="64" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div><div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="passwordCount">Count</label><span id="passwordCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="passwordCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generatePassword" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadPassword" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner break-all"><pre id="valPassword" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="randomNumberCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">#</div>
+                    <h3 id="tool23Title" class="text-lg font-bold text-zinc-900 mb-1">Random Number Generator</h3>
+                    <p id="tool23Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Pick a random number between your chosen minimum and maximum.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div class="grid grid-cols-3 gap-3"><div><label id="lblRandomMin" class="block text-xs font-medium text-zinc-500 mb-1">Min</label><input type="number" id="randomMin" value="1" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div><div><label id="lblRandomMax" class="block text-xs font-medium text-zinc-500 mb-1">Max</label><input type="number" id="randomMax" value="100" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div><div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="randomNumberCount">Count</label><span id="randomNumberCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="randomNumberCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateRandomNumber" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadRandomNumber" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><pre id="valRandomNumber" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="uuidCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128290;</div>
+                    <h3 id="tool24Title" class="text-lg font-bold text-zinc-900 mb-1">UUID Generator</h3>
+                    <p id="tool24Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate a browser-local UUID for testing and development.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="uuidCount">Count</label><span id="uuidCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="uuidCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <div class="grid grid-cols-2 gap-3"><button id="generateUuid" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Generate</button><button id="downloadUuid" class="w-full bg-white text-zinc-800 border border-gray-200 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:border-zinc-400">Download</button></div>
+                    <div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner break-all"><pre id="valUuid" class="text-sm font-black text-zinc-900 whitespace-pre-wrap font-sans">--</pre></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="loremIpsumCard" data-category="generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close generator">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#182;</div>
+                    <h3 id="tool25Title" class="text-lg font-bold text-zinc-900 mb-1">Lorem Ipsum Generator</h3>
+                    <p id="tool25Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Generate quick placeholder text for layouts and mockups.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6">
+                    <div><label class="block text-xs font-medium text-zinc-500 mb-1" for="loremLength">Length</label><input type="number" id="loremLength" value="120" min="10" max="1000" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="loremCount">Count</label><span id="loremCountValue" class="text-xs font-bold text-zinc-700">1</span></div><input type="range" id="loremCount" value="1" min="1" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <button id="downloadLoremIpsum" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="pngToJpgCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-sky-50 border border-sky-100 rounded-xl flex items-center justify-center text-[11px] font-black text-sky-700 mb-4">PNG</div>
+                    <h3 id="tool33Title" class="text-lg font-bold text-zinc-900 mb-1">PNG to JPG Converter</h3>
+                    <p id="tool33Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert one PNG image to a JPG file in your browser.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="pngToJpgInput" accept="image/png" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <img id="pngToJpgPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadPngToJpg" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="jpgToPngCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center text-[11px] font-black text-amber-700 mb-4">JPG</div>
+                    <h3 id="tool34Title" class="text-lg font-bold text-zinc-900 mb-1">JPG to PNG Converter</h3>
+                    <p id="tool34Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert one JPG image to a PNG file locally.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="jpgToPngInput" accept="image/jpeg" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <img id="jpgToPngPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadJpgToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageResizerCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128207;</div>
+                    <h3 id="tool35Title" class="text-lg font-bold text-zinc-900 mb-1">Image Resizer</h3>
+                    <p id="tool35Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Resize one image by width while keeping its ratio.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageResizerInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <div><label class="block text-xs font-medium text-zinc-500 mb-1" for="resizeWidth">Width</label><input type="number" id="resizeWidth" value="800" min="1" max="5000" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
+                    <img id="imageResizerPreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadResizedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Resized Image</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="imageCompressorCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#128229;</div>
+                    <h3 id="tool36Title" class="text-lg font-bold text-zinc-900 mb-1">Image Compressor</h3>
+                    <p id="tool36Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Compress one image to a smaller JPG file.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="imageCompressorInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="compressQuality">Quality</label><span id="compressQualityValue" class="text-xs font-bold text-zinc-700">80%</span></div><input type="range" id="compressQuality" value="80" min="10" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
+                    <img id="imageCompressorPreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadCompressedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="webpConverterCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-violet-50 border border-violet-100 rounded-xl flex items-center justify-center text-[10px] font-black text-violet-700 mb-4">WebP</div>
+                    <h3 id="tool37Title" class="text-lg font-bold text-zinc-900 mb-1">WebP Converter</h3>
+                    <p id="tool37Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert one image to a compact WebP file.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="webpConverterInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <img id="webpConverterPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadWebpImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download WebP</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
+            <div id="webpToPngCard" data-category="image" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close image tool">&times;</button>
+                    <div class="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center text-[10px] font-black text-emerald-700 mb-4">WebP</div>
+                    <h3 id="tool38Title" class="text-lg font-bold text-zinc-900 mb-1">WebP to PNG Converter</h3>
+                    <p id="tool38Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Convert one WebP image to a PNG file locally.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
+                    <input type="file" id="webpToPngInput" accept="image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
+                    <img id="webpToPngPreview" alt="" class="hidden max-h-36 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
+                    <button id="downloadWebpToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
         </div>
+
+        <div id="paginationControls" class="mt-8 flex flex-wrap justify-center gap-2"></div>
 
         <div class="mt-10">
             <div class="min-h-[90px] bg-white/85 border border-gray-200 rounded-xl flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm backdrop-blur-md">
@@ -736,7 +1211,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.08</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.1.77</p>
         </div>
     </footer>
 
@@ -790,6 +1265,7 @@
     <script src="./compound-interest-calculator.js"></script>
     <script src="./loan-payment-calculator.js"></script>
     <script src="./unit-converter.js"></script>
+    <script src="./extra-converters.js"></script>
     <script src="./discount-calculator.js"></script>
     <script src="./sales-tax-calculator.js"></script>
     <script src="./tip-calculator.js"></script>
@@ -797,6 +1273,12 @@
     <script src="./time-duration-calculator.js"></script>
     <script src="./bmi-calculator.js"></script>
     <script src="./fuel-cost-calculator.js"></script>
+    <script src="./mortgage-calculator.js"></script>
+    <script src="./age-calculator.js"></script>
+    <script src="./calorie-calculator.js"></script>
+    <script src="./gpa-calculator.js"></script>
+    <script src="./generators.js"></script>
+    <script src="./image-tools.js"></script>
     <script type="text/javascript">
         function getBrowserLanguage() {
             const lang = navigator.language || navigator.userLanguage;
@@ -819,8 +1301,10 @@
         const toggleBtn = document.getElementById('langToggleBtn');
         const toggleHandle = document.getElementById('toggleHandle');
         const translateIcon = document.getElementById('translateIcon');
+        const cardsGrid = document.getElementById('cardsGrid');
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
+        const paginationControls = document.getElementById('paginationControls');
         const footerActions = document.querySelectorAll('.footer-action');
         const pageBackdrop = document.getElementById('pageBackdrop');
         const infoPanel = document.getElementById('infoPanel');
@@ -838,7 +1322,7 @@
         });
         
         const targetIds = [
-            'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryFinance', 'categoryShopping', 'categoryEveryday',
+            'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryCalculator', 'categoryConverter', 'categoryGenerator', 'categoryImage',
             'footerAbout', 'footerPolicy', 'footerContact',
             'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc',
             'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount',
@@ -853,7 +1337,20 @@
             'tool10Title', 'tool10Desc', 'lblStartDate', 'lblEndDate', 'resDateDays', 'resDateWeeks',
             'tool11Title', 'tool11Desc', 'lblStartTime', 'lblEndTime', 'resDuration', 'resDurationDecimal',
             'tool12Title', 'tool12Desc', 'lblBmiHeight', 'lblBmiWeight', 'resBmi', 'resBmiCategory',
-            'tool13Title', 'tool13Desc', 'lblFuelDistance', 'lblFuelEfficiency', 'lblFuelPrice', 'fuelHint', 'resFuelUsed', 'resFuelCost'
+            'tool13Title', 'tool13Desc', 'lblFuelDistance', 'lblFuelEfficiency', 'lblFuelPrice', 'fuelHint', 'resFuelUsed', 'resFuelCost',
+            'tool14Title', 'tool14Desc', 'lblHomePrice', 'lblDownPayment', 'lblMortgageRate', 'lblMortgageYears', 'resMortgageMonthly', 'resMortgageLoan', 'resMortgageInterest',
+            'tool15Title', 'tool15Desc', 'lblBirthDate', 'lblAgeAsOfDate', 'resAgeYears', 'resAgeDays',
+            'tool16Title', 'tool16Desc', 'lblCalorieAge', 'lblCalorieSex', 'lblCalorieHeight', 'lblCalorieWeight', 'lblActivityLevel', 'resMaintenanceCalories', 'resWeightLossCalories',
+            'tool17Title', 'tool17Desc', 'lblGpaGrade1', 'lblGpaCredits1', 'lblGpaGrade2', 'lblGpaCredits2', 'lblGpaGrade3', 'lblGpaCredits3', 'lblGpaGrade4', 'lblGpaCredits4', 'resGpa', 'resGpaCredits',
+            'tool18Title', 'tool18Desc', 'tool19Title', 'tool19Desc', 'tool20Title', 'tool20Desc', 'tool21Title', 'tool21Desc',
+            'tool22Title', 'tool22Desc', 'lblPasswordLength', 'tool23Title', 'tool23Desc', 'lblRandomMin', 'lblRandomMax',
+            'tool24Title', 'tool24Desc', 'tool25Title', 'tool25Desc', 'tool31Title', 'tool31Desc', 'tool32Title', 'tool32Desc',
+            'tool26Title', 'tool26Desc', 'lblCurrencyAmount', 'lblExchangeRate', 'resCurrencyConverted',
+            'tool27Title', 'tool27Desc', 'lblDataValue', 'lblDataFrom', 'lblDataTo', 'resDataConverted',
+            'tool28Title', 'tool28Desc', 'lblSpeedValue', 'lblSpeedFrom', 'lblSpeedTo', 'resSpeedConverted',
+            'tool29Title', 'tool29Desc', 'lblAreaValue', 'lblAreaFrom', 'lblAreaTo', 'resAreaConverted',
+            'tool30Title', 'tool30Desc', 'lblVolumeValue', 'lblVolumeFrom', 'lblVolumeTo', 'resVolumeConverted',
+            'tool33Title', 'tool33Desc', 'tool34Title', 'tool34Desc', 'tool35Title', 'tool35Desc', 'tool36Title', 'tool36Desc', 'tool37Title', 'tool37Desc', 'tool38Title', 'tool38Desc'
         ];
         
         const originalTexts = {};
@@ -863,8 +1360,16 @@
         let expandedCard = null;
         let activeInfoPanel = null;
         let activeInfoSourceButton = null;
+        let currentPage = 1;
+        const cardsPerPage = 6;
         const starredStorageKey = 'superFastToolStarredCards';
         let starredCards = JSON.parse(localStorage.getItem(starredStorageKey) || '[]');
+        const tempCards = Array.from({ length: cardsPerPage }, () => {
+            const card = document.createElement('div');
+            card.className = 'temp-card hidden bg-zinc-100/80 border border-gray-200 rounded-2xl shadow-inner';
+            return card;
+        });
+        tempCards.forEach(card => cardsGrid.appendChild(card));
 
         function showBackdrop() {
             pageBackdrop.classList.add('is-visible');
@@ -885,6 +1390,38 @@
             card.dataset.starred = isStarred ? 'true' : 'false';
             starButton.classList.toggle('is-starred', isStarred);
             starButton.setAttribute('aria-label', isStarred ? 'Remove from Starred' : 'Add to Starred');
+        }
+
+        function syncStarredTab() {
+            const starredTab = document.querySelector('[data-category-filter="starred"]');
+            const allTab = document.querySelector('[data-category-filter="all"]');
+            starredCards = starredCards.filter(id => document.getElementById(id));
+            saveStarredCards();
+            const hasStarred = starredCards.length > 0;
+            starredTab.classList.toggle('is-hidden', !hasStarred);
+
+            if (!hasStarred && starredTab.classList.contains('is-active')) {
+                starredTab.classList.remove('is-active');
+                allTab.classList.add('is-active');
+                currentPage = 1;
+            }
+
+            if (hasStarred && !document.querySelector('.category-tab.is-active')) {
+                starredTab.classList.add('is-active');
+                currentPage = 1;
+            }
+        }
+
+        function setInitialCategory() {
+            const starredTab = document.querySelector('[data-category-filter="starred"]');
+            const allTab = document.querySelector('[data-category-filter="all"]');
+            categoryTabs.forEach(tab => tab.classList.remove('is-active'));
+            if (starredCards.length > 0) {
+                starredTab.classList.add('is-active');
+            } else {
+                allTab.classList.add('is-active');
+            }
+            syncStarredTab();
         }
 
         function getActiveCategory() {
@@ -951,6 +1488,19 @@
             };
         }
 
+        function resizeExpandedCardToContent(card) {
+            if (expandedCard !== card) return;
+            const calculatorContent = card.querySelector('.calculator-content');
+            if (!calculatorContent) return;
+            const targetWidth = card.offsetWidth;
+            const measuredCard = measureExpandedCard(card, calculatorContent, targetWidth);
+            card.style.height = measuredCard.targetHeight + 'px';
+            card.style.top = measuredCard.targetTop + 'px';
+            sizeCalculatorContent(card, calculatorContent, measuredCard.targetHeight, measuredCard.needsScroll);
+        }
+
+        window.resizeExpandedCardToContent = resizeExpandedCardToContent;
+
         function sizeInfoPanelContent(panelHeight) {
             const header = infoPanel.querySelector('.info-panel-content > div:first-child');
             const activeSection = infoPanel.querySelector('.info-panel-section:not(.hidden)');
@@ -989,13 +1539,196 @@
             });
         }
 
+        function getFilteredCards(selectedCategory = getActiveCategory()) {
+            return Array.from(expandableCards).filter(card => selectedCategory === 'all'
+                || (selectedCategory === 'starred' && card.dataset.starred === 'true')
+                || card.dataset.category === selectedCategory);
+        }
+
+        function chunkCards(cards) {
+            const pages = [];
+            for (let index = 0; index < cards.length; index += cardsPerPage) {
+                pages.push(cards.slice(index, index + cardsPerPage));
+            }
+            return pages;
+        }
+
+        function getAllCategoryOrder() {
+            return Array.from(categoryTabs)
+                .map(tab => tab.dataset.categoryFilter)
+                .filter(category => category && category !== 'starred' && category !== 'all');
+        }
+
+        function sortCardsForAll(cards) {
+            const orderMap = new Map(getAllCategoryOrder().map((category, index) => [category, index]));
+            return [...cards].sort((a, b) => (orderMap.get(a.dataset.category) ?? 99) - (orderMap.get(b.dataset.category) ?? 99));
+        }
+
         function applyCategoryFilter(selectedCategory = getActiveCategory()) {
+            unpinGridItems();
+            const filteredCards = getFilteredCards(selectedCategory);
+            const orderedCards = selectedCategory === 'all' ? sortCardsForAll(filteredCards) : filteredCards;
+            const totalPages = Math.max(1, Math.ceil(orderedCards.length / cardsPerPage));
+            currentPage = Math.min(Math.max(1, currentPage), totalPages);
+            const start = (currentPage - 1) * cardsPerPage;
+            const currentCards = orderedCards.slice(start, start + cardsPerPage);
+            const visibleCards = new Set(currentCards);
+
             expandableCards.forEach(card => {
-                const isVisible = selectedCategory === 'all'
-                    || (selectedCategory === 'starred' && card.dataset.starred === 'true')
-                    || card.dataset.category === selectedCategory;
-                card.classList.toggle('hidden', !isVisible);
+                card.classList.toggle('hidden', !visibleCards.has(card));
+                card.style.order = '';
+                card.classList.remove('card-page-in');
                 card.nextElementSibling.classList.add('hidden');
+                card.nextElementSibling.style.order = '';
+            });
+            tempCards.forEach(card => card.classList.add('hidden'));
+
+            currentCards.forEach(card => {
+                const placeholder = card.nextElementSibling;
+                cardsGrid.appendChild(card);
+                cardsGrid.appendChild(placeholder);
+            });
+            const visibleTempCards = tempCards.slice(0, Math.max(0, cardsPerPage - currentCards.length));
+            visibleTempCards.forEach(card => {
+                card.classList.remove('hidden');
+                cardsGrid.appendChild(card);
+            });
+            pinGridItems([...currentCards, ...visibleTempCards]);
+
+            currentCards.forEach((card, index) => {
+                requestAnimationFrame(() => {
+                    card.style.animationDelay = `${index * 22}ms`;
+                    card.classList.add('card-page-in');
+                });
+            });
+
+            renderPagination(totalPages);
+        }
+
+        function unpinGridItems() {
+            cardsGrid.classList.remove('is-pinned');
+            cardsGrid.classList.remove('is-pinning');
+            cardsGrid.style.height = '';
+            Array.from(cardsGrid.children).forEach(item => {
+                item.style.position = '';
+                item.style.top = '';
+                item.style.left = '';
+                item.style.width = '';
+                item.style.height = '';
+                item.style.margin = '';
+            });
+        }
+
+        function pinGridItems(items) {
+            cardsGrid.classList.add('is-pinning');
+            cardsGrid.classList.remove('is-pinned');
+            cardsGrid.style.height = '';
+            items.forEach(item => {
+                item.style.position = '';
+                item.style.top = '';
+                item.style.left = '';
+                item.style.width = '';
+                item.style.height = '';
+                item.style.margin = '';
+            });
+
+            const gridRect = cardsGrid.getBoundingClientRect();
+            const slots = items.map(item => {
+                const rect = item.getBoundingClientRect();
+                return {
+                    item,
+                    top: rect.top - gridRect.top,
+                    left: rect.left - gridRect.left,
+                    width: rect.width,
+                    height: rect.height
+                };
+            });
+            const gridHeight = Math.max(...slots.map(slot => slot.top + slot.height), 0);
+            cardsGrid.style.height = gridHeight + 'px';
+            cardsGrid.classList.add('is-pinned');
+            slots.forEach(slot => {
+                slot.item.style.top = slot.top + 'px';
+                slot.item.style.left = slot.left + 'px';
+                slot.item.style.width = slot.width + 'px';
+                slot.item.style.height = slot.height + 'px';
+            });
+            requestAnimationFrame(() => {
+                cardsGrid.classList.remove('is-pinning');
+            });
+        }
+
+        function renderPagination(totalPages) {
+            paginationControls.innerHTML = '';
+            paginationControls.classList.toggle('hidden', totalPages <= 1);
+
+            const pageItems = getPaginationItems(totalPages);
+            const addPageButton = (page, label = page, disabled = false) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.disabled = disabled;
+                button.className = `min-w-8 h-8 px-3 rounded-lg border text-xs font-bold inline-flex items-center justify-center leading-none ${disabled ? 'cursor-not-allowed opacity-40 bg-white text-zinc-300 border-gray-200' : 'cursor-pointer'} ${page === currentPage && !disabled ? 'bg-zinc-900 text-white border-zinc-900' : 'bg-white text-zinc-500 border-gray-200 hover:border-zinc-400'}`;
+                if (label === 'prev' || label === 'next') {
+                    const icon = document.createElement('span');
+                    icon.className = `page-arrow-icon ${label}`;
+                    button.appendChild(icon);
+                } else {
+                    button.innerText = label;
+                }
+                button.addEventListener('click', () => {
+                    if (disabled || page === currentPage) return;
+                    if (expandedCard) collapseCard(expandedCard);
+                    currentPage = page;
+                    applyCategoryFilter();
+                });
+                paginationControls.appendChild(button);
+            };
+
+            addPageButton(Math.max(1, currentPage - 1), 'prev', currentPage === 1);
+            pageItems.forEach(item => {
+                if (item === 'dots') {
+                    const dots = document.createElement('span');
+                    dots.className = 'px-1 py-1.5 text-xs font-bold text-zinc-400';
+                    dots.innerText = '...';
+                    paginationControls.appendChild(dots);
+                    return;
+                }
+                addPageButton(item);
+            });
+            addPageButton(Math.min(totalPages, currentPage + 1), 'next', currentPage === totalPages);
+        }
+
+        function getPaginationItems(totalPages) {
+            if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
+            if (currentPage <= 2) return [1, 2, 3, 'dots', totalPages];
+            if (currentPage === totalPages - 2) return [currentPage - 1, currentPage, currentPage + 1, 'dots', totalPages];
+            if (currentPage > totalPages - 2) return [1, 'dots', totalPages - 2, totalPages - 1, totalPages];
+            return [currentPage - 1, currentPage, currentPage + 1, 'dots', totalPages];
+        }
+
+        function applyCardTextStressTest() {
+            const testMode = new URLSearchParams(window.location.search).get('texttest');
+            if (!testMode) return;
+            const samples = [
+                ['Calculadora de Coste Promedio', 'Calcula rapidamente resultados financieros cotidianos con una descripcion bastante larga.'],
+                ['Generateur de Noms Fantastiques', 'Cree des idees de noms longues pour histoires, jeux, mondes imaginaires et personnages.'],
+                ['Bildkonverter Werkzeug', 'Konvertieren und optimieren Sie Bilder direkt im Browser ohne Serververarbeitung.'],
+                ['Calcolatore Rapido Giornaliero', 'Risolve calcoli ripetitivi e conversioni di dati con testo descrittivo esteso.'],
+                ['Gerador de Nomes Aleatorios', 'Gere listas de nomes, senhas e textos para testes com uma descricao maior.'],
+                ['Przelicznik Jednostek Online', 'Szybko przeliczaj wartosci i sprawdzaj czy dlugie opisy mieszcza sie w kartach.'],
+                ['Convertisseur Image WebP', 'Transforme une image unique vers un autre format tout en conservant une interface simple.'],
+                ['Kalkulator Finansowy Prosty', 'Pomaga obliczac wartosci, podatki, napiwki, pozyczki i inne codzienne wyniki.'],
+                ['평균 단가 계산기', '반복되는 일상 계산과 데이터 변환을 빠르게 처리하는 긴 설명 문장입니다.'],
+                ['图片格式转换工具', '直接在浏览器中转换和压缩图片文件并测试较长文本显示效果。'],
+                ['画像変換ツール', 'ブラウザーだけで画像を変換し長い説明文がカード内に収まるか確認します。'],
+                ['Durchschnittskosten Rechner', 'Berechnet wiederkehrende Werte und prueft besonders lange deutsche Beschreibungen.']
+            ];
+            const multiplier = testMode === '2' ? 2 : 1;
+            expandableCards.forEach((card, index) => {
+                const title = card.querySelector('h3');
+                const description = card.querySelector('.card-description');
+                const sample = samples[index % samples.length];
+                if (title) title.innerText = Array.from({ length: multiplier }, () => sample[0]).join(' ');
+                if (description) description.innerText = Array.from({ length: multiplier }, () => sample[1]).join(' ');
             });
         }
 
@@ -1018,11 +1751,16 @@
             starButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 playStarClickFeedback(starButton);
+                const wasStarredCategory = getActiveCategory() === 'starred';
                 const isStarred = !starredCards.includes(card.id);
                 starredCards = isStarred ? [...starredCards, card.id] : starredCards.filter(id => id !== card.id);
                 setStarredState(card, isStarred);
                 saveStarredCards();
-                if (getActiveCategory() === 'starred') applyCategoryFilter('starred');
+                syncStarredTab();
+                if (wasStarredCategory) {
+                    currentPage = 1;
+                    applyCategoryFilter(getActiveCategory());
+                }
             });
         });
 
@@ -1033,6 +1771,7 @@
                 const selectedCategory = tab.dataset.categoryFilter;
 
                 categoryTabs.forEach(item => item.classList.toggle('is-active', item === tab));
+                currentPage = 1;
                 applyCategoryFilter(selectedCategory);
             });
         });
@@ -1194,10 +1933,16 @@
 
             // 1. Capture the original size and position before expansion.
             const rect = card.getBoundingClientRect();
-            
+            const gridRect = cardsGrid.getBoundingClientRect();
             placeholder.style.width = rect.width + 'px';
             placeholder.style.height = rect.height + 'px';
+            placeholder.style.left = (rect.left - gridRect.left) + 'px';
+            placeholder.style.top = (rect.top - gridRect.top) + 'px';
             placeholder.classList.remove('hidden');
+            card.dataset.slotLeft = rect.left - gridRect.left;
+            card.dataset.slotTop = rect.top - gridRect.top;
+            card.dataset.slotWidth = rect.width;
+            card.dataset.slotHeight = rect.height;
 
             // 2. Pin the card to the viewport at its current position to prevent layout jumps.
             card.style.position = 'fixed';
@@ -1261,6 +2006,9 @@
             if (expandedCard !== card) return;
             const placeholder = card.nextElementSibling;
             const calculatorContent = card.querySelector('.calculator-content');
+            cardsGrid.style.minHeight = cardsGrid.offsetHeight + 'px';
+            card.classList.remove('card-page-in');
+            card.style.animationDelay = '';
             card.classList.remove('is-expanded');
             hideBackdrop(true);
             flyStarToNewPosition(card, () => {
@@ -1281,24 +2029,51 @@
             card.style.left = currentLeft + 'px';
             card.style.top = currentTop + 'px';
 
-            const pRect = placeholder.getBoundingClientRect();
+            const gridRect = cardsGrid.getBoundingClientRect();
+            const slotLeft = Number(card.dataset.slotLeft || 0);
+            const slotTop = Number(card.dataset.slotTop || 0);
+            const slotWidth = Number(card.dataset.slotWidth || placeholder.offsetWidth);
+            const slotHeight = Number(card.dataset.slotHeight || placeholder.offsetHeight);
+            const targetLeft = gridRect.left + slotLeft;
+            const targetTop = gridRect.top + slotTop;
 
             card.offsetHeight; // Force reflow.
 
-            card.style.top = pRect.top + 'px';
-            card.style.left = pRect.left + 'px';
-            card.style.width = pRect.width + 'px';
-            card.style.height = pRect.height + 'px';
+            card.style.top = targetTop + 'px';
+            card.style.left = targetLeft + 'px';
+            card.style.width = slotWidth + 'px';
+            card.style.height = slotHeight + 'px';
             card.classList.remove('shadow-2xl', 'border-zinc-400');
             
             setTimeout(() => {
-                card.removeAttribute('style');
+                card.style.transition = 'none';
+                card.classList.remove('hidden');
+                card.style.position = 'absolute';
+                card.style.top = slotTop + 'px';
+                card.style.left = slotLeft + 'px';
+                card.style.width = slotWidth + 'px';
+                card.style.height = slotHeight + 'px';
+                card.style.margin = '0';
+                card.style.maxWidth = '';
+                card.style.transform = '';
+                card.style.opacity = '';
+                card.style.visibility = '';
+                card.style.display = '';
                 card.classList.remove('active-panel');
                 card.classList.remove('star-docked');
+                placeholder.classList.add('hidden');
                 calculatorContent.style.maxHeight = '';
                 calculatorContent.classList.add('hidden');
-                placeholder.classList.add('hidden');
+                cardsGrid.style.minHeight = '';
                 expandedCard = null;
+                card.offsetHeight;
+                requestAnimationFrame(() => {
+                    card.style.transition = '';
+                    delete card.dataset.slotLeft;
+                    delete card.dataset.slotTop;
+                    delete card.dataset.slotWidth;
+                    delete card.dataset.slotHeight;
+                });
             }, 200);
         }
         
@@ -1331,6 +2106,7 @@
         initCompoundInterestCalculator();
         initLoanPaymentCalculator();
         initUnitConverter();
+        initExtraConverters();
         initDiscountCalculator();
         initSalesTaxCalculator();
         initTipCalculator();
@@ -1338,6 +2114,15 @@
         initTimeDurationCalculator();
         initBmiCalculator();
         initFuelCostCalculator();
+        initMortgageCalculator();
+        initAgeCalculator();
+        initCalorieCalculator();
+        initGpaCalculator();
+        initGenerators();
+        initImageTools();
+        applyCardTextStressTest();
+        setInitialCategory();
+        applyCategoryFilter();
 
         // Multilingual translation system.
         window.addEventListener('DOMContentLoaded', async () => {
