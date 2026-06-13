@@ -1551,7 +1551,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.05</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.06</p>
         </div>
     </footer>
 
@@ -2624,7 +2624,7 @@
         safeInit('Category Filter', applyCategoryFilter);
         safeInit('Tool Page Open', openToolPageCard);
         setTimeout(() => {
-            document.body.classList.remove('app-loading');
+            document.body.classList.remove('app-loading', 'tool-page-loading');
         }, 500);
 
         // Multilingual translation system.
