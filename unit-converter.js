@@ -35,9 +35,14 @@ function initUnitConverter() {
         populateUnitOptions();
         updateUnitConversion();
     });
-    [unitValue, unitFrom, unitTo].forEach(input => input.addEventListener('input', updateUnitConversion));
+
+    [unitValue, unitFrom, unitTo].forEach(input => {
+        input.addEventListener('input', updateUnitConversion);
+        input.addEventListener('change', updateUnitConversion);
+    });
 
     populateUnitOptions();
+    updateUnitConversion();
 }
 
 function populateUnitOptions() {
@@ -56,9 +61,10 @@ function updateUnitConversion() {
     const value = parseFloat(document.getElementById('unitValue').value);
     const from = document.getElementById('unitFrom').value;
     const to = document.getElementById('unitTo').value;
+    const resultElement = document.getElementById('valConvertedValue');
 
     if (Number.isNaN(value)) {
-        document.getElementById('valConvertedValue').innerText = '—';
+        resultElement.innerText = '--';
         return;
     }
 
@@ -66,7 +72,7 @@ function updateUnitConversion() {
         ? convertTemperature(value, from, to)
         : convertByFactor(value, unitType, from, to);
 
-    document.getElementById('valConvertedValue').innerText = formatUnitNumber(result);
+    resultElement.innerText = formatUnitNumber(result);
 }
 
 function convertByFactor(value, unitType, from, to) {
@@ -86,5 +92,7 @@ function convertTemperature(value, from, to) {
 }
 
 function formatUnitNumber(value) {
-    return Math.abs(value) >= 1000 || Number.isInteger(value) ? value.toLocaleString() : value.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+    return Math.abs(value) >= 1000 || Number.isInteger(value)
+        ? value.toLocaleString()
+        : value.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
 }
