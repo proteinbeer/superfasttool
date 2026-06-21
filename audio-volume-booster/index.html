@@ -71,8 +71,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        html { overflow-y: scroll; }
-        html.info-panel-open { overflow: hidden !important; overscroll-behavior: none; }
+        html { overflow-y: scroll; scrollbar-gutter: stable; }
+        html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
         body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
@@ -91,11 +91,18 @@
             pointer-events: none;
             background: #f8fafc;
             opacity: 0;
-            transition: opacity 0.08s ease;
+            transition: opacity 0.04s ease;
         }
         body.app-loading .page-fade-layer,
-        body.page-fade-out .page-fade-layer {
+        body.page-fade-out .page-fade-layer,
+        body.history-fade-ready .page-fade-layer {
             opacity: 1;
+        }
+        body.history-fade-revealing .page-fade-layer {
+            transition-duration: 0.04s;
+        }
+        body.page-transitions-disabled .page-fade-layer {
+            display: none !important;
         }
         body.app-loading #cardsGrid,
         body.app-loading #paginationControls,
@@ -2115,7 +2122,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.277</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.288</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-3 text-center text-sm font-black text-zinc-500">Audio Volume Booster</h2>
                 <p>Audio Volume Booster is a focused browser-based audio workflow tool built for quick everyday work. Boost or lower one MP3 or WAV file and download the same format. It is designed to stay simple: open the page, enter or choose the values you need, and read the result without creating an account, installing software, or moving through a complicated dashboard.</p>
@@ -2344,22 +2351,88 @@
             }));
         }
 
-        function clearPageFadeState() {
-            document.body.classList.remove('page-fade-out');
+        function preparePageForHistoryRestore() {
+            document.body.classList.remove('page-fade-out', 'history-fade-revealing');
+            document.body.classList.add('history-fade-ready');
         }
 
-        window.addEventListener('pagehide', clearPageFadeState);
-        window.addEventListener('pageshow', clearPageFadeState);
+        function primeHistoryFadeForInitialNavigation() {
+            const navigationEntry = performance.getEntriesByType('navigation')[0];
+            if (navigationEntry?.type === 'back_forward') {
+                document.body.classList.add('history-fade-ready');
+            }
+        }
+
+        function revealPageAfterHistoryRestore(event) {
+            document.body.classList.remove('page-fade-out');
+            const navigationEntry = performance.getEntriesByType('navigation')[0];
+            const fadeWasPrepared = document.body.classList.contains('history-fade-ready');
+            const isHistoryNavigation = event.persisted
+                || navigationEntry?.type === 'back_forward'
+                || fadeWasPrepared;
+
+            if (!isHistoryNavigation || !fadeWasPrepared) {
+                document.body.classList.remove('history-fade-ready', 'history-fade-revealing');
+                return;
+            }
+
+            document.body.classList.add('history-fade-revealing');
+            const fadeLayer = document.getElementById('pageFadeLayer');
+            if (fadeLayer) void fadeLayer.offsetWidth;
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.body.classList.remove('history-fade-ready');
+                    setTimeout(() => {
+                        document.body.classList.remove('history-fade-revealing');
+                    }, 80);
+                });
+            });
+        }
+
+        primeHistoryFadeForInitialNavigation();
+        window.addEventListener('pagehide', preparePageForHistoryRestore);
+        window.addEventListener('pageshow', revealPageAfterHistoryRestore);
 
         function fadeToUrl(url) {
+            if (document.body.classList.contains('page-transitions-disabled')) {
+                window.location.assign(url);
+                return;
+            }
+
             document.body.classList.add('page-fade-out');
             setTimeout(() => {
                 window.location.assign(url);
-            }, 80);
+            }, 40);
+        }
+
+        function returnToHub() {
+            let cameFromHub = false;
+            try {
+                const referrer = new URL(document.referrer);
+                cameFromHub = referrer.origin === window.location.origin && referrer.pathname === '/';
+            } catch (error) {
+                cameFromHub = false;
+            }
+
+            if (cameFromHub && window.history.length > 1) {
+                if (document.body.classList.contains('page-transitions-disabled')) {
+                    window.history.back();
+                } else {
+                    document.body.classList.add('page-fade-out');
+                    setTimeout(() => window.history.back(), 40);
+                }
+                return;
+            }
+
+            fadeToUrl('/');
         }
 
         function navigateToTool(slug) {
             saveHubState();
+            if (!document.body.classList.contains('page-transitions-disabled')) {
+                document.body.classList.add('history-fade-ready');
+            }
             fadeToUrl(`/${slug}/`);
         }
 
@@ -3186,7 +3259,7 @@
 
         toolBackHome.querySelector('a')?.addEventListener('click', (event) => {
             event.preventDefault();
-            fadeToUrl('/');
+            returnToHub();
         });
 
         const infoPanelData = {
@@ -3587,7 +3660,7 @@
         setTimeout(() => {
             document.body.classList.remove('app-loading', 'tool-page-loading');
             startLogoAndEmojiCycle();
-        }, 500);
+        }, 0);
 
         // Multilingual translation system.
         window.addEventListener('DOMContentLoaded', async () => {
