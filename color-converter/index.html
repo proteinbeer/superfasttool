@@ -63,13 +63,17 @@
                 "Tournament Bracket Generator",
                 "Random Decision Tools",
                 "Reaction Time Test",
-                "Memory Card Game"
+                "Memory Card Game",
+                "The Impossible Choice",
+                "Dox'x Click"
             ]
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         html { overflow-y: scroll; }
+        html.info-panel-open { overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -203,6 +207,8 @@
         .rarity-mythic { animation: mythicGlow 1.1s ease-in-out infinite; }
         .memory-card.is-matched { animation: memoryMatchGlow 1.05s ease-in-out infinite; }
         .memory-card.is-missed { animation: memoryMissGlow 0.42s ease-in-out; }
+        .memory-timer-box.is-low-time { animation: memoryTimerWarning 0.55s ease-in-out infinite; }
+        .expandable-card.is-processing { animation: toolProcessingGlow 1.05s ease-in-out infinite; }
         .reaction-pad { position: relative; overflow: hidden; }
         .reaction-pad.is-waiting::before {
             content: "";
@@ -238,6 +244,14 @@
         @keyframes memoryMissGlow {
             0%, 100% { box-shadow: 0 0 0 rgba(239, 68, 68, 0.08), 0 1px 8px rgba(239, 68, 68, 0.12); }
             50% { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2), 0 5px 16px rgba(239, 68, 68, 0.38); }
+        }
+        @keyframes memoryTimerWarning {
+            0%, 100% { background-color: #fafafa; border-color: #e5e7eb; box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+            50% { background-color: #fee2e2; border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18), 0 5px 16px rgba(239, 68, 68, 0.32); }
+        }
+        @keyframes toolProcessingGlow {
+            0%, 100% { border-color: rgba(249, 115, 22, 0.5); box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.12), 0 3px 12px rgba(249, 115, 22, 0.18); }
+            50% { border-color: rgba(249, 115, 22, 1); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.22), 0 8px 26px rgba(249, 115, 22, 0.42); }
         }
         @keyframes reactionWaitSpin {
             to { transform: rotate(360deg); }
@@ -371,6 +385,11 @@
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
         .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
+        #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
+        #contactPanel { overflow-y: auto; box-sizing: border-box; }
+        #aboutPanel,
+        #privacyPanel { padding-right: 12px !important; }
+        #contactPanel { padding-right: 0 !important; }
         .info-panel-scroll::-webkit-scrollbar { width: 8px; }
         .info-panel-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 999px; }
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
@@ -384,6 +403,9 @@
             min-height: 14rem;
             object-fit: contain;
             background: #f4f4f5;
+        }
+        .file-pending-hidden {
+            display: none !important;
         }
         .image-workspace {
             position: relative;
@@ -562,13 +584,42 @@
         .tool-page .tool-page-panel .calculator-content {
             padding-bottom: 23px !important;
         }
+        .tool-page .tool-page-panel .calculator-content.space-y-4 { gap: 1rem; }
+        .tool-page .tool-page-panel .calculator-content.space-y-5 { gap: 1.25rem; }
+        .tool-page .tool-page-panel .calculator-content.space-y-6 { gap: 1.5rem; }
+        .tool-page .tool-page-panel .calculator-content[class*="space-y-"] > :not(:last-child) {
+            margin-block-start: 0 !important;
+            margin-block-end: 0 !important;
+        }
+        .tool-page .tool-page-panel .calculator-content > div:empty {
+            display: none;
+        }        .tool-page .tool-page-panel .calculator-content:is(
+            :has(> button:last-child),
+            :has(> canvas:last-child),
+            :has(> img:last-child),
+            :has(> video:last-child),
+            :has(> div:empty:last-child)
+        ) {
+            padding-bottom: 26px !important;
+        }
         .tool-page .tool-page-panel .expand-close {
             display: none;
         }
 
         @media (max-width: 640px) {
             .calculator-content { overflow-y: auto; padding-bottom: 0 !important; }
+            #contactPanel { padding-right: 12px !important; }
+            .tool-page .tool-page-panel .calculator-content:is(
+                :has(> button:last-child),
+                :has(> canvas:last-child),
+                :has(> img:last-child),
+                :has(> video:last-child),
+                :has(> div:empty:last-child)
+            ) {
+                padding-bottom: 26px !important;
+            }
             .calculator-content > :last-child { margin-bottom: 0; }
+
             #avgCostCard .calculator-content { padding-bottom: 27px !important; }
             .info-panel-content { box-sizing: border-box; display: flex; flex-direction: column; height: 100%; max-height: calc(100dvh - 7.5rem); overflow-y: hidden; }
             .info-panel-content > div:first-child { flex: 0 0 auto; }
@@ -710,7 +761,7 @@
                         <div class="rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2">Start <span id="audioTrimStartLabel" class="float-right text-zinc-900">0.00s</span></div>
                         <div class="rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2">End <span id="audioTrimEndLabel" class="float-right text-zinc-900">0.00s</span></div>
                     </div>
-                    <button id="downloadTrimmedAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Trimmed Audio</button>
+                    <button id="downloadTrimmedAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -725,7 +776,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="mp3ToWavInput" accept="audio/mpeg,.mp3" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <button id="downloadMp3ToWav" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download WAV</button>
+                    <button id="downloadMp3ToWav" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -740,7 +791,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="wavToMp3Input" accept="audio/wav,.wav" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <button id="downloadWavToMp3" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download MP3</button>
+                    <button id="downloadWavToMp3" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -756,7 +807,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="audioVolumeInput" accept="audio/*" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="audioVolumeGain">Volume</label><span id="audioVolumeGainValue" class="text-xs font-bold text-zinc-700">150%</span></div><input type="range" id="audioVolumeGain" value="150" min="10" max="300" class="w-full accent-zinc-900 cursor-pointer"></div>
-                    <button id="downloadVolumeAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Audio</button>
+                    <button id="downloadVolumeAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -772,7 +823,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="audioSpeedInput" accept="audio/*" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="audioSpeedRate">Speed</label><span id="audioSpeedRateValue" class="text-xs font-bold text-zinc-700">1.25x</span></div><input type="range" id="audioSpeedRate" value="1.25" min="0.5" max="2" step="0.05" class="w-full accent-zinc-900 cursor-pointer"></div>
-                    <button id="downloadSpeedAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download WAV</button>
+                    <button id="downloadSpeedAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -787,7 +838,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="audioReverseInput" accept="audio/*" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <button id="downloadReverseAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Reversed Audio</button>
+                    <button id="downloadReverseAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -802,7 +853,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="audioMetadataInput" accept="audio/*" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <button id="downloadAudioMetadata" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download TXT</button>
+                    <button id="downloadAudioMetadata" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -821,7 +872,7 @@
                         <option value="wav">WAV</option>
                         <option value="mp3">MP3</option>
                     </select>
-                    <button id="downloadSilentAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Silent Audio</button>
+                    <button id="downloadSilentAudio" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
             <div id="profitLossCard" data-category="calculator" data-tool-slug="profit-loss-calculator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
@@ -1687,7 +1738,7 @@
                         <canvas id="imageCropperCanvas"></canvas>
                         <span id="cropSelection" class="crop-selection hidden"></span>
                     </div>
-                    <button id="downloadCroppedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Crop</button>
+                    <button id="downloadCroppedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1703,7 +1754,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="pngToJpgInput" accept="image/png" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <img id="pngToJpgPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadPngToJpg" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
+                    <button id="downloadPngToJpg" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1719,7 +1770,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="jpgToPngInput" accept="image/jpeg" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <img id="jpgToPngPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadJpgToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                    <button id="downloadJpgToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1736,7 +1787,7 @@
                     <input type="file" id="imageResizerInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><label class="block text-xs font-medium text-zinc-500 mb-1" for="resizeWidth">Width</label><input type="number" id="resizeWidth" value="800" min="1" max="5000" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400"></div>
                     <img id="imageResizerPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadResizedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Resized Image</button>
+                    <button id="downloadResizedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1753,7 +1804,7 @@
                     <input type="file" id="imageCompressorInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <div><div class="flex items-center justify-between gap-3 mb-1"><label class="block text-xs font-medium text-zinc-500" for="compressQuality">Quality</label><span id="compressQualityValue" class="text-xs font-bold text-zinc-700">80%</span></div><input type="range" id="compressQuality" value="80" min="10" max="100" class="w-full accent-zinc-900 cursor-pointer"></div>
                     <img id="imageCompressorPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadCompressedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
+                    <button id="downloadCompressedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1769,7 +1820,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="webpConverterInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <img id="webpConverterPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadWebpImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download WebP</button>
+                    <button id="downloadWebpImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1785,7 +1836,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="webpToPngInput" accept="image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <img id="webpToPngPreview" alt="" class="hidden image-preview-large rounded-xl border border-gray-200">
-                    <button id="downloadWebpToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                    <button id="downloadWebpToPng" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1811,7 +1862,7 @@
                     <div id="imageRotateFlipWorkspace" class="image-workspace hidden">
                         <canvas id="imageRotateFlipCanvas"></canvas>
                     </div>
-                    <button id="downloadRotatedFlippedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download PNG</button>
+                    <button id="downloadRotatedFlippedImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1827,7 +1878,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="imageToBase64Input" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
                     <textarea id="imageBase64Output" readonly rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-zinc-400 resize-none" placeholder="Base64 output"></textarea>
-                    <button id="downloadImageBase64" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download TXT</button>
+                    <button id="downloadImageBase64" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1843,7 +1894,7 @@
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <textarea id="base64ImageInput" rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-zinc-400 resize-none" placeholder="Paste data:image/...;base64,..."></textarea>
                     <img id="base64ImagePreview" alt="" class="hidden max-h-32 w-full rounded-xl border border-gray-200 object-contain bg-zinc-50">
-                    <button id="downloadBase64Image" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download Image</button>
+                    <button id="downloadBase64Image" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Convert</button>
                 </div>
             </div>
 
@@ -1858,7 +1909,7 @@
                 </div>
                 <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5">
                     <input type="file" id="imageMetadataInput" accept="image/png,image/jpeg,image/webp" class="w-full text-sm text-zinc-500 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:font-bold file:text-white">
-                    <button id="downloadImageMetadata" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download TXT</button>
+                    <button id="downloadImageMetadata" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1903,7 +1954,7 @@
                     <div id="imageFilterWorkspace" class="image-workspace hidden">
                         <canvas id="imageFilterCanvas"></canvas>
                     </div>
-                    <button id="downloadFilteredImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download JPG</button>
+                    <button id="downloadFilteredImage" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Download</button>
                 </div>
             </div>
 
@@ -1976,8 +2027,20 @@
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
             <div id="memoryCardGameCard" data-category="game" data-tool-slug="memory-card-game" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
-                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close game tool">&times;</button><div class="w-12 h-12 bg-pink-50 border border-pink-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129504;</div><h3 id="tool73Title" class="text-lg font-bold text-zinc-900 mb-1">Memory Card Game</h3><p id="tool73Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Play 50 memory stages with one extra pair added each stage.</p></div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5"><button id="newMemoryGame" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer">New Game</button><div class="flex justify-between rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-600"><span>Stage</span><span id="memoryStage">1 / 50</span></div><div id="memoryGrid" class="grid gap-2"></div><div id="memoryResult" class="text-sm font-bold text-zinc-800">Moves: 0</div></div>
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close game tool">&times;</button><div class="w-12 h-12 bg-pink-50 border border-pink-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129504;</div><h3 id="tool73Title" class="text-lg font-bold text-zinc-900 mb-1">Memory Card Game</h3><p id="tool73Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Match animal and food emojis across endless timed stages that become progressively harder.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5"><button id="newMemoryGame" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer">New Game</button><div class="grid grid-cols-3 gap-3"><div class="flex justify-between rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-600"><span>Stage</span><span id="memoryStage">1</span></div><div id="memoryTimerBox" class="memory-timer-box col-span-2 flex items-center rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2" title="Time remaining"><div class="h-3 w-full overflow-hidden rounded-full border border-orange-100 bg-zinc-200"><span id="memoryTimerBar" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" class="block h-full w-full rounded-full bg-zinc-900" style="transition:width 0.12s linear"></span></div></div></div><div id="memoryGrid" class="grid gap-2"></div><div id="memoryResult" class="text-center text-sm font-bold text-zinc-800">0 / 2</div></div>
+            </div>
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+            <div id="impossibleChoiceCard" data-category="game" data-tool-slug="the-impossible-choice" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close game tool">&times;</button><div class="w-12 h-12 bg-orange-50 border border-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#9878;&#65039;</div><h3 id="tool74Title" class="text-lg font-bold text-zinc-900 mb-1">The Impossible Choice</h3><p id="tool74Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Race through ten choices drawn from 500 impossible dilemmas and reveal your decision style.</p></div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-4">
+                    <div class="flex items-center justify-between text-xs font-bold text-zinc-500"><span id="choiceRound">Choice 1 / 10</span><span id="choiceStreak">Decided 0</span></div>
+                    <div id="choiceTimerBox" class="memory-timer-box flex items-center rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2" title="Time remaining"><div class="h-3 w-full overflow-hidden rounded-full border border-orange-100 bg-zinc-200"><span id="choiceTimerBar" role="progressbar" aria-label="Decision time remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" class="block h-full w-full rounded-full bg-zinc-900" style="transition:width 0.12s linear"></span></div></div>
+                    <div id="choiceQuestion" class="min-h-16 flex items-center justify-center rounded-xl border border-zinc-300 bg-zinc-100 px-4 py-3 text-center text-sm font-black text-zinc-800">Which would you choose?</div>
+                    <div id="choiceOptions" class="grid grid-cols-1 gap-3"><button id="choiceOptionA" type="button" class="min-h-16 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-zinc-800 cursor-pointer hover:border-orange-300 hover:bg-orange-50"></button><button id="choiceOptionB" type="button" class="min-h-16 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-zinc-800 cursor-pointer hover:border-orange-300 hover:bg-orange-50"></button></div>
+                    <div id="choiceResult" class="hidden rounded-xl border border-orange-200 bg-orange-50 p-4 text-center text-sm text-zinc-700"></div>
+                    <button id="newImpossibleChoice" type="button" class="hidden w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Start</button>
+                </div>
             </div>
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
         <div id="paginationControls" class="mt-8 flex flex-wrap justify-center gap-2"></div>
@@ -2000,7 +2063,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="aboutPanel">
-                    <span aria-hidden="true">&#9432;</span>
+                    <span aria-hidden="true">&#129517;</span>
                     <span id="footerAbout">About</span>
                 </button>
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="privacyPanel">
@@ -2014,7 +2077,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.72</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.276</p>
         </div>
     </footer>
 
@@ -2022,7 +2085,7 @@
         <div class="info-panel-content p-6 text-left">
             <div class="flex items-start justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
                 <div>
-                    <div id="infoPanelIcon" class="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center text-xl mb-3">&#9432;</div>
+                    <div id="infoPanelIcon" class="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center text-xl mb-3">&#129517;</div>
                     <h2 id="infoPanelTitle" class="text-xl font-black text-zinc-900">About</h2>
                 </div>
                 <button id="closeInfoPanelBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close information panel">&times;</button>
@@ -2031,7 +2094,14 @@
             <div id="aboutPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
                 <p><strong class="text-zinc-900">Super Fast Tool</strong> is a collection of quick calculators and utility tools for everyday tasks.</p>
                 <p>It is designed for fast answers without signup, installation, or complicated menus.</p>
-                <p>All calculator inputs are processed in your browser. The site does not send your calculation data to a server.</p>
+                <p>The collection includes calculators, converters, generators, image, video and audio utilities, plus lightweight browser games. Each tool has a focused page so you can get to the result without working through unnecessary steps.</p>
+                <p><strong class="text-zinc-900">Private by design</strong></p>
+                <p>Calculator inputs and supported file operations are processed locally in your browser whenever possible. Super Fast Tool does not upload those inputs or files to its own server.</p>
+                <p><strong class="text-zinc-900">Built for everyday use</strong></p>
+                <p>The tools are designed to work on desktop and mobile browsers with clear controls, immediate feedback, and downloadable results where appropriate. New utilities and improvements are added as useful ideas emerge.</p>
+                <p><strong class="text-zinc-900">Results and responsibility</strong></p>
+                <p>Results are provided for convenience and general guidance. Important financial, health, legal, or technical decisions should be checked against an authoritative source or qualified professional.</p>
+                <p>Questions, bug reports, and suggestions for new tools are always welcome through the Contact form.</p>
             </div>
 
             <div id="privacyPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
@@ -2335,6 +2405,48 @@
             }
         }
 
+        function initFileActionStates() {
+            const actionSelector = [
+                'button[id^="download"]',
+                '#compressVideo',
+                '#convertVideoFormat',
+                '#trimVideo',
+                '#createVideoGif',
+                '#extractVideoAudio',
+                '#convertSubtitleFile'
+            ].join(',');
+
+            document.querySelectorAll('.calculator-content input[type="file"]').forEach(input => {
+                const content = input.closest('.calculator-content');
+                const actions = content ? [...content.querySelectorAll(actionSelector)] : [];
+                if (!content) return;
+                const dependentElements = [...content.children].filter(element => {
+                    if (element.contains(input)) return false;
+                    return !element.matches(actionSelector) && !element.querySelector(actionSelector);
+                });
+
+                const sync = () => {
+                    const disabled = !input.files?.length;
+                    dependentElements.forEach(element => {
+                        element.classList.toggle('file-pending-hidden', disabled);
+                    });
+                    actions.forEach(button => {
+                        button.disabled = disabled;
+                        button.classList.toggle('bg-zinc-900', !disabled);
+                        button.classList.toggle('text-white', !disabled);
+                        button.classList.toggle('hover:bg-zinc-700', !disabled);
+                        button.classList.toggle('cursor-pointer', !disabled);
+                        button.classList.toggle('bg-zinc-300', disabled);
+                        button.classList.toggle('text-zinc-500', disabled);
+                        button.classList.toggle('cursor-not-allowed', disabled);
+                    });
+                };
+
+                input.addEventListener('change', sync);
+                sync();
+            });
+        }
+
         function renderHeaderToolName(title) {
             headerToolName.innerHTML = '';
             const subStart = logoMainWaveEndSeconds + 0.22;
@@ -2596,6 +2708,14 @@
             return true;
         }
 
+        function focusHubSearchCaret() {
+            const hasDesktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            if (!hasDesktopPointer || toolPageConfig || activeInfoPanel || !toolSearchInput) return;
+            toolSearchInput.focus({ preventScroll: true });
+            const end = toolSearchInput.value.length;
+            toolSearchInput.setSelectionRange(end, end);
+        }
+
         function getPanelBounds(preferredHeight) {
             const isMobile = window.innerWidth <= 640;
             const topPadding = isMobile ? 48 : 28;
@@ -2680,11 +2800,14 @@
             const headerHeight = header.offsetHeight + parseFloat(headerStyles.marginBottom);
             const contentPadding = parseFloat(contentStyles.paddingTop) + parseFloat(contentStyles.paddingBottom);
             const mobileBottomGap = 2;
-            const desktopPanelBuffer = activeSection.id === 'privacyPanel' ? 68 : 40;
-            const availableHeight = window.innerWidth <= 640
+            const desktopPanelBuffer = activeSection.id === 'contactPanel' ? 40 : 68;
+            const contactTrackGap = activeSection.id === 'contactPanel' && window.innerWidth > 640 ? 24 : 0;
+            const availableHeight = (window.innerWidth <= 640
                 ? panelHeight - headerHeight - contentPadding - mobileBottomGap
-                : panelHeight - header.offsetHeight - desktopPanelBuffer;
-            activeSection.style.maxHeight = Math.max(140, availableHeight) + 'px';
+                : panelHeight - header.offsetHeight - desktopPanelBuffer) - contactTrackGap;
+            const sectionHeight = Math.max(140, availableHeight);
+            activeSection.style.maxHeight = sectionHeight + 'px';
+            activeSection.style.height = '';
         }
 
         function flyStarToNewPosition(card, updatePosition) {
@@ -3006,10 +3129,26 @@
         });
 
         const infoPanelData = {
-            aboutPanel: { title: 'About', icon: '&#9432;' },
+            aboutPanel: { title: 'About', icon: '&#129517;' },
             privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
+
+        function lockPageForInfoPanel() {
+            if (document.body.classList.contains('info-panel-open')) return;
+            infoPanelScrollY = window.scrollY;
+            document.documentElement.classList.add('info-panel-open');
+            document.body.classList.add('info-panel-open');
+            document.body.style.top = `-${infoPanelScrollY}px`;
+        }
+
+        function unlockPageAfterInfoPanel() {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            document.documentElement.classList.remove('info-panel-open');
+            document.body.classList.remove('info-panel-open');
+            document.body.style.top = '';
+            window.scrollTo(0, infoPanelScrollY);
+        }
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {
@@ -3020,8 +3159,10 @@
         });
 
         function openInfoPanel(sourceButton, panelId) {
+            lockPageForInfoPanel();
             showBackdrop();
             activeInfoPanel = panelId;
+            toolSearchInput?.blur();
             activeInfoSourceButton = sourceButton;
             const rect = sourceButton.getBoundingClientRect();
             const targetWidth = Math.min(520, window.innerWidth - 32);
@@ -3069,6 +3210,7 @@
             infoPanel.classList.remove('is-open');
             activeInfoPanel = null;
             activeInfoSourceButton = null;
+            unlockPageAfterInfoPanel();
             hideBackdrop(true);
 
             if (!animate) {
@@ -3080,6 +3222,7 @@
                     section.style.display = '';
                 });
                 if (sourceButton) sourceButton.style.visibility = '';
+                focusHubSearchCaret();
                 return;
             }
 
@@ -3101,6 +3244,7 @@
                     section.style.display = '';
                 });
                 if (sourceButton) sourceButton.style.visibility = '';
+                focusHubSearchCaret();
             }, 180);
         }
 
@@ -3321,6 +3465,7 @@
             if (activeInfoPanel && !infoPanel.contains(e.target) && !e.target.closest('.footer-action')) {
                 closeInfoPanel();
             }
+            if (!isTextEntryTarget(e.target)) setTimeout(focusHubSearchCaret, 0);
         });
 
         pageBackdrop.addEventListener('click', () => {
@@ -3336,7 +3481,7 @@
             }
             if (!toolPageConfig && e.key === 'Escape' && toolSearchInput?.value) {
                 setSearchValue('');
-                toolSearchInput.blur();
+                focusHubSearchCaret();
                 e.preventDefault();
                 return;
             }
@@ -3369,12 +3514,14 @@
         safeInit('Image Tools', initImageTools);
         safeInit('Audio Tools', initAudioTools);
         safeInit('Game Tools', initGameTools);
+        safeInit('File Action States', initFileActionStates);
         safeInit('Text Stress Test', applyCardTextStressTest);
         configureMainLogoWave();
         safeInit('Initial Category', setInitialCategory);
         safeInit('Tool Page Prep', prepareToolPage);
         safeInit('Category Filter', applyCategoryFilter);
         safeInit('Tool Page Open', openToolPageCard);
+        safeInit('Hub Search Caret', focusHubSearchCaret);
         setTimeout(() => {
             document.body.classList.remove('app-loading', 'tool-page-loading');
             startLogoAndEmojiCycle();

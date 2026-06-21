@@ -14,23 +14,23 @@ function initImageTools() {
     setupImageMetadataViewer();
     setupImageColorPicker();
 
-    document.getElementById('downloadPngToJpg').addEventListener('click', async () => {
+    bindImageAction('downloadPngToJpg', async () => {
         const file = getSelectedFile('pngToJpgInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight, '#ffffff');
-        downloadCanvas(canvas, 'converted.jpg', 'image/jpeg', 0.92);
+        await downloadCanvas(canvas, 'converted.jpg', 'image/jpeg', 0.92);
     });
 
-    document.getElementById('downloadJpgToPng').addEventListener('click', async () => {
+    bindImageAction('downloadJpgToPng', async () => {
         const file = getSelectedFile('jpgToPngInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight);
-        downloadCanvas(canvas, 'converted.png', 'image/png');
+        await downloadCanvas(canvas, 'converted.png', 'image/png');
     });
 
-    document.getElementById('downloadResizedImage').addEventListener('click', async () => {
+    bindImageAction('downloadResizedImage', async () => {
         const file = getSelectedFile('imageResizerInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
@@ -38,35 +38,35 @@ function initImageTools() {
         document.getElementById('resizeWidth').value = width;
         const height = Math.max(1, Math.round(width * (image.naturalHeight / image.naturalWidth)));
         const canvas = drawImageToCanvas(image, width, height, '#ffffff');
-        downloadCanvas(canvas, buildFileName(file.name, 'resized', 'jpg'), 'image/jpeg', 0.92);
+        await downloadCanvas(canvas, buildFileName(file.name, 'resized', 'jpg'), 'image/jpeg', 0.92);
     });
 
-    document.getElementById('downloadCompressedImage').addEventListener('click', async () => {
+    bindImageAction('downloadCompressedImage', async () => {
         const file = getSelectedFile('imageCompressorInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const quality = clampNumber(document.getElementById('compressQuality').value, 10, 100, 80) / 100;
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight, '#ffffff');
-        downloadCanvas(canvas, buildFileName(file.name, 'compressed', 'jpg'), 'image/jpeg', quality);
+        await downloadCanvas(canvas, buildFileName(file.name, 'compressed', 'jpg'), 'image/jpeg', quality);
     });
 
-    document.getElementById('downloadWebpImage').addEventListener('click', async () => {
+    bindImageAction('downloadWebpImage', async () => {
         const file = getSelectedFile('webpConverterInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight);
-        downloadCanvas(canvas, buildFileName(file.name, 'converted', 'webp'), 'image/webp', 0.9);
+        await downloadCanvas(canvas, buildFileName(file.name, 'converted', 'webp'), 'image/webp', 0.9);
     });
 
-    document.getElementById('downloadWebpToPng').addEventListener('click', async () => {
+    bindImageAction('downloadWebpToPng', async () => {
         const file = getSelectedFile('webpToPngInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight);
-        downloadCanvas(canvas, buildFileName(file.name, 'converted', 'png'), 'image/png');
+        await downloadCanvas(canvas, buildFileName(file.name, 'converted', 'png'), 'image/png');
     });
 
-    document.getElementById('downloadCroppedImage').addEventListener('click', async () => {
+    bindImageAction('downloadCroppedImage', async () => {
         const file = getSelectedFile('imageCropperInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
@@ -80,23 +80,47 @@ function initImageTools() {
         canvas.width = width;
         canvas.height = height;
         canvas.getContext('2d').drawImage(image, x, y, width, height, 0, 0, width, height);
-        downloadCanvas(canvas, buildFileName(file.name, 'cropped', 'png'), 'image/png');
+        await downloadCanvas(canvas, buildFileName(file.name, 'cropped', 'png'), 'image/png');
     });
 
-    document.getElementById('downloadRotatedFlippedImage').addEventListener('click', async () => {
+    bindImageAction('downloadRotatedFlippedImage', async () => {
         const file = getSelectedFile('imageRotateFlipInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = transformImageToCanvas(image, getActiveTransformMode());
-        downloadCanvas(canvas, buildFileName(file.name, 'transformed', 'png'), 'image/png');
+        await downloadCanvas(canvas, buildFileName(file.name, 'transformed', 'png'), 'image/png');
     });
 
-    document.getElementById('downloadFilteredImage').addEventListener('click', async () => {
+    bindImageAction('downloadFilteredImage', async () => {
         const file = getSelectedFile('imageFilterInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
         const canvas = renderFilteredCanvas(image, document.getElementById('imageFilterMode').value);
-        downloadCanvas(canvas, buildFileName(file.name, 'filtered', 'jpg'), 'image/jpeg', 0.92);
+        await downloadCanvas(canvas, buildFileName(file.name, 'filtered', 'jpg'), 'image/jpeg', 0.92);
+    });
+}
+
+function bindImageAction(buttonId, action) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    button.addEventListener('click', async () => {
+        const card = button.closest('.expandable-card');
+        const originalText = button.textContent;
+        card?.classList.add('is-processing');
+        button.disabled = true;
+        button.classList.add('opacity-50', 'cursor-not-allowed');
+        button.textContent = 'Processing...';
+        try {
+            await new Promise(resolve => requestAnimationFrame(resolve));
+            await action();
+        } catch (error) {
+            console.error('Image task failed:', error);
+        } finally {
+            card?.classList.remove('is-processing');
+            button.disabled = false;
+            button.classList.remove('opacity-50', 'cursor-not-allowed');
+            button.textContent = originalText;
+        }
     });
 }
 
@@ -579,17 +603,20 @@ function getActiveTransformMode() {
 }
 
 function downloadCanvas(canvas, fileName, mimeType, quality) {
-    canvas.toBlob(blob => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-    }, mimeType, quality);
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+            if (!blob) return reject(new Error('Unable to create the image file.'));
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            resolve();
+        }, mimeType, quality);
+    });
 }
 
 function buildFileName(originalName, suffix, extension) {

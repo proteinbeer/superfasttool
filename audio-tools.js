@@ -220,6 +220,8 @@ function initAudioTools() {
         if (!button) return;
         button.addEventListener('click', async () => {
             const originalText = button.textContent;
+            const card = button.closest('.expandable-card');
+            card?.classList.add('is-processing');
             button.disabled = true;
             button.classList.add('opacity-50', 'cursor-not-allowed');
             button.textContent = 'Processing...';
@@ -231,6 +233,7 @@ function initAudioTools() {
                 button.disabled = false;
                 button.classList.remove('opacity-50', 'cursor-not-allowed');
                 button.textContent = originalText;
+                card?.classList.remove('is-processing');
             }
         });
     }
