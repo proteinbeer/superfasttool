@@ -2115,7 +2115,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.276</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.277</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-3 text-center text-sm font-black text-zinc-500">The Impossible Choice</h2>
                 <p>The Impossible Choice is a fast decision game built around ten unusual either-or dilemmas. Every round gives you six seconds to choose, encouraging instinctive answers instead of careful optimization. There are no objectively correct responses and no account is required.</p>
@@ -2343,6 +2343,13 @@
                 searchPage: isSearching() ? currentPage : 1
             }));
         }
+
+        function clearPageFadeState() {
+            document.body.classList.remove('page-fade-out');
+        }
+
+        window.addEventListener('pagehide', clearPageFadeState);
+        window.addEventListener('pageshow', clearPageFadeState);
 
         function fadeToUrl(url) {
             document.body.classList.add('page-fade-out');
