@@ -2116,9 +2116,10 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.301</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.316</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
-                <h2 class="mb-3 text-center text-sm font-black text-zinc-500">Random Decision Tools</h2>
+                <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Random Decision Tools</h2>
+                <div class="mb-4 text-center"><a href="/guides/random-decision-tools/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>Guide</a></div>
                 <p>Random Decision Tools is a focused browser-based game and randomization tool built for quick everyday work. Flip a coin, roll a die, or pick one option from your list. It is designed to stay simple: open the page, enter or choose the values you need, and read the result without creating an account, installing software, or moving through a complicated dashboard.</p>
                 <p class="mt-3">Use Random Decision Tools when you need a fast answer during writing, design, coding, file preparation, study, planning, testing, or routine online tasks. The Random Decision Tools page keeps the controls close to the result so you can adjust inputs and immediately see what changes. This makes it useful for checking small details, comparing formats, preparing content, cleaning up repeated work, or quickly validating an idea before using it somewhere else.</p>
                 <p class="mt-3">To use Random Decision Tools, start with the visible input fields, sliders, upload controls, or buttons inside the tool panel. Change one value at a time if you want to understand how the result is produced, or paste your prepared content directly when you already know what you need. When Random Decision Tools offers a download button, review the output first and then save the generated file to your device.</p>
@@ -2457,7 +2458,7 @@
                 [document.querySelector('#translateIcon img')],
                 Array.from(document.querySelectorAll('.category-tab:not(.is-hidden) > span[aria-hidden="true"]')).filter(visibleElement),
                 cardIconTargets,
-                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"]')).filter(visibleElement)
+                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"], .tool-guide-link > span[aria-hidden="true"]')).filter(visibleElement)
             ];
             let delay = 0;
             groups.forEach(group => {

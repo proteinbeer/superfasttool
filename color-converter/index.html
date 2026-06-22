@@ -2078,7 +2078,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.301</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.316</p>
         </div>
     </footer>
 
@@ -2411,7 +2411,7 @@
                 [document.querySelector('#translateIcon img')],
                 Array.from(document.querySelectorAll('.category-tab:not(.is-hidden) > span[aria-hidden="true"]')).filter(visibleElement),
                 cardIconTargets,
-                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"]')).filter(visibleElement)
+                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"], .tool-guide-link > span[aria-hidden="true"]')).filter(visibleElement)
             ];
             let delay = 0;
             groups.forEach(group => {

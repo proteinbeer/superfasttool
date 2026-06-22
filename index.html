@@ -2118,9 +2118,9 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.301</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.316</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
-                <h2 class="mb-3 text-center text-sm font-black text-zinc-500">Terms of Service</h2>
+                <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Terms of Service</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
                 <p class="mt-3">Most tools on Super Fast Tool run directly inside your browser. Calculation values, text input, generated names, image previews, color selections, audio files, and similar working data are generally processed locally on your device and are not intentionally sent to a Super Fast Tool server. Some features may depend on browser APIs, third-party platform behavior, embedded services, translation services, analytics, hosting infrastructure, or advertising technology. Those services may process limited technical information such as request logs, device data, cookies, browser settings, language preferences, or network information according to their own policies. You should not upload or enter private, confidential, regulated, or sensitive information unless you are comfortable processing it in your current browser environment.</p>
                 <p class="mt-3">The site is offered on an "as is" and "as available" basis. We try to keep tools accurate, fast, accessible, and easy to use, but we do not guarantee that every result will be complete, current, error-free, uninterrupted, secure, or suitable for your specific purpose. Unit conversions, timestamp conversions, color formats, file transformations, random generators, game utilities, calculators, and other outputs may be affected by browser differences, rounding, local time zones, file metadata, unsupported formats, or user input. You agree that Super Fast Tool is not liable for losses, damages, missed deadlines, corrupted files, inaccurate outputs, business interruption, or any indirect consequence that may result from using or being unable to use the site.</p>
@@ -2461,7 +2461,7 @@
                 [document.querySelector('#translateIcon img')],
                 Array.from(document.querySelectorAll('.category-tab:not(.is-hidden) > span[aria-hidden="true"]')).filter(visibleElement),
                 cardIconTargets,
-                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"]')).filter(visibleElement)
+                Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"], .tool-guide-link > span[aria-hidden="true"]')).filter(visibleElement)
             ];
             let delay = 0;
             groups.forEach(group => {
