@@ -118,7 +118,6 @@
             visibility: hidden;
         }
         body.tool-page.tool-page-loading #toolBackHome,
-        body.tool-page.tool-page-loading #adSection,
         body.tool-page.tool-page-loading footer {
             visibility: hidden;
         }
@@ -2099,11 +2098,6 @@
             </a>
         </div>
 
-        <div id="adSection" class="mt-10">
-            <div class="min-h-[90px] bg-white/85 border border-gray-200 rounded-xl flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm backdrop-blur-md">
-                Coming soon
-            </div>
-        </div>
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-12 text-center text-sm text-zinc-400 w-full relative z-0">
@@ -2113,10 +2107,10 @@
                     <span aria-hidden="true">&#129517;</span>
                     <span id="footerAbout">About</span>
                 </button>
-                <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="privacyPanel">
+                <a href="/privacy.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer hover:border-zinc-400">
                     <span aria-hidden="true">&#128274;</span>
                     <span id="footerPolicy">Policy</span>
-                </button>
+                </a>
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="contactPanel">
                     <span aria-hidden="true">&#9993;</span>
                     <span id="footerContact">Contact</span>
@@ -2124,7 +2118,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.288</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.301</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-3 text-center text-sm font-black text-zinc-500">Terms of Service</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -3264,6 +3258,11 @@
         toolBackHome.querySelector('a')?.addEventListener('click', (event) => {
             event.preventDefault();
             returnToHub();
+        });
+
+        document.querySelector('a[href="/privacy.html"]')?.addEventListener('click', event => {
+            event.preventDefault();
+            fadeToUrl('/privacy.html');
         });
 
         const infoPanelData = {
