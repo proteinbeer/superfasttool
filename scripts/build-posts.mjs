@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const version = 'v1.2.334';
+const version = 'v1.2.342';
 const today = '2026-06-24';
 
 const posts = [
@@ -139,6 +139,90 @@ const posts = [
 ];
 
 const newsItems = [
+  {
+    slug: 'adobe-topaz-labs-ai-image-video-enhancement',
+    title: 'Adobe Plans to Acquire Topaz Labs for Creative AI Tools',
+    description: 'Adobe has agreed to acquire Topaz Labs, bringing AI image and video upscaling, restoration, sharpening, and on-device enhancement into its creative portfolio.',
+    dateDisplay: 'June 30, 2026',
+    datePublished: '2026-06-30',
+    icon: '&#128240;',
+    toolHref: '/image-resizer/',
+    toolLabel: 'Open Image Tools',
+    sections: [
+      ['What Adobe announced', 'Adobe announced on June 25, 2026 that it entered into a definitive agreement to acquire Topaz Labs. The transaction has not closed yet. Adobe expects it to close in the second half of 2026, subject to regulatory approvals and other customary closing conditions.'],
+      ['What Topaz Labs contributes', 'Topaz Labs develops AI models and tools for improving existing images and video. Its capabilities include upscaling, sharpening, stabilization, frame interpolation, noise removal, footage restoration, and resolution enhancement. These tools target captured or generated media that needs additional cleanup before delivery.'],
+      ['On-device processing is part of the plan', 'Adobe highlighted Topaz Labs\' Neurostream technology, which is designed to run large enhancement models locally on consumer devices. Adobe says this expertise could support faster and more cost-effective creative workflows, although specific product integrations and release dates have not been announced.'],
+      ['What happens to current Topaz products', 'Adobe says Topaz Labs products are expected to remain available as standalone offerings after the transaction closes, with continued support and investment. The companies have not announced immediate changes to existing subscriptions, pricing, or product availability.'],
+      ['Why this matters for everyday image tools', 'The agreement reflects growing demand for tools that improve media after it has been captured or generated. Advanced AI enhancement can restore difficult material, while focused browser utilities remain useful for direct tasks such as resizing, cropping, converting, or compressing a file with a predictable output.']
+    ],
+    sources: [
+      ['Adobe Newsroom: Adobe to Acquire Topaz Labs', 'https://news.adobe.com/news/2026/06/adobe-to-acquire-topaz-labs'],
+      ['Topaz Labs', 'https://www.topazlabs.com/']
+    ]
+  },
+  {
+    slug: 'coreweave-aria-ai-research-agent-preview',
+    title: 'CoreWeave Launches ARIA AI Research Agent in W&B',
+    description: 'CoreWeave launched ARIA in public preview, an AI research agent that analyzes experiments, creates W&B dashboards, and helps teams plan model improvements.',
+    dateDisplay: 'June 30, 2026',
+    datePublished: '2026-06-30',
+    icon: '&#128240;',
+    toolHref: '/character-byte-counter/',
+    toolLabel: 'Open Productivity Tools',
+    sections: [
+      ['What CoreWeave launched', 'CoreWeave announced ARIA, short for AI Research and Iteration Agent, on June 29, 2026. The agent is built into Weights & Biases and entered public preview alongside the general availability of agent-development capabilities in W&B Weave.'],
+      ['How ARIA uses experiment data', 'CoreWeave says ARIA reads project runs, metrics, and structure to identify patterns and suggest next steps. It can create live W&B workspaces, panels, reports, charts, and visualizations to support its analysis instead of returning only a text summary.'],
+      ['The intended research workflow', 'ARIA is designed to assist with forming hypotheses, launching experiments, evaluating results, and recommending follow-up work. It enters conversations with project context already loaded and can examine data across projects and team experiments. These capabilities are company-reported features of the current preview, not an independent performance evaluation.'],
+      ['Availability and limits', 'ARIA is available from the agent icon inside a W&B project and can also be accessed through the W&B mobile app. Because it is a public preview with deeper autonomous research features still on the roadmap, teams should verify generated analysis, experiment changes, and recommendations before relying on them.'],
+      ['Why it matters for productivity tools', 'ARIA shows how software is moving from passive reporting toward tools that can organize data and propose actions. For everyday utilities, the same practical standard still applies: automation is most valuable when the input, operation, and result remain clear enough for the user to inspect.']
+    ],
+    sources: [
+      ['CoreWeave: ARIA Launches as an AI Research and Iteration Agent', 'https://www.coreweave.com/news/coreweave-aria-launches-as-an-ai-research-and-iteration-agent-with-autonomous-research-and-collaborative-intelligence'],
+      ['Weights & Biases', 'https://wandb.ai/']
+    ]
+  },
+  {
+    slug: 'gemini-chrome-android-auto-browse',
+    title: 'Gemini in Chrome Brings AI Assistance and Auto Browse to Android',
+    description: 'Google is rolling out Gemini in Chrome and its Auto Browse feature to selected Android devices, combining page-aware assistance, image tools, and task automation.',
+    dateDisplay: 'June 29, 2026',
+    datePublished: '2026-06-29',
+    icon: '&#128240;',
+    toolHref: '/image-cropper/',
+    toolLabel: 'Open Browser Tools',
+    sections: [
+      ['What Google is bringing to Android', 'Google says Gemini in Chrome will begin rolling out to selected Android devices in the United States at the end of June 2026. The assistant opens from the Chrome toolbar and can use the context of the current page to answer questions, summarize articles, and explain complex material without requiring the user to switch apps.'],
+      ['Image creation inside the browser', 'The Android experience also includes Nano Banana image capabilities. Google says users can create or modify visuals from the context of a page, such as turning study material into an infographic or previewing changes to a room shown in an online listing. Generated edits still need normal human review before they are treated as accurate or published.'],
+      ['Auto Browse can act on websites', 'Auto Browse is designed to complete multi-step browser tasks such as finding parking from event details or updating an online order. Google says Chrome will request confirmation before sensitive actions such as purchases or social-media posts. The company also describes protections against prompt-injection attacks, although automated browsing still requires careful review.'],
+      ['Availability is limited at launch', 'Gemini in Chrome is initially limited to selected devices running Android 12 or later in the United States, with at least 4 GB of memory. Auto Browse is rolling out to Google AI Pro and Ultra subscribers on selected supported devices. These requirements mean the announcement is a staged rollout, not universal Android availability.'],
+      ['Why it matters for lightweight browser tools', 'The browser is becoming an active workspace rather than only a place that displays pages. Agentic assistance can coordinate broad tasks, while focused utilities remain useful for predictable jobs such as converting one file, trimming one clip, checking one value, or downloading a result that the user can inspect directly.']
+    ],
+    sources: [
+      ['Google Blog: Bringing Gemini in Chrome to Android', 'https://blog.google/products-and-platforms/products/chrome/bringing-chrome-ai-to-android/'],
+      ['Google Blog: Gemini in Chrome expands to more markets', 'https://blog.google/products-and-platforms/products/chrome/chrome-expands-latin-america/']
+    ]
+  },
+  {
+    slug: 'pixel-june-drop-ai-video-music-tools',
+    title: 'Pixel June Drop Adds Gemini Video Creation, Music Generation, and New Editing Tools',
+    description: 'Google\'s June Pixel Drop adds Gemini-powered video creation, original music generation, conversational photo editing, and new multitasking features to supported devices.',
+    dateDisplay: 'June 29, 2026',
+    datePublished: '2026-06-29',
+    icon: '&#128240;',
+    toolHref: '/video-to-gif-converter/',
+    toolLabel: 'Open Media Tools',
+    sections: [
+      ['What arrived in the June Pixel Drop', 'Google announced a collection of creator and productivity features for supported Pixel devices on June 16, 2026. The release includes Gemini Omni video creation, Gemini music generation, screen-recording reactions, floating app bubbles, expanded conversational photo editing, and changes to sharing and communication tools.'],
+      ['Gemini Omni combines several media inputs', 'Google says Gemini Omni can create and edit video through conversation using combinations of text, images, and video. Users can begin from a prompt, remix media from the camera roll, use a template, or create a custom AI avatar. Access requires an eligible Google AI subscription, and availability varies by tier and region.'],
+      ['Music generation comes to Gemini on Pixel', 'The Gemini app can generate an original track from a written idea or an uploaded photo. Users can specify style, vocals, and tempo, and Google notes that usage limits and compatibility restrictions apply. Generated music should also be reviewed for suitability and rights requirements before public or commercial use.'],
+      ['Photo editing and multitasking expand', 'Ask Photos conversational editing is expanding on supported Pixel phones in the United Kingdom, Germany, France, Spain, and Italy. The update also adds Bubbles on Android 17 Pixel devices, allowing an app to run in a compact floating window, and introduces selfie reactions that can be included in full-screen recordings on supported software.'],
+      ['How this connects to focused media tools', 'Pixel is combining capture, generation, editing, and multitasking on one device. Browser utilities serve the narrower stage after that creative work: changing a format, trimming a recording, extracting audio, compressing a file, or turning a finished clip into a GIF with explicit controls and a downloadable output.']
+    ],
+    sources: [
+      ['Google Blog: June Pixel Drop', 'https://blog.google/products-and-platforms/devices/pixel/june-2026-pixel-drop/'],
+      ['Google Pixel Help: Pixel software updates', 'https://support.google.com/pixelphone/answer/7680439']
+    ]
+  },
   {
     slug: 'canva-ai-2-agentic-editing-workflows',
     title: 'Canva AI 2.0 Introduces Layered Editing and Agentic Creative Workflows',
