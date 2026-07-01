@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sprite Sheet Editor</title>
+<style>
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { display: flex; flex-direction: column; background: #f8fafc; color: #18181b; font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 12px; }
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+.mobile-unsupported { display: none; }
+.toolbar { display: flex; flex: 0 0 auto; gap: 10px; align-items: end; flex-wrap: wrap; margin-bottom: 12px; padding: 12px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 1px 2px rgba(24,24,27,.04); }
+.field { display: grid; gap: 4px; }
+.field-label { color: #71717a; font-size: 11px; font-weight: 700; }
+.toolbar input[type=number] { width: 68px; height: 38px; background: #fafafa; color: #18181b; border: 1px solid #e4e4e7; border-radius: 9px; padding: 0 10px; }
+.toolbar input[type=range] { width: 112px; accent-color: #18181b; }
+.toolbar input[type=file] { max-width: 235px; color: #71717a; font-size: 12px; }
+.toolbar input[type=file]::file-selector-button, .toolbar button, #playBtn, #saveBtn { min-height: 38px; border: 1px solid #27272a; border-radius: 9px; background: #18181b; color: #fff; padding: 0 13px; cursor: pointer; font-weight: 750; transition: background-color .12s ease, border-color .12s ease; }
+.toolbar .history-button { width: 38px; padding: 0; font-size: 18px; line-height: 1; }
+.project-input { display: none; }
+.toolbar input[type=file]::file-selector-button { margin-right: 8px; }
+.toolbar button:hover, #playBtn:hover, #saveBtn:hover { background: #3f3f46; border-color: #3f3f46; }
+.toolbar button:active, #playBtn:active, #saveBtn:active { background: #52525b; }
+.toolbar button:disabled, #playBtn:disabled, #saveBtn:disabled { cursor: not-allowed; opacity: .38; }
+.toolbar .info { flex: 1 1 180px; min-width: 0; color: #71717a; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zoom-row { display: flex; min-height: 38px; align-items: center; gap: 8px; }
+#zoomLabel { min-width: 34px; color: #71717a; font-size: 11px; font-weight: 700; text-align: right; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 268px; flex: 1 1 auto; gap: 12px; min-height: 0; overflow: hidden; }
+.sheet-area { position: relative; min-width: 0; overflow: auto; padding: 14px; border: 1px solid #e4e4e7; border-radius: 12px; background-color: #f4f4f5; background-image: linear-gradient(45deg, #e4e4e7 25%, transparent 25%), linear-gradient(-45deg, #e4e4e7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e4e4e7 75%), linear-gradient(-45deg, transparent 75%, #e4e4e7 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0; overscroll-behavior: contain; }
+.empty-state { position: absolute; z-index: 2; inset: 50% auto auto 50%; width: min(280px, calc(100% - 32px)); padding: 18px; transform: translate(-50%, -50%); border: 1px dashed #a1a1aa; border-radius: 12px; background: rgba(255,255,255,.9); color: #71717a; text-align: center; font-size: 12px; font-weight: 700; pointer-events: none; }
+.sheet-area.is-loaded .empty-state { display: none; }
+.sheet-area:not(.is-loaded) .spritesheet-wrap { display: none; }
+.spritesheet-wrap { position: relative; display: inline-block; overflow: hidden; border: 1px solid #a1a1aa; border-radius: 6px; background-color: #fff; background-image: linear-gradient(45deg,#e4e4e7 25%,transparent 25%),linear-gradient(-45deg,#e4e4e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e4e4e7 75%),linear-gradient(-45deg,transparent 75%,#e4e4e7 75%); background-size: 16px 16px; background-position: 0 0,0 8px,8px -8px,-8px 0; box-shadow: 0 8px 24px rgba(24,24,27,.08); }
+.side-panel { min-width: 0; overflow: hidden; }
+#sheetCanvas { display: block; cursor: crosshair; image-rendering: pixelated; touch-action: none; }
+#gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none; image-rendering: pixelated; }
+.preview-panel { min-height: 100%; padding: 14px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 1px 2px rgba(24,24,27,.04); }
+.preview-panel h3 { margin: 0 0 10px; color: #18181b; font-size: 13px; }
+#previewCanvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; margin: 0 auto 8px; border: 1px solid #e4e4e7; border-radius: 9px; background-color: #fff; background-image: linear-gradient(45deg,#e4e4e7 25%,transparent 25%),linear-gradient(-45deg,#e4e4e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e4e4e7 75%),linear-gradient(-45deg,transparent 75%,#e4e4e7 75%); background-size: 16px 16px; background-position: 0 0,0 8px,8px -8px,-8px 0; image-rendering: pixelated; }
+#stripCanvas, #ghostStripCanvas { display: block; width: 100%; height: 30px; border: 1px solid #e4e4e7; border-radius: 7px; background: #fafafa !important; image-rendering: auto; }
+#stripCanvas { margin: 0 auto 6px; }
+#ghostStripCanvas { margin: 0 auto 8px !important; cursor: pointer; }
+.controls { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px; margin-top: 10px; }
+.controls label { color: #71717a; font-size: 11px; font-weight: 700; }
+.controls input[type=range] { width: 100%; accent-color: #18181b; }
+#playBtn { width: 42px; min-height: 34px; padding: 0; }
+.frame-info { color: #71717a; font-size: 11px; margin-top: 7px; }
+.export-row { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 9px; margin-top: 12px; }
+.background-options { display: flex; align-items: end; gap: 10px; }
+.color-field { display: grid; gap: 4px; color: #71717a; font-size: 11px; font-weight: 700; }
+#bgColor { width: 42px; height: 38px; padding: 3px; border: 1px solid #e4e4e7; border-radius: 9px; background: #fff; cursor: pointer; }
+#bgColor:disabled { cursor: not-allowed; opacity: .35; }
+.transparent-toggle { display: flex; min-height: 38px; align-items: center; gap: 6px; color: #52525b; font-size: 11px; font-weight: 750; cursor: pointer; }
+.transparent-toggle input { width: 16px; height: 16px; margin: 0; accent-color: #18181b; }
+#saveBtn { width: 100%; }
+.status { min-height: 18px; color: #71717a; font-size: 11px; margin-top: 8px; }
+@media (hover: none) and (pointer: coarse), (max-width: 760px) {
+  body { display: grid; place-items: center; padding: 16px; }
+  .toolbar, .main { display: none; }
+  .mobile-unsupported {
+    display: flex;
+    width: min(100%, 420px);
+    min-height: 160px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    border: 1px solid #d4d4d8;
+    border-radius: 12px;
+    background: #fff;
+    color: #71717a;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(24,24,27,.06);
+  }
+  .mobile-unsupported strong { color: #18181b; font-size: 16px; }
+  .mobile-unsupported span { font-size: 12px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="mobile-unsupported" role="status">
+  <strong>Desktop only</strong>
+  <span>Sprite Sheet Editor is currently supported on desktop browsers only.</span>
+</div>
+
+<div class="toolbar">
+  <div class="field"><span class="field-label">Spritesheet</span><input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp"></div>
+  <label class="field"><span class="field-label">Columns</span><input type="number" id="cols" value="5" min="1" max="20"></label>
+  <label class="field"><span class="field-label">Rows</span><input type="number" id="rows" value="3" min="1" max="20"></label>
+  <label class="field"><span class="field-label">Zoom</span><span class="zoom-row"><input type="range" id="zoomRange" min="10" max="200" value="100"><span id="zoomLabel">100%</span></span></label>
+  <button id="fitBtn" disabled>Fit</button>
+  <button id="resetBtn" disabled>Reset Grid</button>
+  <button id="undoBtn" class="history-button" type="button" title="Undo" aria-label="Undo" disabled>&#8630;</button>
+  <button id="redoBtn" class="history-button" type="button" title="Redo" aria-label="Redo" disabled>&#8631;</button>
+  <button id="saveProjectBtn" type="button" disabled>Save Project</button>
+  <button id="loadProjectBtn" type="button">Load Project</button>
+  <input class="project-input" type="file" id="projectInput" accept="application/json,.json">
+  <span class="info" id="fileInfo">No image loaded</span>
+</div>
+
+<div class="main">
+  <div class="sheet-area">
+    <div id="editorEmptyState" class="empty-state">Choose a spritesheet to start editing frames.</div>
+    <div class="spritesheet-wrap" id="sheetWrap">
+      <canvas id="sheetCanvas"></canvas>
+      <canvas id="gridCanvas"></canvas>
+    </div>
+  </div>
+  <div class="side-panel">
+    <div class="preview-panel">
+      <h3>Animation Preview</h3>
+      <canvas id="previewCanvas" width="200" height="250"></canvas>
+      <canvas id="stripCanvas" width="200" height="18" style="display:block;margin:0 auto 2px;background:#111"></canvas>
+      <canvas id="ghostStripCanvas" width="200" height="18" style="display:block;margin:0 auto 8px;background:#111;cursor:pointer"></canvas>
+      <div class="controls">
+        <label>Play</label> <button id="playBtn" aria-label="Play animation" disabled>&#9654;</button>
+        <label>Speed</label> <input type="range" id="speedRange" min="50" max="500" value="200">
+      </div>
+      <div class="frame-info" id="frameInfo">Row: 0 / 0 &nbsp; Col: 0 / 0</div>
+      <div class="frame-info" style="margin-top:2px">Frame: <span id="frameNum">0</span></div>
+      <div class="export-row">
+        <div class="background-options">
+          <label class="color-field">Background<input type="color" id="bgColor" value="#ff00ff"></label>
+          <label class="transparent-toggle"><input type="checkbox" id="transparentBg"><span>Transparent</span></label>
+        </div>
+        <button id="saveBtn" disabled>Save</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener('contextmenu', event => {
+  if (event.target.closest('.sheet-area, canvas')) event.preventDefault();
+});
+
+// ---- state ----
+let img = null;
+let COLS = 5, ROWS = 3;
+let divsX = [];
+let divsY = [];
+let contentDrag = null; // { row, col, startX, startY, startOx, startOy }
+let cellOffsets = []; // cellOffsets[row][col] = {x, y}
+
+function applyZoom() {
+  if (!img) return;
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
+  sheetCanvas.style.width = (w * zoom) + 'px';
+  sheetCanvas.style.height = (h * zoom) + 'px';
+  gridCanvas.style.width = (w * zoom) + 'px';
+  gridCanvas.style.height = (h * zoom) + 'px';
+}
+
+function initOffsets() {
+  cellOffsets = [];
+  for (let r = 0; r < ROWS; r++) {
+    cellOffsets[r] = [];
+    for (let c = 0; c < COLS; c++) cellOffsets[r][c] = { x: 0, y: 0 };
+  }
+}
+let PREVIEW_W = 200, PREVIEW_H = 200;
+
+const fileInput = document.getElementById('fileInput');
+const colsInput = document.getElementById('cols');
+const rowsInput = document.getElementById('rows');
+const sheetCanvas = document.getElementById('sheetCanvas');
+const gridCanvas = document.getElementById('gridCanvas');
+const previewCanvas = document.getElementById('previewCanvas');
+const playBtn = document.getElementById('playBtn');
+const speedRange = document.getElementById('speedRange');
+const frameInfo = document.getElementById('frameInfo');
+const frameNum = document.getElementById('frameNum');
+const saveBtn = document.getElementById('saveBtn');
+const status = document.getElementById('status');
+const resetBtn = document.getElementById('resetBtn');
+const fileInfo = document.getElementById('fileInfo');
+const sheetWrap = document.getElementById('sheetWrap');
+const bgColorInput = document.getElementById('bgColor');
+const transparentBgInput = document.getElementById('transparentBg');
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
+const saveProjectBtn = document.getElementById('saveProjectBtn');
+const loadProjectBtn = document.getElementById('loadProjectBtn');
+const projectInput = document.getElementById('projectInput');
+
+let playing = false;
+let animTimer = null;
+let previewRow = 0;
+let previewCol = 0;
+let selRow = 0;
+let selCol = 0; // selected cell (arrows stay on this one)
+let ghosts = []; // [{row, col}] — multiple ghost overlays
+let zoom = 1;
+let sourceFileName = '';
+let historyEntries = [];
+let historyIndex = -1;
+
+function cloneOffsets(offsets) {
+  return offsets.map(row => row.map(offset => ({ x: Number(offset.x) || 0, y: Number(offset.y) || 0 })));
+}
+
+function captureEditorState() {
+  return {
+    columns: COLS,
+    rows: ROWS,
+    offsets: cloneOffsets(cellOffsets),
+    ghosts: ghosts.map(ghost => ({ row: ghost.row, col: ghost.col })),
+    selectedRow: selRow,
+    selectedCol: selCol,
+    previewRow,
+    previewCol,
+    background: getBackgroundColor(),
+    transparent: transparentBgInput.checked
+  };
+}
+
+function updateHistoryButtons() {
+  undoBtn.disabled = historyIndex <= 0;
+  redoBtn.disabled = historyIndex < 0 || historyIndex >= historyEntries.length - 1;
+}
+
+function resetHistory() {
+  historyEntries = img ? [captureEditorState()] : [];
+  historyIndex = historyEntries.length - 1;
+  updateHistoryButtons();
+}
+
+function recordHistory() {
+  if (!img) return;
+  const nextState = captureEditorState();
+  const previousState = historyEntries[historyIndex];
+  if (previousState && JSON.stringify(previousState) === JSON.stringify(nextState)) return;
+  historyEntries.splice(historyIndex + 1);
+  historyEntries.push(nextState);
+  if (historyEntries.length > 50) historyEntries.shift();
+  historyIndex = historyEntries.length - 1;
+  updateHistoryButtons();
+}
+
+function normalizeOffsets(offsets) {
+  return Array.from({ length: ROWS }, (_, row) =>
+    Array.from({ length: COLS }, (_, col) => ({
+      x: Number(offsets?.[row]?.[col]?.x) || 0,
+      y: Number(offsets?.[row]?.[col]?.y) || 0
+    }))
+  );
+}
+
+function applyEditorState(state) {
+  COLS = Math.max(1, Math.min(20, Number(state.columns) || 1));
+  ROWS = Math.max(1, Math.min(20, Number(state.rows) || 1));
+  colsInput.value = COLS;
+  rowsInput.value = ROWS;
+  initDividers();
+  cellOffsets = normalizeOffsets(state.offsets);
+  ghosts = Array.isArray(state.ghosts) ? state.ghosts
+    .map(ghost => ({ row: Number(ghost.row), col: Number(ghost.col) }))
+    .filter(ghost => ghost.row >= 0 && ghost.row < ROWS && ghost.col >= 0 && ghost.col < COLS) : [];
+  selRow = Math.max(0, Math.min(ROWS - 1, Number(state.selectedRow) || 0));
+  selCol = Math.max(0, Math.min(COLS - 1, Number(state.selectedCol) || 0));
+  previewRow = Math.max(0, Math.min(ROWS - 1, Number(state.previewRow) || 0));
+  previewCol = Math.max(0, Math.min(COLS - 1, Number(state.previewCol) || 0));
+  if (/^#[0-9a-f]{6}$/i.test(state.background || '')) bgColorInput.value = state.background;
+  transparentBgInput.checked = Boolean(state.transparent);
+  updateBackgroundMode();
+  draw();
+}
+
+// ---- initialize dividers ----
+function initDividers() {
+  if (!img) return;
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
+  divsX = [];
+  for (let i = 0; i <= COLS; i++) divsX.push(Math.round(i * w / COLS));
+  divsY = [];
+  for (let i = 0; i <= ROWS; i++) divsY.push(Math.round(i * h / ROWS));
+}
+
+// ---- build coordinate inputs ----
+
+
+// ---- draw ----
+function getBackgroundColor() {
+  return bgColorInput?.value || '#ff00ff';
+}
+
+function usesTransparentBackground() {
+  return Boolean(transparentBgInput?.checked);
+}
+
+function updateBackgroundMode() {
+  const transparent = usesTransparentBackground();
+  bgColorInput.disabled = transparent;
+  sheetWrap.classList.toggle('is-transparent', transparent);
+}
+
+function draw() {
+  if (!img) return;
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
+
+  sheetCanvas.width = w;
+  sheetCanvas.height = h;
+  const ctx = sheetCanvas.getContext('2d');
+  const bgHex = getBackgroundColor();
+  ctx.clearRect(0, 0, w, h);
+  if (!usesTransparentBackground()) {
+    ctx.fillStyle = bgHex;
+    ctx.fillRect(0, 0, w, h);
+  }
+  // draw each cell with its offset, filling bg where source falls outside image
+  const imgW = img.naturalWidth || img.width;
+  const imgH = img.naturalHeight || img.height;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const ox = cellOffsets[r][c].x, oy = cellOffsets[r][c].y;
+      const sw = divsX[c+1] - divsX[c], sh = divsY[r+1] - divsY[r];
+      const sx = divsX[c] + ox, sy = divsY[r] + oy;
+      // fill cell bg
+      if (!usesTransparentBackground()) {
+        ctx.fillStyle = bgHex;
+        ctx.fillRect(divsX[c], divsY[r], sw, sh);
+      }
+      // clip source to image bounds
+      const clipX = Math.max(sx, 0);
+      const clipY = Math.max(sy, 0);
+      const clipW = Math.min(sx + sw, imgW) - clipX;
+      const clipH = Math.min(sy + sh, imgH) - clipY;
+      if (clipW > 0 && clipH > 0) {
+        ctx.drawImage(img, clipX, clipY, clipW, clipH, divsX[c] + clipX - sx, divsY[r] + clipY - sy, clipW, clipH);
+      }
+    }
+  }
+  // ghost overlay on selected cell
+  if (selRow >= 0 && selRow < ROWS && selCol >= 0 && selCol < COLS && ghosts.length) {
+    for (const g of ghosts) {
+      if (g.row !== selRow || g.col === selCol) continue;
+      const gox = cellOffsets[g.row][g.col].x, goy = cellOffsets[g.row][g.col].y;
+      const gsx = divsX[g.col] + gox, gsy = divsY[g.row] + goy;
+      const gsw = divsX[g.col + 1] - divsX[g.col], gsh = divsY[g.row + 1] - divsY[g.row];
+      const gclipX = Math.max(gsx, 0), gclipY = Math.max(gsy, 0);
+      const gclipW = Math.min(gsx + gsw, imgW) - gclipX, gclipH = Math.min(gsy + gsh, imgH) - gclipY;
+      if (gclipW <= 0 || gclipH <= 0) continue;
+      const temp = chromaKeyCanvas(img, gclipX, gclipY, gclipW, gclipH);
+      ctx.globalAlpha = 0.4;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(temp, 0, 0, gclipW, gclipH, divsX[selCol] + gclipX - gsx, divsY[selRow] + gclipY - gsy, gclipW, gclipH);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  gridCanvas.width = w;
+  gridCanvas.height = h;
+  applyZoom();
+  const gctx = gridCanvas.getContext('2d');
+
+  if (previewRow >= 0 && previewRow < ROWS) {
+    const y0 = divsY[previewRow], y1 = divsY[previewRow+1];
+    if (y1 > y0) {
+      gctx.fillStyle = 'rgba(255,200,50,0.12)';
+      gctx.fillRect(0, y0, w, y1 - y0);
+    }
+  }
+
+  gctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  gctx.lineWidth = 1;
+  for (let x of divsX) { gctx.beginPath(); gctx.moveTo(x+0.5, 0); gctx.lineTo(x+0.5, h); gctx.stroke(); }
+  for (let y of divsY) { gctx.beginPath(); gctx.moveTo(0, y+0.5); gctx.lineTo(w, y+0.5); gctx.stroke(); }
+
+
+
+  // highlight selected cell with colored border
+  if (selRow >= 0 && selRow < ROWS && selCol >= 0 && selCol < COLS) {
+    const sx = divsX[selCol], sy = divsY[selRow];
+    const sw = divsX[selCol+1] - sx, sh = divsY[selRow+1] - sy;
+    gctx.strokeStyle = 'rgba(255,200,50,0.6)';
+    gctx.lineWidth = 2;
+    gctx.strokeRect(sx, sy, sw, sh);
+  }
+
+  // arrow buttons on selected cell edges (fixed, doesn't follow animation)
+  if (selRow >= 0 && selRow < ROWS && selCol >= 0 && selCol < COLS) {
+    const sx = divsX[selCol], sy = divsY[selRow];
+    const sw = divsX[selCol+1] - sx, sh = divsY[selRow+1] - sy;
+    const ox = cellOffsets[selRow][selCol].x;
+    const oy = cellOffsets[selRow][selCol].y;
+
+    const as = 10;
+    const inset = Math.min(sw, sh) * 0.18;
+    const hits = [
+      { id: 'left', cx: sx + inset, cy: sy + sh/2 },
+      { id: 'right', cx: sx + sw - inset, cy: sy + sh/2 },
+      { id: 'top', cx: sx + sw/2, cy: sy + inset },
+      { id: 'bottom', cx: sx + sw/2, cy: sy + sh - inset },
+    ];
+    for (const h of hits) {
+      gctx.beginPath();
+      gctx.arc(h.cx, h.cy, 12, 0, Math.PI * 2);
+      gctx.fillStyle = 'rgba(0,0,0,0.6)';
+      gctx.fill();
+      gctx.strokeStyle = '#fff';
+      gctx.lineWidth = 1.5;
+      gctx.stroke();
+      gctx.fillStyle = '#fff';
+      gctx.beginPath();
+      const pts = {
+        left:  [h.cx+as/2, h.cy-as/2, h.cx+as/2, h.cy+as/2, h.cx-as/2, h.cy],
+        right: [h.cx-as/2, h.cy-as/2, h.cx-as/2, h.cy+as/2, h.cx+as/2, h.cy],
+        top:   [h.cx-as/2, h.cy+as/2, h.cx+as/2, h.cy+as/2, h.cx, h.cy-as/2],
+        bottom:[h.cx-as/2, h.cy-as/2, h.cx+as/2, h.cy-as/2, h.cx, h.cy+as/2],
+      }[h.id];
+      gctx.moveTo(pts[0], pts[1]);
+      gctx.lineTo(pts[2], pts[3]);
+      gctx.lineTo(pts[4], pts[5]);
+      gctx.closePath();
+      gctx.fill();
+    }
+
+    if (ox !== 0 || oy !== 0) {
+      gctx.fillStyle = 'rgba(255,200,50,0.8)';
+      gctx.font = '11px monospace';
+      gctx.fillText(`offset: ${ox},${oy}`, sx + 4, sy + 14);
+    }
+  }
+
+  computePreviewSize();
+  drawPreview();
+  drawStrip();
+  drawGhostStrip();
+  updateFrameInfo();
+}
+
+function chromaKeyCanvas(srcImg, sx, sy, sw, sh) {
+  // extract a region from the source image with magenta → transparent
+  const c = document.createElement('canvas');
+  c.width = sw; c.height = sh;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(srcImg, sx, sy, sw, sh, 0, 0, sw, sh);
+  const d = ctx.getImageData(0, 0, sw, sh);
+  for (let i = 0; i < d.data.length; i += 4) {
+    if (d.data[i] > 180 && d.data[i+2] > 180 && d.data[i+1] < 70) d.data[i+3] = 0;
+  }
+  ctx.putImageData(d, 0, 0);
+  return c;
+}
+
+function computePreviewSize() {
+  if (!img || previewRow < 0 || previewCol < 0) return;
+  const sw = divsX[previewCol + 1] - divsX[previewCol];
+  const sh = divsY[previewRow + 1] - divsY[previewRow];
+  if (sw <= 0 || sh <= 0) return;
+  // cap to a reasonable size
+  const maxH = 150, maxW = 148;
+  PREVIEW_H = Math.min(maxH, sh);
+  PREVIEW_W = Math.min(maxW, Math.round(PREVIEW_H * sw / sh));
+  PREVIEW_H = Math.round(PREVIEW_W * sh / sw); // recalc height to match capped width
+}
+
+function drawPreview() {
+  if (!img) return;
+  previewCanvas.width = PREVIEW_W;
+  previewCanvas.height = PREVIEW_H;
+  const pc = previewCanvas.getContext('2d');
+  pc.clearRect(0, 0, PREVIEW_W, PREVIEW_H);
+  if (!usesTransparentBackground()) {
+    pc.fillStyle = getBackgroundColor();
+    pc.fillRect(0, 0, PREVIEW_W, PREVIEW_H);
+  }
+
+  const col = Math.min(previewCol, COLS - 1);
+  const row = Math.min(previewRow, ROWS - 1);
+  if (divsX[col + 1] - divsX[col] <= 0) return;
+
+  const imgW = img.naturalWidth || img.width;
+  const imgH = img.naturalHeight || img.height;
+
+  // draw current frame (scaled to fit canvas)
+  const ox = cellOffsets[row][col].x, oy = cellOffsets[row][col].y;
+  const sx = divsX[col] + ox, sy = divsY[row] + oy;
+  const sw = divsX[col + 1] - divsX[col], sh = divsY[row + 1] - divsY[row];
+  const clipX = Math.max(sx, 0), clipY = Math.max(sy, 0);
+  const clipW = Math.min(sx + sw, imgW) - clipX, clipH = Math.min(sy + sh, imgH) - clipY;
+  if (clipW > 0 && clipH > 0) {
+    const scale = Math.min(PREVIEW_W / sw, PREVIEW_H / sh);
+    const dx = (PREVIEW_W - sw * scale) / 2 + (clipX - sx) * scale;
+    const dy = (PREVIEW_H - sh * scale) / 2 + (clipY - sy) * scale;
+    pc.imageSmoothingEnabled = false;
+    pc.drawImage(img, clipX, clipY, clipW, clipH, dx, dy, clipW * scale, clipH * scale);
+  }
+
+  // draw ghost frames on top (chroma-keyed, semi-transparent)
+  for (const g of ghosts) {
+    if (g.row !== row) continue;
+    if (g.col === col) continue;
+    const gox = cellOffsets[g.row][g.col].x, goy = cellOffsets[g.row][g.col].y;
+    const gsx = divsX[g.col] + gox, gsy = divsY[g.row] + goy;
+    const gsw = divsX[g.col + 1] - divsX[g.col], gsh = divsY[g.row + 1] - divsY[g.row];
+    const gclipX = Math.max(gsx, 0), gclipY = Math.max(gsy, 0);
+    const gclipW = Math.min(gsx + gsw, imgW) - gclipX, gclipH = Math.min(gsy + gsh, imgH) - gclipY;
+    if (gclipW <= 0 || gclipH <= 0) continue;
+    const gscale = Math.min(PREVIEW_W / gsw, PREVIEW_H / gsh);
+    const gdx = (PREVIEW_W - gsw * gscale) / 2 + (gclipX - gsx) * gscale;
+    const gdy = (PREVIEW_H - gsh * gscale) / 2 + (gclipY - gsy) * gscale;
+    const temp = chromaKeyCanvas(img, gclipX, gclipY, gclipW, gclipH);
+    pc.globalAlpha = 0.4;
+    pc.imageSmoothingEnabled = false;
+    pc.drawImage(temp, 0, 0, gclipW, gclipH, gdx, gdy, gclipW * gscale, gclipH * gscale);
+    pc.globalAlpha = 1;
+  }
+}
+
+function prepareStripCanvas(canvas) {
+  const width = Math.max(120, Math.round(canvas.getBoundingClientRect().width || PREVIEW_W));
+  const height = 28;
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  const context = canvas.getContext('2d');
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  context.fillStyle = '#fafafa';
+  context.fillRect(0, 0, width, height);
+  return { context, width, height };
+}
+
+function getStripSegments(width) {
+  const padding = 3;
+  const gap = 3;
+  const available = Math.max(COLS, width - padding * 2 - gap * Math.max(0, COLS - 1));
+  const cellWidth = available / COLS;
+  return Array.from({ length: COLS }, (_, index) => ({
+    index,
+    x: padding + index * (cellWidth + gap),
+    width: cellWidth
+  }));
+}
+
+function drawStripSegments(canvas, isActive, activeColor) {
+  const { context, width } = prepareStripCanvas(canvas);
+  if (!img) return;
+  for (const segment of getStripSegments(width)) {
+    const active = isActive(segment.index);
+    const x = segment.x;
+    const w = segment.width;
+    context.beginPath();
+    context.roundRect(x, 3, w, 22, Math.min(4, w / 3));
+    context.fillStyle = active ? activeColor : '#ffffff';
+    context.fill();
+    context.strokeStyle = active ? activeColor : '#d4d4d8';
+    context.lineWidth = 1;
+    context.stroke();
+    context.fillStyle = active ? '#ffffff' : '#52525b';
+    context.font = `700 ${w < 18 ? 9 : 11}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(segment.index, x + w / 2, 14.5);
+  }
+}
+
+function drawStrip() {
+  drawStripSegments(document.getElementById('stripCanvas'), column => column === previewCol, '#18181b');
+}
+
+function drawGhostStrip() {
+  drawStripSegments(
+    document.getElementById('ghostStripCanvas'),
+    column => ghosts.some(ghost => ghost.row === previewRow && ghost.col === column),
+    '#f97316'
+  );
+}
+
+function updateFrameInfo() {
+  document.getElementById('frameInfo').textContent = `Row: ${previewRow} / ${ROWS-1}  Col: ${previewCol} / ${COLS-1}`;
+  frameNum.textContent = previewRow * COLS + previewCol;
+}
+
+// ---- animation ----
+function stepAnim() {
+  previewCol = (previewCol + 1) % COLS;
+  draw();
+}
+
+function togglePlay() {
+  playing = !playing;
+  playBtn.textContent = playing ? '\u23F8' : '\u25B6';
+  if (playing) {
+    clearInterval(animTimer);
+    animTimer = setInterval(stepAnim, parseInt(speedRange.value));
+  } else {
+    clearInterval(animTimer);
+    animTimer = null;
+  }
+}
+
+// ---- sheet mouse interaction ----
+function getSheetPos(e) {
+  const rect = sheetCanvas.getBoundingClientRect();
+  const scaleX = sheetCanvas.width / rect.width;
+  const scaleY = sheetCanvas.height / rect.height;
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+}
+
+function findCell(pos) {
+  for (let i = 0; i < divsX.length - 1; i++) {
+    if (pos.x >= divsX[i] && pos.x < divsX[i + 1]) {
+      for (let j = 0; j < divsY.length - 1; j++) {
+        if (pos.y >= divsY[j] && pos.y < divsY[j + 1]) {
+          return { col: i, row: j };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+sheetCanvas.addEventListener('pointermove', (e) => {
+  if (contentDrag) return;
+  sheetCanvas.style.cursor = 'crosshair';
+});
+
+sheetCanvas.addEventListener('pointerdown', (e) => {
+  if (e.button !== 0) return; // left click only for sprite editing
+  e.preventDefault();
+  sheetCanvas.setPointerCapture?.(e.pointerId);
+  const pos = getSheetPos(e);
+  // check arrow clicks on selected cell (fixed selection)
+  if (selRow >= 0 && selRow < ROWS && selCol >= 0 && selCol < COLS) {
+    const sx = divsX[selCol], sy = divsY[selRow];
+    const sw = divsX[selCol+1] - sx, sh = divsY[selRow+1] - sy;
+    const inset = Math.min(sw, sh) * 0.18;
+    const arrows = [
+      { id: 'left', cx: sx + inset, cy: sy + sh/2, dx: 1, dy: 0 },
+      { id: 'right', cx: sx + sw - inset, cy: sy + sh/2, dx: -1, dy: 0 },
+      { id: 'top', cx: sx + sw/2, cy: sy + inset, dx: 0, dy: 1 },
+      { id: 'bottom', cx: sx + sw/2, cy: sy + sh - inset, dx: 0, dy: -1 },
+    ];
+    for (const a of arrows) {
+      if (Math.abs(pos.x - a.cx) <= 12 && Math.abs(pos.y - a.cy) <= 12) {
+        cellOffsets[selRow][selCol].x += a.dx;
+        cellOffsets[selRow][selCol].y += a.dy;
+        recordHistory();
+        draw();
+        return;
+      }
+    }
+  }
+  const cell = findCell(pos);
+  if (cell) {
+    selRow = cell.row; selCol = cell.col;
+    previewRow = cell.row; previewCol = cell.col;
+    if (playing) { clearInterval(animTimer); animTimer = setInterval(stepAnim, parseInt(speedRange.value)); }
+    contentDrag = { pointerId: e.pointerId, row: cell.row, col: cell.col, startX: e.clientX, startY: e.clientY, startOx: cellOffsets[cell.row][cell.col].x, startOy: cellOffsets[cell.row][cell.col].y };
+    draw();
+  }
+});
+
+document.addEventListener('pointermove', (e) => {
+  if (contentDrag && e.pointerId === contentDrag.pointerId) {
+    const cd = contentDrag;
+    const fw = divsX[cd.col + 1] - divsX[cd.col];
+    const fh = divsY[cd.row + 1] - divsY[cd.row];
+    const scaleX = sheetCanvas.width / sheetCanvas.getBoundingClientRect().width;
+    const scaleY = sheetCanvas.height / sheetCanvas.getBoundingClientRect().height;
+    const dx = Math.round((e.clientX - cd.startX) * scaleX);
+    const dy = Math.round((e.clientY - cd.startY) * scaleY);
+    // Invert: drag right → sprite shifts right in frame
+    cellOffsets[cd.row][cd.col].x = cd.startOx - dx;
+    cellOffsets[cd.row][cd.col].y = cd.startOy - dy;
+    draw();
+  }
+});
+
+// right-click / middle-click scroll-drag on sheet area
+let scrollDrag = null;
+document.querySelector('.sheet-area').addEventListener('mousedown', (e) => {
+  if (e.button === 0) return;
+  e.preventDefault();
+  const area = document.querySelector('.sheet-area');
+  scrollDrag = { startX: e.clientX, startY: e.clientY, scrollLeft: area.scrollLeft, scrollTop: area.scrollTop };
+});
+document.addEventListener('mousemove', (e) => {
+  if (!scrollDrag) return;
+  const area = document.querySelector('.sheet-area');
+  area.scrollLeft = scrollDrag.scrollLeft - (e.clientX - scrollDrag.startX);
+  area.scrollTop = scrollDrag.scrollTop - (e.clientY - scrollDrag.startY);
+});
+document.addEventListener('mouseup', () => {
+  scrollDrag = null;
+});
+
+const finishContentDrag = (e) => {
+  if (contentDrag && (e.pointerId === undefined || e.pointerId === contentDrag.pointerId)) {
+    contentDrag = null;
+    recordHistory();
+    draw();
+  }
+};
+document.addEventListener('pointerup', finishContentDrag);
+document.addEventListener('pointercancel', finishContentDrag);
+
+document.addEventListener('mouseup', () => {
+  if (contentDrag) {
+    contentDrag = null;
+    draw();
+  }
+});
+
+// ---- save ----
+saveBtn.addEventListener('click', () => {
+  if (!img) { status.textContent = 'No image loaded'; return; }
+  const bgHex = getBackgroundColor();
+  const fw = Math.round((divsX[COLS] - divsX[0]) / COLS);
+  const fh = Math.round((divsY[ROWS] - divsY[0]) / ROWS);
+  const cvs = document.createElement('canvas');
+  cvs.width = fw * COLS;
+  cvs.height = fh * ROWS;
+  const ctx = cvs.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  // Fill only when an opaque background is selected; otherwise PNG alpha is preserved.
+  if (!usesTransparentBackground()) {
+    ctx.fillStyle = bgHex;
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+  }
+  const imgW = img.naturalWidth || img.width;
+  const imgH = img.naturalHeight || img.height;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const ox = cellOffsets[r][c].x, oy = cellOffsets[r][c].y;
+      const sw = divsX[c+1] - divsX[c], sh = divsY[r+1] - divsY[r];
+      let sx = divsX[c] + ox, sy = divsY[r] + oy;
+      // clip source rect to image bounds
+      const clipX = Math.max(sx, 0);
+      const clipY = Math.max(sy, 0);
+      const clipW = Math.min(sx + sw, imgW) - clipX;
+      const clipH = Math.min(sy + sh, imgH) - clipY;
+      if (clipW > 0 && clipH > 0) {
+        const dstX = c * fw + (clipX - sx) * (fw / sw);
+        const dstY = r * fh + (clipY - sy) * (fh / sh);
+        const dstW = clipW * (fw / sw);
+        const dstH = clipH * (fh / sh);
+        ctx.drawImage(img, clipX, clipY, clipW, clipH, dstX, dstY, dstW, dstH);
+      }
+    }
+  }
+  const link = document.createElement('a');
+  link.download = 'spritesheet.png';
+  link.href = cvs.toDataURL('image/png');
+  link.click();
+  status.textContent = usesTransparentBackground() ? 'Saved with transparent background!' : 'Saved with ' + bgHex + ' background!';
+  setTimeout(() => { status.textContent = ''; }, 2000);
+});
+
+undoBtn.addEventListener('click', () => {
+  if (historyIndex <= 0) return;
+  historyIndex -= 1;
+  applyEditorState(historyEntries[historyIndex]);
+  updateHistoryButtons();
+});
+
+redoBtn.addEventListener('click', () => {
+  if (historyIndex >= historyEntries.length - 1) return;
+  historyIndex += 1;
+  applyEditorState(historyEntries[historyIndex]);
+  updateHistoryButtons();
+});
+
+saveProjectBtn.addEventListener('click', () => {
+  if (!img) { status.textContent = 'Choose a spritesheet first'; return; }
+  const project = {
+    type: 'super-fast-tool-sprite-project',
+    version: 1,
+    image: {
+      name: sourceFileName,
+      width: img.naturalWidth || img.width,
+      height: img.naturalHeight || img.height
+    },
+    zoom,
+    speed: Number(speedRange.value),
+    ...captureEditorState()
+  };
+  const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  const baseName = (sourceFileName || 'spritesheet').replace(/\.[^.]+$/, '').replace(/[^a-z0-9_-]+/gi, '-');
+  link.download = `${baseName || 'spritesheet'}.sprite-project.json`;
+  const projectUrl = URL.createObjectURL(blob);
+  link.href = projectUrl;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(projectUrl), 0);
+  status.textContent = 'Project saved';
+});
+
+loadProjectBtn.addEventListener('click', () => {
+  if (!img) {
+    status.textContent = 'Choose the matching spritesheet first';
+    return;
+  }
+  projectInput.click();
+});
+
+projectInput.addEventListener('change', async event => {
+  const file = event.target.files?.[0];
+  event.target.value = '';
+  if (!file || !img) return;
+  try {
+    const project = JSON.parse(await file.text());
+    if (project.type !== 'super-fast-tool-sprite-project' || project.version !== 1) throw new Error('Unsupported project file');
+    const imageWidth = img.naturalWidth || img.width;
+    const imageHeight = img.naturalHeight || img.height;
+    if (Number(project.image?.width) !== imageWidth || Number(project.image?.height) !== imageHeight) {
+      throw new Error('This project belongs to a different image size');
+    }
+    applyEditorState(project);
+    zoom = Math.max(0.1, Math.min(2, Number(project.zoom) || 1));
+    document.getElementById('zoomRange').value = Math.round(zoom * 100);
+    document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+    speedRange.value = Math.max(50, Math.min(500, Number(project.speed) || 200));
+    applyZoom();
+    resetHistory();
+    status.textContent = 'Project loaded';
+  } catch (error) {
+    status.textContent = error.message || 'Unable to load project';
+  }
+});
+
+// ---- inputs ----
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const i = new Image();
+    i.onload = () => {
+      img = i;
+      sourceFileName = file.name;
+      fileInfo.textContent = `${file.name} (${i.naturalWidth}x${i.naturalHeight})`;
+      initDividers();
+      initOffsets();
+      ghosts = [];
+      previewRow = 0; previewCol = 0; selRow = 0; selCol = 0;
+      updateBackgroundMode();
+      draw();
+      document.querySelector('.sheet-area')?.classList.add('is-loaded');
+      [playBtn, saveBtn, saveProjectBtn, document.getElementById('fitBtn'), resetBtn].forEach(button => { if (button) button.disabled = false; });
+      resetHistory();
+      status.textContent = 'Ready';
+    };
+    i.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+colsInput.addEventListener('change', () => {
+  COLS = Math.max(1, parseInt(colsInput.value) || 5);
+  initDividers();
+  initOffsets();
+  if (previewCol >= COLS) previewCol = 0;
+  if (playing) { clearInterval(animTimer); animTimer = setInterval(stepAnim, parseInt(speedRange.value)); }
+  draw();
+  recordHistory();
+});
+
+rowsInput.addEventListener('change', () => {
+  ROWS = Math.max(1, parseInt(rowsInput.value) || 3);
+  initDividers();
+  initOffsets();
+  if (previewRow >= ROWS) previewRow = 0;
+  if (playing) { clearInterval(animTimer); animTimer = setInterval(stepAnim, parseInt(speedRange.value)); }
+  draw();
+  recordHistory();
+});
+
+resetBtn.addEventListener('click', () => { initDividers(); initOffsets(); draw(); recordHistory(); });
+bgColorInput.addEventListener('input', draw);
+bgColorInput.addEventListener('change', recordHistory);
+transparentBgInput.addEventListener('change', () => {
+  updateBackgroundMode();
+  draw();
+  recordHistory();
+});
+
+// zoom
+document.getElementById('zoomRange').addEventListener('input', function() {
+  zoom = this.value / 100;
+  document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+  applyZoom();
+});
+document.getElementById('fitBtn').addEventListener('click', () => {
+  if (!img) return;
+  const area = document.querySelector('.sheet-area');
+  const availW = area.clientWidth - 24;
+  const availH = area.clientHeight - 24;
+  const iw = img.naturalWidth || img.width;
+  const ih = img.naturalHeight || img.height;
+  zoom = Math.min(availW / iw, availH / ih, 2);
+  zoom = Math.max(zoom, 0.1);
+  document.getElementById('zoomRange').value = Math.round(zoom * 100);
+  document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+  applyZoom();
+});
+
+// ghost strip click — toggle ghost for clicked cell
+document.getElementById('ghostStripCanvas').addEventListener('click', (e) => {
+  if (!img) return;
+  const rect = e.target.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  for (const segment of getStripSegments(rect.width)) {
+    if (mx >= segment.x && mx < segment.x + segment.width) {
+      const idx = ghosts.findIndex(g => g.row === previewRow && g.col === segment.index);
+      if (idx >= 0) ghosts.splice(idx, 1); else ghosts.push({ row: previewRow, col: segment.index });
+      draw();
+      recordHistory();
+      return;
+    }
+  }
+});
+
+playBtn.addEventListener('click', togglePlay);
+
+speedRange.addEventListener('input', () => {
+  if (playing) { clearInterval(animTimer); animTimer = setInterval(stepAnim, parseInt(speedRange.value)); }
+});
+
+window.addEventListener('resize', () => {
+  drawStrip();
+  drawGhostStrip();
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+    e.preventDefault();
+    if (e.shiftKey) redoBtn.click(); else undoBtn.click();
+    return;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+    e.preventDefault();
+    redoBtn.click();
+    return;
+  }
+  if (e.key === 'ArrowRight') { previewCol = Math.min(previewCol + 1, COLS - 1); draw(); e.preventDefault(); }
+  if (e.key === 'ArrowLeft') { previewCol = Math.max(previewCol - 1, 0); draw(); e.preventDefault(); }
+  if (e.key === 'ArrowDown') { previewRow = Math.min(previewRow + 1, ROWS - 1); draw(); e.preventDefault(); }
+  if (e.key === 'ArrowUp') { previewRow = Math.max(previewRow - 1, 0); draw(); e.preventDefault(); }
+  if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+});
+
+status.textContent = 'Open a spritesheet to begin';
+</script>
+</body>
+</html>
