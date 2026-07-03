@@ -8,7 +8,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const baseUrl = 'https://superfasttool.com';
-const version = 'v1.2.389';
+const version = 'v1.2.390';
 const shouldTranslate = process.argv.includes('--translate');
 const catalogPath = path.join(here, 'guide-i18n.catalog.json');
 const localeDefinitions = {

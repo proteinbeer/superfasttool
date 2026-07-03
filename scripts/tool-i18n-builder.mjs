@@ -201,7 +201,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.389', lastmod = '2026-07-03' } = options;
+  const { write = true, version = 'v1.2.390', lastmod = '2026-07-03' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

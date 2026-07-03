@@ -9,7 +9,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.389';
+const version = 'v1.2.390';
 const baseUrl = 'https://superfasttool.com';
 
 const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
