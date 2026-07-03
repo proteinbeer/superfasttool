@@ -8,16 +8,44 @@
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="8d_Vnu3iaxG7ZllKTxo-UgBmCC2CyfzN9JuvQCTdqK8">
     <link rel="canonical" href="https://superfasttool.com/doxx-click/">
+    <!-- SFT_I18N_ALTERNATES_START -->
+    <link rel="alternate" hreflang="en" href="https://superfasttool.com/doxx-click/">
+    <link rel="alternate" hreflang="ko" href="https://superfasttool.com/ko/doxx-click/">
+    <link rel="alternate" hreflang="ja" href="https://superfasttool.com/ja/doxx-click/">
+    <link rel="alternate" hreflang="zh-CN" href="https://superfasttool.com/zh-CN/doxx-click/">
+    <link rel="alternate" hreflang="es" href="https://superfasttool.com/es/doxx-click/">
+    <link rel="alternate" hreflang="de" href="https://superfasttool.com/de/doxx-click/">
+    <link rel="alternate" hreflang="fr" href="https://superfasttool.com/fr/doxx-click/">
+    <link rel="alternate" hreflang="pt-BR" href="https://superfasttool.com/pt-BR/doxx-click/">
+    <link rel="alternate" hreflang="x-default" href="https://superfasttool.com/doxx-click/">
+    <!-- SFT_I18N_ALTERNATES_END -->
+    <script src="/locale-routing.js"></script>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4400508127713059" crossorigin="anonymous"></script>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://superfasttool.com/doxx-click/">
     <meta property="og:title" content="Dox'x Click | Super Fast Tool">
-    <meta property="og:description" content="Play a free pixel horror platform game where control shifts between the player and a hostile entity.">
+    <meta property="og:description" content="Play Dox'x Click, a free pixel horror platform game where control shifts between the player and a hostile entity.">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Dox'x Click | Super Fast Tool">
-    <meta name="twitter:description" content="Play a free pixel horror platform game where control shifts between the player and a hostile entity.">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Dox'x Click","url":"https://superfasttool.com/doxx-click/","description":"A free pixel horror platform game where control shifts between the player and a hostile entity.","applicationCategory":"Game","operatingSystem":"Any","playMode":"SinglePlayer","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+    <meta name="twitter:description" content="Play Dox'x Click, a free pixel horror platform game where control shifts between the player and a hostile entity.">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Dox'x Click",
+    "url": "https://superfasttool.com/doxx-click/",
+    "description": "Play Dox'x Click, a free pixel horror platform game where control shifts between the player and a hostile entity.",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "playMode": "SinglePlayer",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
     <style>.doxx-game-frame{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#050006;overflow:hidden;transition:height .18s ease}.tool-page #doxxClickCard{max-width:960px}</style>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -714,8 +742,15 @@
             .info-panel-scroll { overflow-y: scroll; scrollbar-gutter: stable; padding-bottom: 0; }
         }
     </style>
+<style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
+<style id="sft-tool-critical-open">
+body.tool-page #cardsGrid > .expandable-card:not(#doxxClickCard),
+body.tool-page #cardsGrid > .temp-card,
+body.tool-page #cardsGrid > .card-placeholder { display: none !important; }
+body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
+</style>
 </head>
-<body class="app-loading bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+<body class="tool-page page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative tool-page-ready">
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
     <div id="pageBackdrop" class="page-backdrop" aria-hidden="true"></div>
 
@@ -726,15 +761,7 @@
                 <span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span>
             </a>
 
-            <div class="shrink-0 flex items-center gap-2 bg-gray-100/90 p-1.5 rounded-2xl border border-gray-200 shadow-inner">
-                <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
-                    <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
-                </button>
-
-                <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200 flex items-center">
-                    <img src="https://image.similarpng.com/file/similarpng/very-thumbnail/2020/12/Google-translate-logo-design-clipart-PNG.png" alt="Translate" class="w-5 h-5 object-contain">
-                </div>
-            </div>
+            <div class="language-menu relative shrink-0"><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>English</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>English</span><span class="text-[10px] text-orange-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>한국어</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>日本語</span><span class="text-[10px] text-zinc-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>简体中文</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Español</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Deutsch</span><span class="text-[10px] text-zinc-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Français</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Português (Brasil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div><button id="langToggleBtn" type="button" hidden></button><span id="toggleHandle" hidden></span><span id="translateIcon" hidden></span></div>
         </div>
     </header>
 
@@ -2191,15 +2218,15 @@
             </div>
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
-            <div id="doxxClickCard" data-category="game" data-tool-slug="doxx-click" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-fuchsia-700 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+            <div id="doxxClickCard" data-category="game" data-tool-slug="doxx-click" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-fuchsia-700 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0 tool-page-panel is-expanded active-panel shadow-2xl border-zinc-400">
                 <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Close game">&times;</button><div class="w-12 h-12 bg-fuchsia-950 border border-fuchsia-800 rounded-xl flex items-center justify-center text-2xl text-fuchsia-300 mb-4">&#128065;</div><h3 id="tool75Title" class="text-lg font-bold text-zinc-900 mb-1">Dox'x Click</h3><p id="tool75Desc" class="card-description text-sm text-zinc-500 overflow-hidden">A corrupted pixel horror platformer where control is never entirely yours.</p></div>
-                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out"><iframe class="doxx-game-frame" src="./game/index.html?embed=1" title="Play Dox'x Click" allow="autoplay; fullscreen" loading="eager" scrolling="no"></iframe></div>
+                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out opacity-100 translate-y-0"><iframe class="doxx-game-frame" src="./game/index.html?embed=1" title="Play Dox'x Click" allow="autoplay; fullscreen" loading="eager" scrolling="no"></iframe></div>
             </div>
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
         <div id="paginationControls" class="mt-8 flex flex-wrap justify-center gap-2"></div>
 
-        <div id="toolBackHome" class="hidden mt-8 flex justify-center">
+        <div id="toolBackHome" class="mt-8 flex justify-center">
             <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
                 <span aria-hidden="true">&#11013;&#65039;</span>
                 Back
@@ -2226,7 +2253,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.342</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.389</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Dox'x Click</h2>
                 <p>Dox'x Click is a compact pixel horror platform game built around an unstable struggle for control. Move and jump through each stage while a hostile entity gradually takes over the character. The goal is to reach the portal, survive hazards and monsters, and continue through increasingly long stages.</p>
@@ -2287,33 +2314,9 @@
             </div>
         </div>
     </div>
-
-    <script src="../stock-crypto-avg-cost-calculator.js"></script>
-    <script src="../profit-loss-calculator.js"></script>
-    <script src="../percentage-calculator.js"></script>
-    <script src="../compound-interest-calculator.js"></script>
-    <script src="../loan-payment-calculator.js"></script>
-    <script src="../unit-converter.js"></script>
-    <script src="../extra-converters.js"></script>
-    <script src="../discount-calculator.js"></script>
-    <script src="../sales-tax-calculator.js"></script>
-    <script src="../tip-calculator.js"></script>
-    <script src="../date-difference-calculator.js"></script>
-    <script src="../time-duration-calculator.js"></script>
-    <script src="../bmi-calculator.js"></script>
-    <script src="../fuel-cost-calculator.js"></script>
-    <script src="../mortgage-calculator.js"></script>
-    <script src="../age-calculator.js"></script>
-    <script src="../calorie-calculator.js"></script>
-    <script src="../gpa-calculator.js"></script>
-    <script src="../character-byte-counter.js"></script>
-    <script src="../generators.js"></script>
-    <script src="../image-tools.js"></script>
-    <script src="../video-tools.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
-    <script src="../audio-tools.js"></script>
-    <script src="../game-tools.js"></script>
+    <script src="/game-tools.js"></script>
     <script>window.SFT_TOOL_PAGE = { cardId: "doxxClickCard", slug: "doxx-click", title: "Dox'x Click" };</script>
+    <script>window.SFT_LOCALE="en";window.SFT_LOCALE_URLS={"en":"/doxx-click/","ko":"/ko/doxx-click/","ja":"/ja/doxx-click/","zh-CN":"/zh-CN/doxx-click/","es":"/es/doxx-click/","de":"/de/doxx-click/","fr":"/fr/doxx-click/","pt-BR":"/pt-BR/doxx-click/"};window.SFT_I18N={"addStar":"Add to Starred","removeStar":"Remove from Starred"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
     <script>
         window.addEventListener('message', event => {
             const gameFrame = document.querySelector('.doxx-game-frame');
@@ -2325,8 +2328,7 @@
     </script>
     <script type="text/javascript">
         function getBrowserLanguage() {
-            const lang = navigator.language || navigator.userLanguage;
-            return lang.split('-')[0];
+            return 'en';
         }
 
         async function fetchTranslation(text, targetLang) {
@@ -2534,7 +2536,7 @@
                     window.history.back();
                 } else {
                     document.body.classList.add('page-fade-out');
-                    setTimeout(() => window.history.back(), 40);
+                    window.history.back();
                 }
                 return;
             }
@@ -2574,7 +2576,7 @@
                 .map(getCardIconWaveTarget)
                 .filter(Boolean);
             const groups = [
-                [document.querySelector('#translateIcon img')],
+                [document.querySelector('header img[alt="Language"]')].filter(Boolean),
                 Array.from(document.querySelectorAll('.category-tab:not(.is-hidden) > span[aria-hidden="true"]')).filter(visibleElement),
                 cardIconTargets,
                 Array.from(document.querySelectorAll('.footer-action > span[aria-hidden="true"], .tool-guide-link > span[aria-hidden="true"]')).filter(visibleElement)
@@ -2711,7 +2713,7 @@
             const starButton = card.querySelector('.star-toggle');
             card.dataset.starred = isStarred ? 'true' : 'false';
             starButton.classList.toggle('is-starred', isStarred);
-            starButton.setAttribute('aria-label', isStarred ? 'Remove from Starred' : 'Add to Starred');
+            starButton.setAttribute('aria-label', isStarred ? (window.SFT_I18N?.removeStar || 'Remove from Starred') : (window.SFT_I18N?.addStar || 'Add to Starred'));
         }
 
         function syncStarredTab() {
@@ -2787,14 +2789,8 @@
         function openToolPageCard() {
             if (!toolPageConfig || !toolPageConfig.cardId) return;
             const card = document.getElementById(toolPageConfig.cardId);
-            if (!card) return;
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    if (!card.classList.contains('hidden')) {
-                        openStaticToolPageCard(card);
-                    }
-                });
-            });
+            if (!card || card.classList.contains('hidden')) return;
+            openStaticToolPageCard(card);
         }
 
         function openStaticToolPageCard(card) {
@@ -3744,29 +3740,6 @@
             }
         });
 
-        safeInitByName('Average Cost Calculator', 'initAverageCostCalculator');
-        safeInitByName('Profit Loss Calculator', 'initProfitLossCalculator');
-        safeInitByName('Percentage Calculator', 'initPercentageCalculator');
-        safeInitByName('Compound Interest Calculator', 'initCompoundInterestCalculator');
-        safeInitByName('Loan Payment Calculator', 'initLoanPaymentCalculator');
-        safeInitByName('Unit Converter', 'initUnitConverter');
-        safeInitByName('Extra Converters', 'initExtraConverters');
-        safeInitByName('Discount Calculator', 'initDiscountCalculator');
-        safeInitByName('Sales Tax Calculator', 'initSalesTaxCalculator');
-        safeInitByName('Tip Calculator', 'initTipCalculator');
-        safeInitByName('Date Difference Calculator', 'initDateDifferenceCalculator');
-        safeInitByName('Time Duration Calculator', 'initTimeDurationCalculator');
-        safeInitByName('BMI Calculator', 'initBmiCalculator');
-        safeInitByName('Fuel Cost Calculator', 'initFuelCostCalculator');
-        safeInitByName('Mortgage Calculator', 'initMortgageCalculator');
-        safeInitByName('Age Calculator', 'initAgeCalculator');
-        safeInitByName('Calorie Calculator', 'initCalorieCalculator');
-        safeInitByName('GPA Calculator', 'initGpaCalculator');
-        safeInitByName('Character Byte Counter', 'initCharacterByteCounter');
-        safeInitByName('Generators', 'initGenerators');
-        safeInitByName('Image Tools', 'initImageTools');
-        safeInitByName('Video Tools', 'initVideoTools');
-        safeInitByName('Audio Tools', 'initAudioTools');
         safeInitByName('Game Tools', 'initGameTools');
         safeInit('File Action States', initFileActionStates);
         safeInitByName('Text Stress Test', 'applyCardTextStressTest');
@@ -3780,68 +3753,6 @@
             document.body.classList.remove('app-loading', 'tool-page-loading');
             startLogoAndEmojiCycle();
         }, 0);
-
-        // Multilingual translation system.
-        window.addEventListener('DOMContentLoaded', async () => {
-            targetIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) originalTexts[id] = el.innerText;
-            });
-
-            const userLang = getBrowserLanguage();
-
-            if (userLang !== 'en') {
-                toggleBtn.classList.add('opacity-50');
-                const translationPromises = targetIds.map(async (id) => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) {
-                        const translatedText = await fetchTranslation(originalTexts[id], userLang);
-                        translatedTexts[id] = translatedText;
-                        return { id, text: translatedText };
-                    }
-                    return null;
-                });
-
-                const results = await Promise.all(translationPromises);
-                results.forEach(result => {
-                    if (result) document.getElementById(result.id).innerText = result.text;
-                });
-                toggleBtn.classList.remove('opacity-50');
-            }
-        });
-
-        toggleBtn.addEventListener('click', () => {
-            if (isLoopBlocking) return;
-            const userLang = getBrowserLanguage();
-            isLoopBlocking = true;
-
-            if (isTranslated) {
-                targetIds.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) el.innerText = originalTexts[id];
-                });
-                toggleBtn.classList.remove('bg-zinc-900');
-                toggleBtn.classList.add('bg-gray-300');
-                toggleHandle.classList.remove('translate-x-5');
-                translateIcon.classList.remove('text-zinc-900');
-                translateIcon.classList.add('text-zinc-400');
-                isTranslated = false;
-            } else {
-                if (userLang !== 'en') {
-                    targetIds.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.innerText = translatedTexts[id] || originalTexts[id];
-                    });
-                }
-                toggleBtn.classList.remove('bg-gray-300');
-                toggleBtn.classList.add('bg-zinc-900');
-                toggleHandle.classList.add('translate-x-5');
-                translateIcon.classList.remove('text-zinc-400');
-                translateIcon.classList.add('text-zinc-900');
-                isTranslated = true;
-            }
-            isLoopBlocking = false;
-        });
     </script>
 </body>
 </html>

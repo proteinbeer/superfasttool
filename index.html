@@ -4,19 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Fast Tool - Free Online Tools</title>
-    <meta name="description" content="Free online calculators, converters, generators, image tools, audio tools, and game tools for quick everyday tasks. Fast browser-based utilities with no signup required.">
+    <meta name="description" content="Free online calculators, converters, generators, image tools, audio tools, and game tools for quick everyday tasks. No signup required.">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="8d_Vnu3iaxG7ZllKTxo-UgBmCC2CyfzN9JuvQCTdqK8">
     <link rel="canonical" href="https://superfasttool.com/">
+    <!-- SFT_HUB_I18N_ALTERNATES_START -->
+    <link rel="alternate" hreflang="en" href="https://superfasttool.com/">
+    <link rel="alternate" hreflang="ko" href="https://superfasttool.com/ko/">
+    <link rel="alternate" hreflang="ja" href="https://superfasttool.com/ja/">
+    <link rel="alternate" hreflang="zh-CN" href="https://superfasttool.com/zh-CN/">
+    <link rel="alternate" hreflang="es" href="https://superfasttool.com/es/">
+    <link rel="alternate" hreflang="de" href="https://superfasttool.com/de/">
+    <link rel="alternate" hreflang="fr" href="https://superfasttool.com/fr/">
+    <link rel="alternate" hreflang="pt-BR" href="https://superfasttool.com/pt-BR/">
+    <link rel="alternate" hreflang="x-default" href="https://superfasttool.com/">
+    <!-- SFT_HUB_I18N_ALTERNATES_END -->
+    <script src="/locale-routing.js"></script>
+    <link rel="prefetch" href="/fantasy-person-name-generator/" as="document">
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4400508127713059" crossorigin="anonymous"></script>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://superfasttool.com/">
     <meta property="og:title" content="Super Fast Tool - Free Online Tools">
-    <meta property="og:description" content="Fast calculators, converters, generators, image tools, audio tools, and game tools with no signup required.">
+    <meta property="og:description" content="Free online calculators, converters, generators, image tools, audio tools, and game tools for quick everyday tasks. No signup required.">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Super Fast Tool - Free Online Tools">
-    <meta name="twitter:description" content="Fast calculators, converters, generators, image tools, audio tools, and game tools with no signup required.">
+    <meta name="twitter:description" content="Free online calculators, converters, generators, image tools, audio tools, and game tools for quick everyday tasks. No signup required.">
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -70,7 +83,7 @@
             ]
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/assets/tailwind.css">
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
@@ -387,6 +400,30 @@
         }
         .hero-action-word:nth-child(2) { animation-delay: 0.18s; }
         .hero-action-word:nth-child(3) { animation-delay: 0.36s; }
+        @media (max-width: 640px) {
+            html[lang="en"] #hubHero h1,
+            html[lang="es"] #hubHero h1,
+            html[lang="fr"] #hubHero h1,
+            html[lang="pt-BR"] #hubHero h1 {
+                font-size: 1.5rem;
+                letter-spacing: 0;
+            }
+            html[lang="de"] #hubHero h1 {
+                font-size: 1.15rem;
+                letter-spacing: 0;
+            }
+        }
+        @media (max-width: 360px) {
+            html[lang="en"] #hubHero h1,
+            html[lang="es"] #hubHero h1,
+            html[lang="fr"] #hubHero h1,
+            html[lang="pt-BR"] #hubHero h1 {
+                font-size: 1.2rem;
+            }
+            html[lang="de"] #hubHero h1 {
+                font-size: 0.95rem;
+            }
+        }
         @keyframes heroGrayWave {
             0%, 28%, 100% { transform: translateX(-130%) skewX(-14deg); opacity: 0; }
             38% { opacity: 0.78; }
@@ -598,6 +635,9 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 12px 35px rgba(15, 23, 42, 0.06);
             backdrop-filter: blur(10px);
         }
+        body.info-panel-open .guide-ticker {
+            pointer-events: none;
+        }
         .guide-ticker::before,
         .guide-ticker::after {
             content: "";
@@ -677,11 +717,152 @@
             background: #fff7ed;
             font-size: 0.95rem;
         }
+        .ticker-date {
+            display: none;
+            flex: 0 0 5.5rem;
+            color: #a1a1aa;
+            font-size: 0.72rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
         .ticker-title {
             min-width: 0;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+        .ticker-mobile-toggle {
+            display: none;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .guide-ticker {
+                transition: height 0.22s ease, max-width 0.22s ease, box-shadow 0.22s ease;
+            }
+            .guide-ticker.is-expanded {
+                height: 16.05rem;
+                max-width: 42rem;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 18px 42px rgba(15, 23, 42, 0.1);
+            }
+            .guide-ticker.is-collapsing {
+                height: 5.7rem;
+                max-width: 36rem;
+                overflow: hidden;
+            }
+            .guide-ticker-scroll {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .guide-ticker.is-expanded .guide-ticker-scroll {
+                width: calc(100% - 4px);
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar {
+                width: 8px;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar-thumb {
+                border-radius: 999px;
+                background: #d4d4d8;
+            }
+            .guide-ticker.is-expanded::before,
+            .guide-ticker.is-expanded::after,
+            .guide-ticker.is-collapsing::before,
+            .guide-ticker.is-collapsing::after {
+                opacity: 0;
+            }
+            .guide-ticker.is-expanded .guide-ticker-track,
+            .guide-ticker.is-collapsing .guide-ticker-track {
+                animation: none;
+                transform: none;
+            }
+            .guide-ticker.is-expanded .guide-ticker-link[aria-hidden="true"],
+            .guide-ticker.is-collapsing .guide-ticker-link[aria-hidden="true"] {
+                display: none;
+            }
+            .guide-ticker.is-expanded .ticker-date,
+            .guide-ticker.is-collapsing .ticker-date {
+                display: inline-block;
+            }
+        }
+        @media (hover: none) and (pointer: coarse) {
+            .guide-ticker {
+                transition: height 0.22s ease, box-shadow 0.22s ease;
+            }
+            .ticker-mobile-toggle {
+                position: absolute;
+                top: 0.48rem;
+                left: 0.48rem;
+                z-index: 5;
+                display: inline-flex;
+                width: 1.8rem;
+                height: 1.8rem;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                border-radius: 0.5rem;
+                background: #18181b;
+                color: #fff;
+                box-shadow: 0 3px 10px rgba(24, 24, 27, 0.18);
+                cursor: pointer;
+                touch-action: manipulation;
+            }
+            .ticker-mobile-toggle:active {
+                background: #3f3f46;
+            }
+            .ticker-toggle-icon {
+                width: 0.48rem;
+                height: 0.48rem;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                transform: translateY(-0.12rem) rotate(45deg);
+                transition: transform 0.18s ease;
+            }
+            .guide-ticker.is-mobile-expanded .ticker-toggle-icon {
+                transform: translateY(0.12rem) rotate(225deg);
+            }
+            .guide-ticker-link {
+                padding-left: 2.65rem;
+            }
+            .guide-ticker.is-mobile-expanded {
+                height: 16.05rem;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 18px 42px rgba(15, 23, 42, 0.1);
+            }
+            .guide-ticker.is-mobile-expanded .guide-ticker-scroll {
+                width: calc(100% - 4px);
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+            }
+            .guide-ticker.is-mobile-expanded::before,
+            .guide-ticker.is-mobile-expanded::after {
+                opacity: 0;
+            }
+            .guide-ticker.is-mobile-expanded .guide-ticker-track {
+                animation: none;
+                transform: none;
+            }
+            .guide-ticker.is-mobile-expanded .guide-ticker-link[aria-hidden="true"] {
+                display: none;
+            }
+            .guide-ticker:focus-within:not(.is-mobile-expanded) .guide-ticker-track {
+                animation-play-state: running;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar {
+                width: 8px;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .guide-ticker-scroll::-webkit-scrollbar-thumb {
+                border-radius: 999px;
+                background: #d4d4d8;
+            }
         }
         @keyframes guideTickerScroll {
             from { transform: translateY(0); }
@@ -765,8 +946,9 @@
             .info-panel-scroll { overflow-y: scroll; scrollbar-gutter: stable; padding-bottom: 0; }
         }
     </style>
+<style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
 </head>
-<body class="app-loading bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+<body class="page-transitions-disabled app-loading bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
     <div id="pageBackdrop" class="page-backdrop" aria-hidden="true"></div>
 
@@ -777,15 +959,7 @@
                 <span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span>
             </a>
             
-            <div class="shrink-0 flex items-center gap-2 bg-gray-100/90 p-1.5 rounded-2xl border border-gray-200 shadow-inner">
-                <button id="langToggleBtn" class="toggle-bg w-10 h-5 bg-zinc-900 rounded-full p-0.5 focus:outline-none relative cursor-pointer">
-                    <div id="toggleHandle" class="toggle-dot w-4 h-4 bg-white rounded-full shadow transform translate-x-5 duration-200 ease-in-out pointer-events-none"></div>
-                </button>
-                
-                <div id="translateIcon" class="text-zinc-900 p-0.5 transition-colors duration-200 flex items-center">
-                    <img src="https://image.similarpng.com/file/similarpng/very-thumbnail/2020/12/Google-translate-logo-design-clipart-PNG.png" alt="Translate" class="w-5 h-5 object-contain">
-                </div>
-            </div>
+            <div class="language-menu relative shrink-0"><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>English</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>English</span><span class="text-[10px] text-orange-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>한국어</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>日本語</span><span class="text-[10px] text-zinc-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>简体中文</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Español</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Deutsch</span><span class="text-[10px] text-zinc-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Français</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Português (Brasil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div><button id="langToggleBtn" type="button" hidden></button><span id="toggleHandle" hidden></span><span id="translateIcon" hidden></span></div>
         </div>
     </header>
 
@@ -797,28 +971,31 @@
                 <span id="heroTitle1" class="hero-action-line"><span class="hero-action-word text-zinc-900">Generate</span><span class="hero-action-word text-zinc-600">, Convert</span><span class="hero-action-word text-zinc-400">, Calculate</span></span>
                 <span id="heroTitle2" class="hidden"></span>
             </h1>
-            <div class="guide-ticker mx-auto mt-16 max-w-xl" aria-label="Latest guides">
-                <div class="guide-ticker-track">
-                    <a class="guide-ticker-link is-news" href="/news/adobe-topaz-labs-ai-image-video-enhancement/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Adobe Plans to Acquire Topaz Labs for Creative AI Tools</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/coreweave-aria-ai-research-agent-preview/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">CoreWeave Launches ARIA AI Research Agent in W&amp;B</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/gemini-chrome-android-auto-browse/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Gemini in Chrome Brings AI Assistance and Auto Browse to Android</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/pixel-june-drop-ai-video-music-tools/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Pixel June Drop Adds Gemini Video Creation, Music Generation, and New Editing Tools</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/canva-ai-2-agentic-editing-workflows/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Canva AI 2.0 Introduces Layered Editing and Agentic Creative Workflows</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/firefox-152-redesigned-settings/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Firefox 152 Redesigns Settings for Faster Navigation and Clearer Controls</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/lightroom-generate-video-from-photos/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Lightroom Adds AI Video Generation From Edited Photos</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/aurora-tool-using-agent-video-editing-research/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Aurora Research Explores Tool-Using AI Agents for Video Editing</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/adobe-firefly-elements-projects-consistent-ai-assets/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Adobe Firefly Adds Reusable Elements and Projects for More Consistent AI Creations</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/davinci-resolve-21-photo-page-ai-tools/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">DaVinci Resolve 21 Expands Into Photo Editing With a New Generation of AI Tools</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/adobe-topaz-labs-ai-image-video-enhancement/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Adobe Plans to Acquire Topaz Labs for Creative AI Tools</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/coreweave-aria-ai-research-agent-preview/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">CoreWeave Launches ARIA AI Research Agent in W&amp;B</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/gemini-chrome-android-auto-browse/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Gemini in Chrome Brings AI Assistance and Auto Browse to Android</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/pixel-june-drop-ai-video-music-tools/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Pixel June Drop Adds Gemini Video Creation, Music Generation, and New Editing Tools</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/canva-ai-2-agentic-editing-workflows/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Canva AI 2.0 Introduces Layered Editing and Agentic Creative Workflows</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/firefox-152-redesigned-settings/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Firefox 152 Redesigns Settings for Faster Navigation and Clearer Controls</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/lightroom-generate-video-from-photos/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Lightroom Adds AI Video Generation From Edited Photos</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/aurora-tool-using-agent-video-editing-research/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Aurora Research Explores Tool-Using AI Agents for Video Editing</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/adobe-firefly-elements-projects-consistent-ai-assets/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">Adobe Firefly Adds Reusable Elements and Projects for More Consistent AI Creations</span></a>
-                    <a class="guide-ticker-link is-news" href="/news/davinci-resolve-21-photo-page-ai-tools/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><span class="ticker-title">DaVinci Resolve 21 Expands Into Photo Editing With a New Generation of AI Tools</span></a>
+            <div class="guide-ticker mx-auto mt-16 max-w-xl" aria-label="Latest guides and news">
+                <button class="ticker-mobile-toggle" type="button" aria-label="Expand news list" aria-expanded="false"><span class="ticker-toggle-icon" aria-hidden="true"></span></button>
+                <div class="guide-ticker-scroll">
+                    <div class="guide-ticker-track">
+                    <a class="guide-ticker-link is-news" href="/news/canva-magic-layers-gemini-chatgpt/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-07-02">2026.07.02</time><span class="ticker-title">Canva Magic Layers Turns AI Images Into Editable Designs in Gemini and ChatGPT</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/google-june-2026-ai-tools-roundup/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-07-02">2026.07.02</time><span class="ticker-title">Google June AI Roundup Highlights Translation, Local Models, and Research Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/adobe-topaz-labs-ai-image-video-enhancement/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-30">2026.06.30</time><span class="ticker-title">Adobe Plans to Acquire Topaz Labs for Creative AI Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/coreweave-aria-ai-research-agent-preview/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-30">2026.06.30</time><span class="ticker-title">CoreWeave Launches ARIA AI Research Agent in W&amp;B</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/gemini-chrome-android-auto-browse/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-29">2026.06.29</time><span class="ticker-title">Gemini in Chrome Brings AI Assistance and Auto Browse to Android</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/pixel-june-drop-ai-video-music-tools/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-29">2026.06.29</time><span class="ticker-title">Pixel June Drop Adds Gemini Video Creation, Music Generation, and New Editing Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/canva-ai-2-agentic-editing-workflows/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-27">2026.06.27</time><span class="ticker-title">Canva AI 2.0 Introduces Layered Editing and Agentic Creative Workflows</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/firefox-152-redesigned-settings/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-27">2026.06.27</time><span class="ticker-title">Firefox 152 Redesigns Settings for Faster Navigation and Clearer Controls</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/lightroom-generate-video-from-photos/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-26">2026.06.26</time><span class="ticker-title">Lightroom Adds AI Video Generation From Edited Photos</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/aurora-tool-using-agent-video-editing-research/"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-26">2026.06.26</time><span class="ticker-title">Aurora Research Explores Tool-Using AI Agents for Video Editing</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/canva-magic-layers-gemini-chatgpt/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-07-02">2026.07.02</time><span class="ticker-title">Canva Magic Layers Turns AI Images Into Editable Designs in Gemini and ChatGPT</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/google-june-2026-ai-tools-roundup/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-07-02">2026.07.02</time><span class="ticker-title">Google June AI Roundup Highlights Translation, Local Models, and Research Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/adobe-topaz-labs-ai-image-video-enhancement/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-30">2026.06.30</time><span class="ticker-title">Adobe Plans to Acquire Topaz Labs for Creative AI Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/coreweave-aria-ai-research-agent-preview/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-30">2026.06.30</time><span class="ticker-title">CoreWeave Launches ARIA AI Research Agent in W&amp;B</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/gemini-chrome-android-auto-browse/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-29">2026.06.29</time><span class="ticker-title">Gemini in Chrome Brings AI Assistance and Auto Browse to Android</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/pixel-june-drop-ai-video-music-tools/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-29">2026.06.29</time><span class="ticker-title">Pixel June Drop Adds Gemini Video Creation, Music Generation, and New Editing Tools</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/canva-ai-2-agentic-editing-workflows/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-27">2026.06.27</time><span class="ticker-title">Canva AI 2.0 Introduces Layered Editing and Agentic Creative Workflows</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/firefox-152-redesigned-settings/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-27">2026.06.27</time><span class="ticker-title">Firefox 152 Redesigns Settings for Faster Navigation and Clearer Controls</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/lightroom-generate-video-from-photos/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-26">2026.06.26</time><span class="ticker-title">Lightroom Adds AI Video Generation From Edited Photos</span></a>
+                    <a class="guide-ticker-link is-news" href="/news/aurora-tool-using-agent-video-editing-research/" aria-hidden="true" tabindex="-1"><span class="ticker-type">NEWS</span><span class="ticker-icon" aria-hidden="true">&#128240;</span><time class="ticker-date" datetime="2026-06-26">2026.06.26</time><span class="ticker-title">Aurora Research Explores Tool-Using AI Agents for Video Editing</span></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2283,7 +2460,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">No data is transmitted to the server; all operations are processed safely within your browser.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.351</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.389</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Terms of Service</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -2374,8 +2551,7 @@
     <script src="./game-tools.js"></script>
     <script type="text/javascript">
         function getBrowserLanguage() {
-            const lang = navigator.language || navigator.userLanguage;
-            return lang.split('-')[0];
+            return "en";
         }
 
         async function fetchTranslation(text, targetLang) {
@@ -2583,7 +2759,7 @@
                     window.history.back();
                 } else {
                     document.body.classList.add('page-fade-out');
-                    setTimeout(() => window.history.back(), 40);
+                    window.history.back();
                 }
                 return;
             }
@@ -2596,7 +2772,7 @@
             if (!document.body.classList.contains('page-transitions-disabled')) {
                 document.body.classList.add('history-fade-ready');
             }
-            fadeToUrl(`/${slug}/`);
+            fadeToUrl(window.SFTLocale?.pathFor(window.SFTLocale.get(), `/${slug}/`) || `/${slug}/`);
         }
 
 
@@ -2836,14 +3012,8 @@
         function openToolPageCard() {
             if (!toolPageConfig || !toolPageConfig.cardId) return;
             const card = document.getElementById(toolPageConfig.cardId);
-            if (!card) return;
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    if (!card.classList.contains('hidden')) {
-                        openStaticToolPageCard(card);
-                    }
-                });
-            });
+            if (!card || card.classList.contains('hidden')) return;
+            openStaticToolPageCard(card);
         }
 
         function openStaticToolPageCard(card) {
@@ -3829,72 +3999,98 @@
             document.body.classList.remove('app-loading', 'tool-page-loading');
             startLogoAndEmojiCycle();
         }, 0);
-
-        // Multilingual translation system.
-        window.addEventListener('DOMContentLoaded', async () => {
-            targetIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) originalTexts[id] = el.innerText;
-            });
-
-            const userLang = getBrowserLanguage();
-
-            if (userLang !== 'en') {
-                toggleBtn.classList.add('opacity-50');
-                const translationPromises = targetIds.map(async (id) => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) {
-                        const translatedText = await fetchTranslation(originalTexts[id], userLang);
-                        translatedTexts[id] = translatedText;
-                        return { id, text: translatedText };
-                    }
-                    return null;
-                });
-
-                const results = await Promise.all(translationPromises);
-                results.forEach(result => {
-                    if (result) document.getElementById(result.id).innerText = result.text;
-                });
-                toggleBtn.classList.remove('opacity-50');
-            }
-        });
-
-        toggleBtn.addEventListener('click', () => {
-            if (isLoopBlocking) return;
-            const userLang = getBrowserLanguage();
-            isLoopBlocking = true;
-
-            if (isTranslated) {
-                targetIds.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && originalTexts[id]) el.innerText = originalTexts[id];
-                });
-                toggleBtn.classList.remove('bg-zinc-900');
-                toggleBtn.classList.add('bg-gray-300');
-                toggleHandle.classList.remove('translate-x-5');
-                translateIcon.classList.remove('text-zinc-900');
-                translateIcon.classList.add('text-zinc-400');
-                isTranslated = false;
-            } else {
-                if (userLang !== 'en') {
-                    targetIds.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.innerText = translatedTexts[id] || originalTexts[id];
-                    });
-                } 
-                toggleBtn.classList.remove('bg-gray-300');
-                toggleBtn.classList.add('bg-zinc-900');
-                toggleHandle.classList.add('translate-x-5');
-                translateIcon.classList.remove('text-zinc-400');
-                translateIcon.classList.add('text-zinc-900');
-                isTranslated = true;
-            }
-            isLoopBlocking = false;
-        });
     </script>
+<script id="guideTickerInteraction">(()=>{
+    const ticker=document.querySelector('.guide-ticker');
+    const scrollArea=ticker?.querySelector('.guide-ticker-scroll');
+    const track=ticker?.querySelector('.guide-ticker-track');
+    const mobileToggle=ticker?.querySelector('.ticker-mobile-toggle');
+    if(!ticker||!scrollArea||!track)return;
+    const animationSeconds=42;
+    const desktopQuery=window.matchMedia('(hover: hover) and (pointer: fine)');
+    let collapseTimer=0;
+    const isBlocked=()=>document.body.classList.contains('info-panel-open');
+    const loopDistance=()=>track.querySelector('.guide-ticker-link[aria-hidden="true"]')?.offsetTop||track.scrollHeight/2||1;
+    const translateY=()=>{
+      const transform=getComputedStyle(track).transform;
+      if(!transform||transform==='none')return 0;
+      if(window.DOMMatrixReadOnly)return new DOMMatrixReadOnly(transform).m42;
+      const values=transform.match(/matrix(?:3d)?\(([^)]+)\)/)?.[1].split(',').map(Number);
+      return values?.length===16?values[13]:(values?.[5]||0);
+    };
+    const automaticOffset=()=>{
+      const distance=loopDistance();
+      return ((-translateY()%distance)+distance)%distance;
+    };
+    const expand=()=>{
+      if(isBlocked())return;
+      clearTimeout(collapseTimer);
+      const offset=ticker.classList.contains('is-collapsing')?scrollArea.scrollTop:automaticOffset();
+      ticker.classList.remove('is-collapsing');
+      ticker.classList.add('is-expanded');
+      scrollArea.scrollTop=offset;
+    };
+    const collapse=(force=false)=>{
+      if(!force&&ticker.matches(':focus-within'))return;
+      clearTimeout(collapseTimer);
+      const offset=scrollArea.scrollTop;
+      ticker.classList.remove('is-expanded');
+      ticker.classList.add('is-collapsing');
+      scrollArea.scrollTop=offset;
+      collapseTimer=window.setTimeout(()=>{
+        const distance=Math.max(track.scrollHeight,1);
+        const progress=(((offset%distance)+distance)%distance)/distance;
+        track.style.animationDelay=(-progress*animationSeconds).toFixed(4)+'s';
+        scrollArea.scrollTop=0;
+        ticker.classList.remove('is-collapsing');
+      },240);
+    };
+    if(desktopQuery.matches){
+      ticker.addEventListener('pointerenter',expand);
+      ticker.addEventListener('pointerleave',collapse);
+      ticker.addEventListener('focusin',expand);
+      ticker.addEventListener('focusout',()=>window.setTimeout(()=>{if(!ticker.matches(':focus-within')&&!ticker.matches(':hover'))collapse()},0));
+    }
+    if(mobileToggle){
+      const setToggleState=expanded=>{
+        mobileToggle.setAttribute('aria-expanded',String(expanded));
+        mobileToggle.setAttribute('aria-label',expanded?'Collapse news list':'Expand news list');
+      };
+      const collapseMobile=()=>{
+        if(!ticker.classList.contains('is-mobile-expanded'))return;
+        const offset=scrollArea.scrollTop;
+        const distance=Math.max(track.scrollHeight,1);
+        const progress=(((offset%distance)+distance)%distance)/distance;
+        track.style.animationDelay=(-progress*animationSeconds).toFixed(4)+'s';
+        scrollArea.scrollTop=0;
+        ticker.classList.remove('is-mobile-expanded');
+        setToggleState(false);
+      };
+      mobileToggle.addEventListener('click',event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        if(isBlocked())return;
+        const expanded=ticker.classList.contains('is-mobile-expanded');
+        if(expanded){
+          collapseMobile();
+        }else{
+          const offset=automaticOffset();
+          ticker.classList.add('is-mobile-expanded');
+          scrollArea.scrollTop=offset;
+          setToggleState(true);
+        }
+      });
+      new MutationObserver(()=>{
+        if(!isBlocked())return;
+        if(ticker.classList.contains('is-expanded'))collapse(true);
+        collapseMobile();
+      }).observe(document.body,{attributes:true,attributeFilter:['class']});
+    }else{
+      new MutationObserver(()=>{
+        if(isBlocked()&&ticker.classList.contains('is-expanded'))collapse(true);
+      }).observe(document.body,{attributes:true,attributeFilter:['class']});
+    }
+  })();</script>
+<script id="sftHubLocaleScript">window.SFT_LOCALE="en";window.SFT_LOCALE_URLS={"en":"/","ko":"/ko/","ja":"/ja/","zh-CN":"/zh-CN/","es":"/es/","de":"/de/","fr":"/fr/","pt-BR":"/pt-BR/"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const close=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180')};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening)});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url)});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))close()});document.addEventListener('keydown',event=>{if(event.key==='Escape')close()})});</script>
 </body>
 </html>
-
-
-
-

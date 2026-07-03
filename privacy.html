@@ -180,8 +180,9 @@
             .policy-heading, .policy-content { padding: 22px; }
         }
     </style>
+<style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
 </head>
-<body class="app-loading">
+<body class="page-transitions-disabled app-loading">
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
     <header class="site-header">
         <div class="header-inner">
@@ -280,7 +281,7 @@
     <footer>
         <div class="footer-inner">
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p class="version">v1.2.342</p>
+            <p class="version">v1.2.370</p>
         </div>
     </footer>
 
@@ -346,7 +347,7 @@
 
         function returnToHub() {
             document.body.classList.add('page-fade-out');
-            setTimeout(() => window.location.assign('/'), 40);
+            window.location.assign('/');
         }
 
         window.addEventListener('pagehide', preparePageForHistoryRestore);
