@@ -8,8 +8,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const baseUrl = 'https://superfasttool.com';
-const version = 'v1.2.390';
-const shouldTranslate = process.argv.includes('--translate');
+const version = 'v1.2.408';
 const catalogPath = path.join(here, 'guide-i18n.catalog.json');
 const localeDefinitions = {
   en: { label: 'English', target: 'en' },
@@ -75,8 +74,7 @@ function normalizeSource(source, code, guideSlug) {
   output = output.replace(/\s*<script src="\/locale-routing\.js"><\/script>/g, '');
   output = output.replace(/(<link rel="canonical"[^>]+>)/, `$1${alternateLinks(guideSlug)}<script src="/locale-routing.js"></script>`);
   output = output.replace(/<div class="language-menu">[\s\S]*?<\/div><\/div><\/div><\/header>/, `${languageControl(code, guideSlug)}</div></header>`);
-  output = output.replace(/<div class="translate-control">[\s\S]*?<\/div><\/div><\/div><\/header>/, `${languageControl(code, guideSlug)}</div></header>`);
-  output = output.replace(/<script>\(\(\)=>\{const control=document\.querySelector\('\.translate-control'\);[\s\S]*?<\/script>/, '');
+  output = output.replace('<div data-guide-language-slot></div>', languageControl(code, guideSlug));
   if (!output.includes("const button=document.getElementById('languageMenuButton')")) output = output.replace('</body>', `${menuScript}</body>`);
   if (!output.includes('.language-menu{position:relative')) output = output.replace('</style>', `${menuCss}</style>`);
   return output;
@@ -162,46 +160,6 @@ function localizeDocument(source, code, guideSlug, toolSlug, translations, confi
   return serialize(document).replace(/v1\.2\.\d+/g, version);
 }
 
-function makeBatches(strings, maxLength = 2800) {
-  const batches = [];
-  let batch = [];
-  let length = 0;
-  for (const value of strings) {
-    if (batch.length && length + value.length + 3 > maxLength) {
-      batches.push(batch);
-      batch = [];
-      length = 0;
-    }
-    batch.push(value);
-    length += value.length + 3;
-  }
-  if (batch.length) batches.push(batch);
-  return batches;
-}
-
-async function fetchBatch(batch, target, attempt = 1) {
-  const separator = '\uE000';
-  const query = batch.join(`\n${separator}\n`);
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(target)}&dt=t&q=${encodeURIComponent(query)}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    const output = data[0].map(part => part[0]).join('');
-    const values = output.split(separator).map(value => value.trim());
-    if (values.length !== batch.length) throw new Error(`Expected ${batch.length} translations, received ${values.length}`);
-    return values;
-  } catch (error) {
-    if (attempt >= 4) throw error;
-    await new Promise(resolve => setTimeout(resolve, 500 * attempt));
-    return fetchBatch(batch, target, attempt + 1);
-  }
-}
-
-function saveCatalog(catalog) {
-  fs.writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
-}
-
 const guideRecords = guideSlugs.map(guideSlug => {
   const file = path.join(root, 'guides', guideSlug, 'index.html');
   if (!fs.existsSync(file)) throw new Error(`Missing English guide: ${guideSlug}`);
@@ -217,26 +175,9 @@ const allStrings = [...new Set(guideRecords.flatMap(record => [...collectStrings
 const catalog = fs.existsSync(catalogPath) ? JSON.parse(fs.readFileSync(catalogPath, 'utf8')) : { version: 1, translations: {} };
 catalog.version = 1;
 
-if (shouldTranslate) {
-  for (const code of localeCodes.filter(item => item !== 'en')) {
-    catalog.translations[code] ||= {};
-    const missing = allStrings.filter(value => !catalog.translations[code][value]);
-    const batches = makeBatches(missing);
-    console.log(`Translating ${missing.length} missing ${code} strings in ${batches.length} batches.`);
-    for (let index = 0; index < batches.length; index += 4) {
-      const group = batches.slice(index, index + 4);
-      const results = await Promise.all(group.map(batch => fetchBatch(batch, localeDefinitions[code].target)));
-      group.forEach((batch, groupIndex) => batch.forEach((source, itemIndex) => {
-        catalog.translations[code][source] = results[groupIndex][itemIndex];
-      }));
-      saveCatalog(catalog);
-    }
-  }
-}
-
 for (const code of localeCodes.filter(item => item !== 'en')) {
   const missing = allStrings.filter(value => !catalog.translations[code]?.[value]);
-  if (missing.length) throw new Error(`${code} is missing ${missing.length} guide translations. Run npm run translate:guides.`);
+  if (missing.length) throw new Error(`${code} is missing ${missing.length} static guide translations.`);
 }
 
 for (const record of guideRecords) {

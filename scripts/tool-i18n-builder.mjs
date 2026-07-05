@@ -12,6 +12,18 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;');
 }
 
+function preserveFooterBrand(value) {
+  const text = String(value);
+  const match = text.match(/^(.+?\s*2026)\s+.*?([.。]\s*.*)$/);
+  return match ? `${match[1]} Super Fast Tool.${match[2].replace(/^[.。]\s*/, ' ')}` : text;
+}
+
+function preserveFooterBrandInHtml(source) {
+  return source.replace(/<p>([^<]*2026[^<]*)<\/p>/g, (match, text) => {
+    return text.trim().indexOf('2026') <= 8 ? `<p>${preserveFooterBrand(text)}</p>` : match;
+  });
+}
+
 function localeUrl(slug, code) {
   return code === 'en' ? `${baseUrl}/${slug}/` : `${baseUrl}/${code}/${slug}/`;
 }
@@ -50,7 +62,7 @@ function languageControl(config, selectedCode) {
     const codeClasses = selected ? 'text-orange-300' : 'text-zinc-300';
     return `<button type="button" role="menuitem" data-locale="${code}" aria-current="${selected ? 'true' : 'false'}" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors ${classes}"><span>${escapeHtml(locale.label)}</span><span class="text-[10px] ${codeClasses}">${code.toUpperCase()}</span></button>`;
   }).join('');
-  return `<div class="language-menu relative shrink-0"><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${escapeHtml(config.locales[selectedCode].label)}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div><button id="langToggleBtn" type="button" hidden></button><span id="toggleHandle" hidden></span><span id="translateIcon" hidden></span></div>`;
+  return `<div class="language-menu relative shrink-0" data-sft-language-control><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${escapeHtml(config.locales[selectedCode].label)}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div></div>`;
 }
 
 function navigationScript(config, code) {
@@ -84,6 +96,10 @@ function headerSubtitle(title) {
 
 function prepareSharedSource(source, config, version) {
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
+  source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
+  source = source.replace(/\n\s*const targetIds = \[[\s\S]*?\n\s*\];/, '');
+  source = source.replace(/\n\s*const originalTexts = \{\};\s*\n\s*const translatedTexts = \{\};\s*\n\s*let isTranslated = true;/, '');
+  source = source.replace(/\s*\[document\.querySelector\('#translateIcon img'\)\],/, '');
   source = source.replace(/<body class="(?![^"]*page-transitions-disabled)/, '<body class="page-transitions-disabled ');
   source = source.replace(/<body class="(?![^"]*\btool-page\b)/, '<body class="tool-page tool-page-loading ');
   source = source.replace(/\s*<!-- SFT_I18N_ALTERNATES_START -->[\s\S]*?<!-- SFT_I18N_ALTERNATES_END -->/g, '');
@@ -91,7 +107,7 @@ function prepareSharedSource(source, config, version) {
   source = source.replace(/\s*<script src="\/locale-routing\.js"><\/script>/g, '');
   source = replaceRequired(source, /(<!-- SFT_I18N_ALTERNATES_END -->)/, `$1\n    <script src="/locale-routing.js"></script>`, 'locale router');
 
-  let controlStart = source.indexOf('<div class="language-menu relative shrink-0">');
+  let controlStart = source.indexOf('<div class="language-menu relative shrink-0"');
   if (controlStart < 0) controlStart = source.indexOf('<div class="shrink-0 flex items-center gap-2 bg-gray-100/90');
   const controlEndMarker = '        </div>\n    </header>';
   const controlEnd = source.indexOf(controlEndMarker, controlStart);
@@ -100,8 +116,6 @@ function prepareSharedSource(source, config, version) {
 
   source = source.replace(/\s*<script>window\.SFT_LOCALE=.*?<\/script>/g, '');
   source = replaceRequired(source, /(<script>window\.SFT_TOOL_PAGE = \{[^<]+<\/script>)/, `$1\n    ${navigationScript(config, 'en')}`, 'tool page config');
-  source = replaceRequired(source, /function getBrowserLanguage\(\) \{[\s\S]*?\n        \}/, "function getBrowserLanguage() {\n            return 'en';\n        }", 'legacy browser language function');
-  source = source.replace("[document.querySelector('#translateIcon img')],", "[document.querySelector('header img[alt=\"Language\"]')].filter(Boolean),");
   source = source.replace("starButton.setAttribute('aria-label', isStarred ? 'Remove from Starred' : 'Add to Starred');", "starButton.setAttribute('aria-label', isStarred ? (window.SFT_I18N?.removeStar || 'Remove from Starred') : (window.SFT_I18N?.addStar || 'Add to Starred')); ");
   return source.replace(/v1\.2\.\d+/g, version);
 }
@@ -135,6 +149,7 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, locale.footer, 'footer description');
   output = output.replace(/<p>(?:&copy;|©|Â©) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
   output = replaceCapturedText(output, /(<h2 id="infoPanelTitle"[^>]*>)[^<]*(<\/h2>)/, locale.about, 'About title');
+  output = preserveFooterBrandInHtml(output);
   output = replaceRequired(output, /(<div id="aboutPanel"[^>]*>)[\s\S]*?(<\/div>\s*<div id="privacyPanel")/, (match, start, end) => `${start}${locale.aboutHtml}${end}`, 'About panel');
   output = replaceCapturedText(output, /(<form id="contactPanel"[\s\S]*?<p[^>]*>)[^<]*(<\/p>)/, locale.contactIntro, 'contact intro');
   output = replaceCapturedText(output, /(<input name="name"[^>]*placeholder=")[^"]*(")/, locale.namePlaceholder, 'name placeholder');
@@ -149,7 +164,7 @@ function localizeCommon(source, config, code, locale) {
 
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
   output = replaceRequired(output, /window\.SFT_TOOL_PAGE = \{ cardId: "[^"]+", slug: "[^"]+", title: "[^"]+" \}/, `window.SFT_TOOL_PAGE = { cardId: "${config.cardId}", slug: "${config.slug}", title: ${JSON.stringify(locale.title)} }`, 'localized tool page config');
-  output = replaceRequired(output, /<div class="language-menu relative shrink-0">[\s\S]*?<span id="translateIcon" hidden><\/span><\/div>/, languageControl(config, code), 'localized language control');
+  output = replaceRequired(output, /<div class="language-menu relative shrink-0" data-sft-language-control>[\s\S]*?<\/div><\/div>/, languageControl(config, code), 'localized language control');
   if (config.guideHref) output = output.replace(`href="${config.guideHref}"`, `href="${localizedGuidePath(config, code)}"`);
 
   if (code !== 'en') output = output.replaceAll('src="../', 'src="/').replaceAll('src="./', `src="/${config.slug}/`).replaceAll('href="./', `href="/${config.slug}/`).replaceAll('href="../favicon.svg"', 'href="/favicon.svg"');
@@ -172,10 +187,11 @@ function localizeAuto(source, config, code, locale) {
   output = output.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${escapeHtml(locale.meta)}">`);
   output = localizeStructuredData(output, config, locale, url);
   output = applyTranslationMap(output, config.cardId, locale.translations || {});
-  output = output.replace(/<span class="logo-sub-name" aria-label="[^"]*">[\s\S]*?<\/span><\/a>/, `${headerSubtitle(locale.title)}</a>`);
+  output = preserveFooterBrandInHtml(output);
+  output = output.replace(/<span(?=[^>]*\bclass="[^"]*\blogo-sub-name\b)[^>]*>(?:<span class="logo-sub-letter">[\s\S]*?<\/span>)*<\/span>\s*<\/a>/, `${headerSubtitle(locale.title)}</a>`);
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
   output = replaceRequired(output, /window\.SFT_TOOL_PAGE = \{ cardId: "[^"]+", slug: "[^"]+", title: "[^"]+" \}/, `window.SFT_TOOL_PAGE = { cardId: "${config.cardId}", slug: "${config.slug}", title: ${JSON.stringify(locale.title)} }`, 'localized tool page config');
-  output = replaceRequired(output, /<div class="language-menu relative shrink-0">[\s\S]*?<span id="translateIcon" hidden><\/span><\/div>/, languageControl(config, code), 'localized language control');
+  output = replaceRequired(output, /<div class="language-menu relative shrink-0" data-sft-language-control>[\s\S]*?<\/div><\/div>/, languageControl(config, code), 'localized language control');
   if (config.guideHref) output = output.replace(`href="${config.guideHref}"`, `href="${localizedGuidePath(config, code)}"`);
   if (code !== 'en') output = output.replaceAll('src="../', 'src="/').replaceAll('src="./', `src="/${config.slug}/`).replaceAll('href="./', `href="/${config.slug}/`).replaceAll('href="../favicon.svg"', 'href="/favicon.svg"');
   return output.replace(/[ \t]+$/gm, '');
@@ -201,7 +217,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.390', lastmod = '2026-07-03' } = options;
+  const { write = true, version = 'v1.2.408', lastmod = '2026-07-04' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

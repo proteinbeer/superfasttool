@@ -87,6 +87,7 @@ function initGenerators() {
     setupCountSlider('uuidCount');
     setupCountSlider('loremCount');
     setupClampedNumberInput('loremLength', clampLoremLength);
+    initLunchPicker();
 
     document.getElementById('generatePassword').addEventListener('click', () => {
         document.getElementById('valPassword').innerText = createPassword();
@@ -120,6 +121,240 @@ function initGenerators() {
         document.getElementById('loremCountValue').innerText = count;
         downloadTextFile('lorem-ipsum.txt', Array.from({ length: count }, () => createLoremIpsum(length)).join('\n\n'));
     });
+}
+
+function initLunchPicker() {
+    const presetSelect = document.getElementById('lunchPreset');
+    const optionsInput = document.getElementById('lunchOptions');
+    const excludedInput = document.getElementById('lunchExcluded');
+    const avoidRecentInput = document.getElementById('lunchAvoidRecent');
+    const spinButton = document.getElementById('spinLunch');
+    const slotMachine = document.getElementById('lunchSlotMachine');
+    const previousRow = document.getElementById('lunchSlotPrevious');
+    const currentRow = document.getElementById('lunchSlotCurrent');
+    const nextRow = document.getElementById('lunchSlotNext');
+    const message = document.getElementById('lunchPickerMessage');
+    const recentOutput = document.getElementById('lunchRecentResults');
+    const creditsLink = document.getElementById('lunchPhotoCredits');
+    const fireworks = document.getElementById('lunchFireworks');
+    if (!presetSelect || !optionsInput || !excludedInput || !avoidRecentInput || !spinButton || !slotMachine) return;
+
+    const requestedLocale = document.documentElement.lang || window.SFT_LOCALE || 'en';
+    const locale = window.SFT_LUNCH_PRESETS?.[requestedLocale] ? requestedLocale : 'en';
+    const presets = window.SFT_LUNCH_PRESETS?.[locale] || {};
+    const photoLookup = window.SFT_LUNCH_PHOTOS?.[locale] || {};
+    if (!Object.keys(presets).length) return;
+    if (creditsLink) creditsLink.textContent = window.SFT_LUNCH_CREDITS_LABELS?.[locale] || 'Photo credits';
+    const storageKey = 'sft-lunch-picker';
+    const customStorageKey = 'sft-lunch-picker-custom-options';
+    const defaultCustomOptions = (window.SFT_LUNCH_CUSTOM_DEFAULTS?.[locale] || ['Menu 1', 'Menu 2', 'Menu 3']).join('\n');
+    let recent = [];
+    let customOptions = defaultCustomOptions;
+    let hasSavedCustom = false;
+    try {
+        hasSavedCustom = localStorage.getItem(customStorageKey) !== null;
+        customOptions = hasSavedCustom ? localStorage.getItem(customStorageKey) || '' : defaultCustomOptions;
+    } catch {}
+    const text = (id, fallback) => document.getElementById(id)?.textContent.trim() || fallback;
+    const labels = {
+        ready: previousRow.textContent.trim(),
+        choose: currentRow.textContent.trim(),
+        spinWhenReady: nextRow.textContent.trim(),
+        spinning: text('lunchLabelSpinning', 'Spinning...'),
+        spinAgain: text('lunchLabelSpinAgain', 'Spin Again'),
+        recent: text('lunchLabelRecent', 'Recent'),
+        empty: message.textContent.trim() || 'Add at least one available lunch option.'
+    };
+
+    const normalizeLines = value => [...new Set(value.split(/\r?\n/).map(item => item.trim()).filter(Boolean))];
+    const randomItem = items => {
+        if (!items.length) return '';
+        if (window.crypto?.getRandomValues) {
+            const value = new Uint32Array(1);
+            window.crypto.getRandomValues(value);
+            return items[value[0] % items.length];
+        }
+        return items[Math.floor(Math.random() * items.length)];
+    };
+    const imageSource = item => photoLookup[item] ? `/assets/lunch-photos/${photoLookup[item]}.webp` : '';
+    const preloadItems = items => {
+        const sources = [...new Set(items.map(imageSource).filter(Boolean))];
+        sources.forEach(source => {
+            const image = new Image();
+            image.src = source;
+        });
+    };
+    const saveState = () => {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify({ locale, preset: presetSelect.value, options: optionsInput.value, customOptions, excluded: excludedInput.value, avoidRecent: avoidRecentInput.checked, recent }));
+        } catch {}
+    };
+    const saveCustomOptions = () => {
+        try {
+            localStorage.setItem(customStorageKey, customOptions);
+            hasSavedCustom = true;
+        } catch {}
+    };
+    const renderRecent = () => {
+        recentOutput.textContent = recent.length ? `${labels.recent}: ${recent.join(' · ')}` : '';
+        recentOutput.classList.toggle('hidden', !recent.length);
+    };
+    const renderSlotRow = (row, item, fallback) => {
+        const label = item || fallback;
+        const source = imageSource(item);
+        const name = document.createElement('span');
+        name.className = 'lunch-slot-name';
+        name.textContent = label;
+        if (!source) {
+            row.replaceChildren(name);
+            return;
+        }
+        const image = document.createElement('img');
+        image.className = 'lunch-slot-image';
+        image.src = source;
+        image.alt = '';
+        image.width = row === currentRow ? 48 : 34;
+        image.height = row === currentRow ? 48 : 34;
+        image.decoding = 'async';
+        image.setAttribute('aria-hidden', 'true');
+        image.addEventListener('error', () => image.remove(), { once: true });
+        row.replaceChildren(image, name);
+    };
+    const setRows = (winner, pool) => {
+        const alternatives = pool.filter(item => item !== winner);
+        const previous = randomItem(alternatives);
+        const next = randomItem(alternatives);
+        renderSlotRow(previousRow, previous, labels.ready);
+        renderSlotRow(currentRow, winner, labels.choose);
+        renderSlotRow(nextRow, next, labels.spinWhenReady);
+    };
+    const setPreset = key => {
+        if (key === 'custom') {
+            optionsInput.value = customOptions;
+            saveState();
+            return;
+        }
+        optionsInput.value = (presets[key] || presets.mixed).join('\n');
+        preloadItems(presets[key] || presets.mixed);
+        saveState();
+    };
+    const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+    const burstCelebration = reducedMotion => {
+        if (!fireworks) return;
+        if (fireworks.parentElement !== document.body) document.body.appendChild(fireworks);
+        fireworks.replaceChildren();
+        const colors = ['#f97316', '#facc15', '#ef4444', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#ffffff'];
+        const origins = [18, 50, 82];
+        const count = reducedMotion ? 18 : 72;
+        const fragment = document.createDocumentFragment();
+        for (let index = 0; index < count; index += 1) {
+            const particle = document.createElement('span');
+            const origin = origins[index % origins.length] + ((Math.random() * 10) - 5);
+            const horizontal = (Math.random() - 0.5) * Math.min(window.innerWidth * 0.42, 420);
+            const vertical = -(window.innerHeight * (0.55 + Math.random() * 0.48));
+            const width = 8 + Math.round(Math.random() * 7);
+            const height = 12 + Math.round(Math.random() * 12);
+            const rotation = Math.round((Math.random() * 900) - 450);
+            particle.className = 'lunch-confetti';
+            particle.style.setProperty('--confetti-color', colors[index % colors.length]);
+            particle.style.setProperty('--confetti-origin', `${origin}%`);
+            particle.style.setProperty('--confetti-x', `${horizontal}px`);
+            particle.style.setProperty('--confetti-y', `${vertical}px`);
+            particle.style.setProperty('--confetti-fall-x', `${horizontal + ((Math.random() - 0.5) * 28)}px`);
+            particle.style.setProperty('--confetti-fall-y', `${vertical + 12 + (Math.random() * 30)}px`);
+            particle.style.setProperty('--confetti-rotate', `${rotation}deg`);
+            particle.style.setProperty('--confetti-end-rotate', `${rotation + 240 + Math.round(Math.random() * 400)}deg`);
+            particle.style.setProperty('--confetti-width', `${width}px`);
+            particle.style.setProperty('--confetti-height', `${height}px`);
+            particle.style.setProperty('--confetti-radius', index % 3 === 0 ? '999px' : '2px');
+            particle.style.setProperty('--confetti-delay', `${Math.round(Math.random() * 130)}ms`);
+            fragment.appendChild(particle);
+        }
+        fireworks.appendChild(fragment);
+        window.setTimeout(() => fireworks.replaceChildren(), 1700);
+    };
+
+    presetSelect.addEventListener('change', () => setPreset(presetSelect.value));
+    optionsInput.addEventListener('input', () => {
+        presetSelect.value = 'custom';
+        customOptions = optionsInput.value;
+        saveCustomOptions();
+        saveState();
+    });
+    excludedInput.addEventListener('input', saveState);
+    avoidRecentInput.addEventListener('change', saveState);
+    spinButton.addEventListener('click', async () => {
+        const options = normalizeLines(optionsInput.value);
+        const excluded = new Set(normalizeLines(excludedInput.value).map(item => item.toLocaleLowerCase()));
+        const available = options.filter(item => !excluded.has(item.toLocaleLowerCase()));
+        let candidates = available;
+        if (avoidRecentInput.checked) {
+            const unused = candidates.filter(item => !recent.includes(item));
+            if (unused.length) candidates = unused;
+        }
+        if (!candidates.length) {
+            message.textContent = labels.empty;
+            message.classList.remove('hidden');
+            return;
+        }
+
+        message.classList.add('hidden');
+        spinButton.disabled = true;
+        spinButton.textContent = labels.spinning;
+        slotMachine.classList.remove('is-complete');
+        slotMachine.classList.add('is-spinning');
+        const winner = randomItem(candidates);
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const steps = reducedMotion ? 3 : 24;
+        for (let step = 0; step < steps; step += 1) {
+            setRows(randomItem(candidates), candidates);
+            const progress = step / Math.max(steps - 1, 1);
+            await wait(reducedMotion ? 35 : 45 + Math.round(progress * progress * 145));
+        }
+        setRows(winner, available);
+        slotMachine.classList.remove('is-spinning');
+        slotMachine.classList.add('is-complete');
+        burstCelebration(reducedMotion);
+        recent = [winner, ...recent.filter(item => item !== winner)].slice(0, 5);
+        renderRecent();
+        saveState();
+        spinButton.textContent = labels.spinAgain;
+        spinButton.disabled = false;
+    });
+
+    try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        const sameLocale = saved.locale === locale;
+        recent = sameLocale && Array.isArray(saved.recent) ? saved.recent.slice(0, 5) : [];
+        const savedPreset = sameLocale && (presets[saved.preset] || saved.preset === 'custom') ? saved.preset : 'mixed';
+        if (!hasSavedCustom && saved.preset === 'custom' && typeof saved.options === 'string') {
+            customOptions = saved.options;
+            saveCustomOptions();
+        } else if (!hasSavedCustom && typeof saved.customOptions === 'string') {
+            customOptions = saved.customOptions;
+            saveCustomOptions();
+        }
+        presetSelect.value = savedPreset;
+        optionsInput.value = savedPreset === 'custom'
+            ? customOptions
+            : sameLocale && typeof saved.options === 'string' && saved.options.trim()
+            ? saved.options
+            : (presets[savedPreset] || presets.mixed).join('\n');
+        excludedInput.value = sameLocale && typeof saved.excluded === 'string' ? saved.excluded : '';
+        avoidRecentInput.checked = sameLocale ? saved.avoidRecent !== false : true;
+    } catch {
+        presetSelect.value = 'mixed';
+        optionsInput.value = presets.mixed.join('\n');
+    }
+    renderRecent();
+    preloadItems(normalizeLines(optionsInput.value));
+    if (recent.length) {
+        setRows(recent[0], normalizeLines(optionsInput.value));
+    } else {
+        renderSlotRow(previousRow, '', labels.ready);
+        renderSlotRow(currentRow, '', labels.choose);
+        renderSlotRow(nextRow, '', labels.spinWhenReady);
+    }
 }
 
 function setupNameGenerator(config, generatedLists) {

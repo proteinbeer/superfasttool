@@ -661,10 +661,9 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="site-brand-link text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2 min-w-0">
                 <span class="logo-bolt">&#9889;</span> <span class="logo-text" aria-label="Super Fast Tool"><span class="logo-word" aria-hidden="true"><span class="logo-letter">S</span><span class="logo-letter">u</span><span class="logo-letter">p</span><span class="logo-letter">e</span><span class="logo-letter">r</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">F</span><span class="logo-letter">a</span><span class="logo-letter">s</span><span class="logo-letter">t</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">T</span><span class="logo-letter">o</span><span class="logo-letter">o</span><span class="logo-letter">l</span></span></span>
-                <span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span>
-            </a>
+                <span class="logo-sub-name" aria-label="オーディオリバーサー"><span class="logo-sub-letter">-</span><span class="logo-sub-letter">&nbsp;</span><span class="logo-sub-letter">オ</span><span class="logo-sub-letter">ー</span><span class="logo-sub-letter">デ</span><span class="logo-sub-letter">ィ</span><span class="logo-sub-letter">オ</span><span class="logo-sub-letter">リ</span><span class="logo-sub-letter">バ</span><span class="logo-sub-letter">ー</span><span class="logo-sub-letter">サ</span><span class="logo-sub-letter">ー</span></span></a>
 
-            <div class="language-menu relative shrink-0"><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>日本語</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>English</span><span class="text-[10px] text-zinc-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>한국어</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>日本語</span><span class="text-[10px] text-orange-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>简体中文</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Español</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Deutsch</span><span class="text-[10px] text-zinc-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Français</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Português (Brasil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div><button id="langToggleBtn" type="button" hidden></button><span id="toggleHandle" hidden></span><span id="translateIcon" hidden></span></div>
+            <div class="language-menu relative shrink-0" data-sft-language-control><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>日本語</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>English</span><span class="text-[10px] text-zinc-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>한국어</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>日本語</span><span class="text-[10px] text-orange-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>简体中文</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Español</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Deutsch</span><span class="text-[10px] text-zinc-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Français</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Português (Brasil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div></div>
         </div>
     </header>
 
@@ -2125,9 +2124,9 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                     <span id="footerContact">連絡先</span>
                 </button>
             </div>
-            <p>© 2026 超高速ツール。無断転載を禁じます。</p>
+            <p>© 2026 Super Fast Tool. 無断転載を禁じます。</p>
             <p id="footerDesc" class="mt-2 text-xs">データはサーバーに送信されません。すべての操作はブラウザ内で安全に処理されます。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.390</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.408</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">オーディオリバーサー</h2>
                 <div class="mb-4 text-center"><a href="/ja/guides/audio-reverser/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>ガイド</a></div>
@@ -2194,26 +2193,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
     <script>window.SFT_TOOL_PAGE = { cardId: "audioReverseCard", slug: "audio-reverser", title: "オーディオリバーサー" };</script>
     <script>window.SFT_LOCALE="ja";window.SFT_LOCALE_URLS={"en":"/audio-reverser/","ko":"/ko/audio-reverser/","ja":"/ja/audio-reverser/","zh-CN":"/zh-CN/audio-reverser/","es":"/es/audio-reverser/","de":"/de/audio-reverser/","fr":"/fr/audio-reverser/","pt-BR":"/pt-BR/audio-reverser/"};window.SFT_I18N={"addStar":"お気に入りに追加","removeStar":"お気に入りから削除"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
     <script type="text/javascript">
-        function getBrowserLanguage() {
-            return 'en';
-        }
 
-        async function fetchTranslation(text, targetLang) {
-            if (!text.trim() || targetLang === 'en') return text;
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                return data[0][0][0];
-            } catch (error) {
-                console.error("Bypass:", error);
-                return text;
-            }
-        }
-
-        const toggleBtn = document.getElementById('langToggleBtn');
-        const toggleHandle = document.getElementById('toggleHandle');
-        const translateIcon = document.getElementById('translateIcon');
         const cardsGrid = document.getElementById('cardsGrid');
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
@@ -2241,46 +2221,6 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             section.classList.toggle('hidden', !isDefaultSection);
             section.style.display = isDefaultSection ? '' : 'none';
         });
-
-        const targetIds = [
-            'heroTitle1', 'heroTitle2', 'heroDesc', 'footerDesc', 'categoryAll', 'categoryStarred', 'categoryCalculator', 'categoryConverter', 'categoryGenerator', 'categoryGame', 'categoryImage', 'categoryVideo', 'categoryAudio',
-            'footerAbout', 'footerPolicy', 'footerContact',
-            'tool1Title', 'tool1Desc', 'tool2Title', 'tool2Desc',
-            'lblCurPrice', 'lblCurShares', 'lblBuyPrice', 'lblBuyShares', 'resAvgPrice', 'resTotalShares', 'resTotalAmount',
-            'lblEntryPrice', 'lblExitPrice', 'lblTradeQty', 'lblFees', 'resProfitLoss', 'resReturnPct', 'resFinalValue',
-            'tool3Title', 'tool3Desc', 'lblPercentValue', 'lblPercentTotal', 'lblPercentFrom', 'lblPercentTo', 'resPercentOfTotal', 'resPercentChange',
-            'tool4Title', 'tool4Desc', 'lblPrincipal', 'lblMonthlyContribution', 'lblAnnualReturn', 'lblYears', 'resFutureValue', 'resTotalContributed', 'resInterestEarned',
-            'tool5Title', 'tool5Desc', 'lblLoanAmount', 'lblLoanRate', 'lblLoanYears', 'resMonthlyPayment', 'resTotalRepayment', 'resLoanInterest',
-            'tool6Title', 'tool6Desc', 'lblUnitType', 'lblUnitValue', 'lblUnitFrom', 'lblUnitTo', 'resConvertedValue',
-            'tool7Title', 'tool7Desc', 'lblDiscountPrice', 'lblDiscountRate', 'resDiscountFinal', 'resDiscountSaved',
-            'tool8Title', 'tool8Desc', 'lblTaxPrice', 'lblTaxRate', 'resTaxAmount', 'resTaxTotal',
-            'tool9Title', 'tool9Desc', 'lblBillAmount', 'lblTipRate', 'lblSplitCount', 'resTipAmount', 'resTipTotal', 'resTipEach',
-            'tool10Title', 'tool10Desc', 'lblStartDate', 'lblEndDate', 'resDateDays', 'resDateWeeks',
-            'tool11Title', 'tool11Desc', 'lblStartTime', 'lblEndTime', 'resDuration', 'resDurationDecimal',
-            'tool12Title', 'tool12Desc', 'lblBmiHeight', 'lblBmiWeight', 'resBmi', 'resBmiCategory',
-            'tool13Title', 'tool13Desc', 'lblFuelDistance', 'lblFuelEfficiency', 'lblFuelPrice', 'fuelHint', 'resFuelUsed', 'resFuelCost',
-            'tool14Title', 'tool14Desc', 'lblHomePrice', 'lblDownPayment', 'lblMortgageRate', 'lblMortgageYears', 'resMortgageMonthly', 'resMortgageLoan', 'resMortgageInterest',
-            'tool15Title', 'tool15Desc', 'lblBirthDate', 'lblAgeAsOfDate', 'resAgeYears', 'resAgeDays',
-            'tool16Title', 'tool16Desc', 'lblCalorieAge', 'lblCalorieSex', 'lblCalorieHeight', 'lblCalorieWeight', 'lblActivityLevel', 'resMaintenanceCalories', 'resWeightLossCalories',
-            'tool17Title', 'tool17Desc', 'lblGpaGrade1', 'lblGpaCredits1', 'lblGpaGrade2', 'lblGpaCredits2', 'lblGpaGrade3', 'lblGpaCredits3', 'lblGpaGrade4', 'lblGpaCredits4', 'resGpa', 'resGpaCredits',
-            'tool18Title', 'tool18Desc', 'tool19Title', 'tool19Desc', 'tool20Title', 'tool20Desc', 'tool21Title', 'tool21Desc',
-            'tool22Title', 'tool22Desc', 'lblPasswordLength', 'tool23Title', 'tool23Desc', 'lblRandomMin', 'lblRandomMax',
-            'tool24Title', 'tool24Desc', 'tool25Title', 'tool25Desc', 'tool31Title', 'tool31Desc', 'tool32Title', 'tool32Desc',
-            'tool26Title', 'tool26Desc', 'lblCurrencyAmount', 'lblExchangeRate', 'resCurrencyConverted',
-            'tool27Title', 'tool27Desc', 'lblDataValue', 'lblDataFrom', 'lblDataTo', 'resDataConverted',
-            'tool28Title', 'tool28Desc', 'lblSpeedValue', 'lblSpeedFrom', 'lblSpeedTo', 'resSpeedConverted',
-            'tool29Title', 'tool29Desc', 'lblAreaValue', 'lblAreaFrom', 'lblAreaTo', 'resAreaConverted',
-            'tool30Title', 'tool30Desc', 'lblVolumeValue', 'lblVolumeFrom', 'lblVolumeTo', 'resVolumeConverted',
-            'tool46Title', 'tool46Desc', 'tool47Title', 'tool47Desc', 'tool48Title', 'tool48Desc', 'tool49Title', 'tool49Desc',
-            'tool50Title', 'tool50Desc', 'tool51Title', 'tool51Desc', 'tool52Title', 'tool52Desc', 'tool53Title', 'tool53Desc',
-            'tool33Title', 'tool33Desc', 'tool34Title', 'tool34Desc', 'tool35Title', 'tool35Desc', 'tool36Title', 'tool36Desc', 'tool37Title', 'tool37Desc', 'tool38Title', 'tool38Desc',
-            'tool39Title', 'tool39Desc', 'tool40Title', 'tool40Desc', 'tool41Title', 'tool41Desc', 'tool42Title', 'tool42Desc', 'tool43Title', 'tool43Desc', 'tool44Title', 'tool44Desc', 'tool45Title', 'tool45Desc',
-            'tool54Title', 'tool54Desc', 'tool55Title', 'tool55Desc', 'tool56Title', 'tool56Desc', 'tool57Title', 'tool57Desc', 'tool58Title', 'tool58Desc', 'tool59Title', 'tool59Desc', 'tool60Title', 'tool60Desc', 'tool61Title', 'tool61Desc', 'tool62Title', 'tool62Desc', 'tool63Title', 'tool63Desc', 'tool64Title', 'tool64Desc', 'tool65Title', 'tool65Desc', 'tool66Title', 'tool66Desc', 'tool67Title', 'tool67Desc', 'tool68Title', 'tool68Desc', 'tool69Title', 'tool69Desc', 'tool70Title', 'tool70Desc', 'tool72Title', 'tool72Desc', 'tool73Title', 'tool73Desc'
-        ];
-
-        const originalTexts = {};
-        const translatedTexts = {};
-        let isTranslated = true;
         let isLoopBlocking = false;
         let expandedCard = null;
         let activeInfoPanel = null;

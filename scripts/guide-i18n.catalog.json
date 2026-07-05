@@ -874,7 +874,17 @@
       "image guide": "이미지 가이드",
       "u": "너",
       "v1.2.372": "v1.2.372",
-      "video guide": "비디오 가이드"
+      "video guide": "비디오 가이드",
+      "How to Use Lunch Picker | Super Fast Tool": "점심 뽑기 사용 방법 | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "점심 뽑기 사용 방법. 결과를 사용하기 전에 핵심 개념, 실용적인 사용 절차, 흔한 실수와 제한 사항을 알아보세요.",
+      "How to Use Lunch Picker": "점심 뽑기 사용 방법",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "점심 슬롯머신을 돌려 오늘의 메뉴를 운에 맡겨 보세요. 이 가이드는 도구의 작동 방식, 안전한 사용법, 간단한 브라우저 결과의 한계를 설명합니다.",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "점심 뽑기는 사용 가능한 메뉴 목록에서 하나를 선택합니다. 균등 무작위 선택을 사용하면 남은 모든 옵션이 선택될 확률이 같습니다.",
+      "How to use Lunch Picker": "점심 뽑기 사용 방법",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "프리셋을 선택하거나 한 줄에 메뉴 하나씩 입력하고, 이용할 수 없는 항목을 제외한 다음 돌리세요. 최근 당첨 메뉴 피하기를 켜면 메뉴를 영구히 삭제하지 않고도 여러 번의 점심에 변화를 줄 수 있습니다.",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "결과는 제안일 뿐 식단 권고가 아닙니다. 주문하기 전에 알레르기, 재료, 영양 요구 사항, 영업시간, 가격 및 이용 가능 여부를 확인하세요.",
+      "Does Lunch Picker require an account?": "점심 뽑기를 사용하려면 계정이 필요한가요?",
+      "Open Lunch Picker": "점심 뽑기 열기"
     },
     "ja": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 は RGB(63, 63, 70) に対応します。 HSL は、色相、彩度、明度によって同じ色を表します。",
@@ -1749,7 +1759,17 @@
       "image guide": "イメージガイド",
       "u": "あなた",
       "v1.2.372": "v1.2.372",
-      "video guide": "ビデオガイド"
+      "video guide": "ビデオガイド",
+      "How to Use Lunch Picker | Super Fast Tool": "ランチ抽選の使い方 | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "ランチ抽選の使い方。結果を使う前に、基本的な考え方、実用的な手順、よくある間違い、制限事項を確認してください。",
+      "How to Use Lunch Picker": "ランチ抽選の使い方",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "ランチスロットを回して今日の食事を運に任せましょう。このガイドでは、ツールの仕組み、注意深い使い方、簡易的なブラウザ結果の限界を説明します。",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "ランチ抽選は利用可能なメニューから1つを選びます。均等なランダム選択では、残っているすべての候補が同じ確率で選ばれます。",
+      "How to use Lunch Picker": "ランチ抽選の使い方",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "プリセットを選ぶか1行に1品ずつ入力し、利用できない候補を除外して回してください。最近の当選を避けると、候補を削除せずに数回の食事へ変化を付けられます。",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "結果は提案であり、食事指導ではありません。注文前にアレルギー、材料、栄養上の要件、営業時間、価格、提供状況を確認してください。",
+      "Does Lunch Picker require an account?": "ランチ抽選にアカウントは必要ですか？",
+      "Open Lunch Picker": "ランチ抽選を開く"
     },
     "zh-CN": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 对应 RGB(63, 63, 70)。 HSL 通过色调、饱和度和亮度来描述相同的颜色。",
@@ -2624,7 +2644,17 @@
       "image guide": "图像指南",
       "u": "你",
       "v1.2.372": "v1.2.372",
-      "video guide": "视频指南"
+      "video guide": "视频指南",
+      "How to Use Lunch Picker | Super Fast Tool": "午餐抽选器使用指南 | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "午餐抽选器使用指南。在使用结果前，了解核心原理、实用流程、常见错误和限制。",
+      "How to Use Lunch Picker": "午餐抽选器使用指南",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "转动午餐老虎机，让运气决定今天吃什么。本指南说明工具的工作方式、谨慎使用方法以及快速浏览器结果的局限。",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "午餐抽选器会从可用菜单中选择一项。采用均匀随机选择时，所有剩余选项被选中的概率相同。",
+      "How to use Lunch Picker": "如何使用午餐抽选器",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "选择预设菜单或每行输入一种餐点，排除不可用项目，然后开始转动。启用避开最近结果后，无需永久删除选项也能让多次午餐更有变化。",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "结果只是建议，并非饮食指导。订购前请检查过敏原、食材、营养需求、营业时间、价格和供应情况。",
+      "Does Lunch Picker require an account?": "使用午餐抽选器需要账户吗？",
+      "Open Lunch Picker": "打开午餐抽选器"
     },
     "es": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 corresponde a RGB(63, 63, 70). HSL describe el mismo color a través del tono, la saturación y la luminosidad.",
@@ -3499,7 +3529,17 @@
       "image guide": "guía de imagen",
       "u": "tu",
       "v1.2.372": "v1.2.372",
-      "video guide": "guía de vídeo"
+      "video guide": "guía de vídeo",
+      "How to Use Lunch Picker | Super Fast Tool": "Cómo usar Selector de almuerzo | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Cómo usar Selector de almuerzo. Conoce la idea principal, un flujo práctico, errores comunes y limitaciones antes de utilizar el resultado.",
+      "How to Use Lunch Picker": "Cómo usar Selector de almuerzo",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Gira la máquina de almuerzos y deja que el azar elija la comida de hoy. Esta guía explica qué hace la herramienta, cómo usarla con cuidado y los límites de un resultado rápido en el navegador.",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "El selector de almuerzo elige un elemento de la lista disponible. Con una selección aleatoria uniforme, todas las opciones restantes tienen la misma probabilidad.",
+      "How to use Lunch Picker": "Cómo usar Selector de almuerzo",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Elige un preajuste o escribe una comida por línea, excluye lo que no esté disponible y gira. Evitar resultados recientes aporta variedad sin eliminar una opción permanentemente.",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "El resultado es una sugerencia, no una recomendación dietética. Comprueba alergias, ingredientes, necesidades nutricionales, horario, precio y disponibilidad antes de pedir.",
+      "Does Lunch Picker require an account?": "¿Selector de almuerzo requiere una cuenta?",
+      "Open Lunch Picker": "Abrir Selector de almuerzo"
     },
     "de": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 entspricht RGB(63, 63, 70). HSL beschreibt dieselbe Farbe durch Farbton, Sättigung und Helligkeit.",
@@ -4374,7 +4414,17 @@
       "image guide": "Bildführer",
       "u": "u",
       "v1.2.372": "v1.2.372",
-      "video guide": "Videoanleitung"
+      "video guide": "Videoanleitung",
+      "How to Use Lunch Picker | Super Fast Tool": "Mittagessen-Auswahl verwenden | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Mittagessen-Auswahl verwenden. Erfahre vor der Nutzung des Ergebnisses mehr über das Grundprinzip, einen praktischen Ablauf, häufige Fehler und Einschränkungen.",
+      "How to Use Lunch Picker": "Mittagessen-Auswahl verwenden",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Drehe den Mittagessen-Automaten und überlasse die heutige Mahlzeit dem Zufall. Dieser Leitfaden erklärt die Funktionsweise, die sorgfältige Nutzung und die Grenzen eines schnellen Browser-Ergebnisses.",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "Die Mittagessen-Auswahl wählt einen Eintrag aus der verfügbaren Menüliste. Bei gleichmäßiger Zufallsauswahl hat jede verbleibende Option die gleiche Chance.",
+      "How to use Lunch Picker": "So verwendest du die Mittagessen-Auswahl",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Wähle eine Voreinstellung oder gib eine Mahlzeit pro Zeile ein, schließe nicht verfügbare Einträge aus und drehe. Das Vermeiden letzter Ergebnisse sorgt für Abwechslung, ohne Optionen dauerhaft zu entfernen.",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "Das Ergebnis ist ein Vorschlag und keine Ernährungsempfehlung. Prüfe Allergien, Zutaten, Nährstoffbedarf, Öffnungszeiten, Preis und Verfügbarkeit vor der Bestellung.",
+      "Does Lunch Picker require an account?": "Benötigt die Mittagessen-Auswahl ein Konto?",
+      "Open Lunch Picker": "Mittagessen-Auswahl öffnen"
     },
     "fr": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 correspond à RVB(63, 63, 70). HSL décrit la même couleur à travers la teinte, la saturation et la luminosité.",
@@ -5249,7 +5299,17 @@
       "image guide": "guide d'images",
       "u": "toi",
       "v1.2.372": "v1.2.372",
-      "video guide": "guide vidéo"
+      "video guide": "guide vidéo",
+      "How to Use Lunch Picker | Super Fast Tool": "Comment utiliser le Sélecteur de déjeuner | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Comment utiliser le Sélecteur de déjeuner. Découvrez le principe, une méthode pratique, les erreurs courantes et les limites avant d’utiliser le résultat.",
+      "How to Use Lunch Picker": "Comment utiliser le Sélecteur de déjeuner",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Faites tourner la machine à déjeuner et laissez le hasard choisir le repas du jour. Ce guide explique le fonctionnement, la bonne utilisation et les limites d’un résultat rapide dans le navigateur.",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "Le Sélecteur de déjeuner choisit un élément dans la liste disponible. Avec une sélection aléatoire uniforme, chaque option restante a la même chance d’être choisie.",
+      "How to use Lunch Picker": "Comment utiliser le Sélecteur de déjeuner",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Choisissez un préréglage ou saisissez un repas par ligne, excluez les options indisponibles et lancez la sélection. Éviter les résultats récents ajoute de la variété sans supprimer définitivement une option.",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "Le résultat est une suggestion, pas une recommandation alimentaire. Vérifiez les allergies, les ingrédients, les besoins nutritionnels, les horaires, le prix et la disponibilité avant de commander.",
+      "Does Lunch Picker require an account?": "Le Sélecteur de déjeuner nécessite-t-il un compte ?",
+      "Open Lunch Picker": "Ouvrir le Sélecteur de déjeuner"
     },
     "pt-BR": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 corresponde a RGB(63, 63, 70). HSL descreve a mesma cor por meio de matiz, saturação e luminosidade.",
@@ -6124,7 +6184,17 @@
       "image guide": "guia de imagem",
       "u": "você",
       "v1.2.372": "v1.2.372",
-      "video guide": "guia de vídeo"
+      "video guide": "guia de vídeo",
+      "How to Use Lunch Picker | Super Fast Tool": "Como usar o Seletor de almoço | Super Fast Tool",
+      "How to Use Lunch Picker. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Como usar o Seletor de almoço. Conheça a ideia central, um fluxo prático, erros comuns e limitações antes de usar o resultado.",
+      "How to Use Lunch Picker": "Como usar o Seletor de almoço",
+      "Spin a lunch slot machine and let chance choose today's meal. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Gire a máquina de almoço e deixe o acaso escolher a refeição de hoje. Este guia explica como a ferramenta funciona, como usá-la com cuidado e os limites de um resultado rápido no navegador.",
+      "A lunch picker selects one item from the available menu list. With uniform random selection, every remaining option has the same chance of being chosen.": "O Seletor de almoço escolhe um item da lista disponível. Com seleção aleatória uniforme, todas as opções restantes têm a mesma chance.",
+      "How to use Lunch Picker": "Como usar o Seletor de almoço",
+      "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Escolha uma predefinição ou digite uma refeição por linha, exclua o que estiver indisponível e gire. Evitar resultados recentes acrescenta variedade sem remover uma opção permanentemente.",
+      "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "O resultado é uma sugestão, não uma recomendação alimentar. Verifique alergias, ingredientes, necessidades nutricionais, horário, preço e disponibilidade antes de pedir.",
+      "Does Lunch Picker require an account?": "O Seletor de almoço exige uma conta?",
+      "Open Lunch Picker": "Abrir Seletor de almoço"
     }
   }
 }

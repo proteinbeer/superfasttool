@@ -9,7 +9,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.390';
+const version = 'v1.2.408';
 const baseUrl = 'https://superfasttool.com';
 
 const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -28,7 +28,7 @@ function languageControl(selectedCode) {
     const classes = selected ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-700 hover:bg-zinc-100';
     return `<button type="button" role="menuitem" data-locale="${code}" aria-current="${selected}" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors ${classes}"><span>${locale.label}</span><span class="text-[10px] ${selected ? 'text-orange-300' : 'text-zinc-300'}">${code.toUpperCase()}</span></button>`;
   }).join('');
-  return `<div class="language-menu relative shrink-0"><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${locales[selectedCode].label}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div><button id="langToggleBtn" type="button" hidden></button><span id="toggleHandle" hidden></span><span id="translateIcon" hidden></span></div>`;
+  return `<div class="language-menu relative shrink-0" data-sft-language-control><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${locales[selectedCode].label}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div></div>`;
 }
 
 function tickerInteractionScript() {
@@ -37,9 +37,11 @@ function tickerInteractionScript() {
     const scrollArea=ticker?.querySelector('.guide-ticker-scroll');
     const track=ticker?.querySelector('.guide-ticker-track');
     const mobileToggle=ticker?.querySelector('.ticker-mobile-toggle');
+    const moreButton=ticker?.querySelector('.ticker-more-button');
     if(!ticker||!scrollArea||!track)return;
     const animationSeconds=42;
     const desktopQuery=window.matchMedia('(hover: hover) and (pointer: fine)');
+    const moreLabels={en:'More',ko:'\\uB354 \\uBCF4\\uAE30',ja:'\\u3082\\u3063\\u3068\\u898B\\u308B','zh-CN':'\\u67E5\\u770B\\u66F4\\u591A',es:'M\\u00E1s',de:'Mehr',fr:'Plus','pt-BR':'Mais'};
     let collapseTimer=0;
     const isBlocked=()=>document.body.classList.contains('info-panel-open');
     const loopDistance=()=>track.querySelector('.guide-ticker-link[aria-hidden="true"]')?.offsetTop||track.scrollHeight/2||1;
@@ -57,6 +59,7 @@ function tickerInteractionScript() {
     const expand=()=>{
       if(isBlocked())return;
       clearTimeout(collapseTimer);
+      if(ticker.classList.contains('is-expanded'))return;
       const offset=ticker.classList.contains('is-collapsing')?scrollArea.scrollTop:automaticOffset();
       ticker.classList.remove('is-collapsing');
       ticker.classList.add('is-expanded');
@@ -82,6 +85,20 @@ function tickerInteractionScript() {
       ticker.addEventListener('pointerleave',collapse);
       ticker.addEventListener('focusin',expand);
       ticker.addEventListener('focusout',()=>window.setTimeout(()=>{if(!ticker.matches(':focus-within')&&!ticker.matches(':hover'))collapse()},0));
+    }
+    if(moreButton){
+      const locale=document.documentElement.lang||'en';
+      const label=moreLabels[locale]||moreLabels.en;
+      const labelElement=moreButton.querySelector('.ticker-more-label');
+      if(labelElement)labelElement.textContent=label;
+      moreButton.setAttribute('aria-label',label);
+      moreButton.addEventListener('click',event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        const pending=Array.from(track.querySelectorAll('.guide-ticker-link[data-ticker-pending="true"]')).slice(0,10);
+        pending.forEach(link=>link.removeAttribute('data-ticker-pending'));
+        if(!track.querySelector('.guide-ticker-link[data-ticker-pending="true"]'))moreButton.hidden=true;
+      });
     }
     if(mobileToggle){
       const setToggleState=expanded=>{
@@ -132,11 +149,15 @@ function navigationScript(code) {
 
 function prepareSource(source) {
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
+  source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
+  source = source.replace(/\n\s*const targetIds = \[[\s\S]*?\n\s*\];/, '');
+  source = source.replace(/\n\s*const originalTexts = \{\};\s*\n\s*const translatedTexts = \{\};\s*\n\s*let isTranslated = true;/, '');
+  source = source.replace(/\s*\[document\.querySelector\('#translateIcon img'\)\],/, '');
   source = source.replace(/\s*<!-- SFT_HUB_I18N_ALTERNATES_START -->[\s\S]*?<!-- SFT_HUB_I18N_ALTERNATES_END -->/g, '');
   source = source.replace(/(<link rel="canonical"[^>]+>)/, `$1\n    ${alternateLinks()}`);
   source = source.replace(/\s*<script src="\/locale-routing\.js"><\/script>/g, '');
   source = source.replace('<!-- SFT_HUB_I18N_ALTERNATES_END -->', '<!-- SFT_HUB_I18N_ALTERNATES_END -->\n    <script src="/locale-routing.js"></script>');
-  let start = source.indexOf('<div class="language-menu relative shrink-0">');
+  let start = source.indexOf('<div class="language-menu relative shrink-0"');
   if (start < 0) start = source.indexOf('<div class="shrink-0 flex items-center gap-2 bg-gray-100/90');
   const marker = '        </div>\n    </header>';
   const end = source.indexOf(marker, start);
@@ -147,7 +168,7 @@ function prepareSource(source) {
   source = source.replace('</body>', `${tickerInteractionScript()}\n${navigationScript('en')}\n</body>`);
   source = source.replace(/\s*const localizedSlugs = new Set\([^;]+;\s*const localePrefix = [^;]+;\s*fadeToUrl\(`\$\{localePrefix\}\/\$\{slug\}\/`\);/, '\n            fadeToUrl(window.SFTLocale?.pathFor(window.SFTLocale.get(), `/${slug}/`) || `/${slug}/`);');
   source = source.replace('            fadeToUrl(`/${slug}/`);', '            fadeToUrl(window.SFTLocale?.pathFor(window.SFTLocale.get(), `/${slug}/`) || `/${slug}/`);');
-  return source.replace(/v1\.2\.\d+/g, version);
+  return source.replace(/v1\.2\.\d+/g, version).replace(/[ \t]+$/gm, '');
 }
 
 function localize(source, code, locale) {
@@ -192,10 +213,10 @@ function localize(source, code, locale) {
   }
   output = output.replace(/(<section class="mx-auto mt-8 max-w-4xl[^>]*>\s*<h2[^>]*>)[^<]*(<\/h2>)/, `$1${locale.terms}$2`);
   output = output.replace(/function getBrowserLanguage\(\) \{[\s\S]*?\n        \}/, `function getBrowserLanguage() {\n            return ${JSON.stringify(code)};\n        }`);
-  output = output.replace(/<div class="language-menu relative shrink-0">[\s\S]*?<span id="translateIcon" hidden><\/span><\/div>/, languageControl(code));
+  output = output.replace(/<div class="language-menu relative shrink-0" data-sft-language-control>[\s\S]*?<\/div><\/div>/, languageControl(code));
   output = output.replace(/<script id="sftHubLocaleScript">[\s\S]*?<\/script>/, navigationScript(code));
   if (code !== 'en') output = output.replaceAll('src="./', 'src="/').replaceAll('href="./favicon.svg"', 'href="/favicon.svg"');
-  return output;
+  return output.replace(/[ \t]+$/gm, '');
 }
 
 function updateSitemap() {

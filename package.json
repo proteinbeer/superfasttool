@@ -2,12 +2,12 @@
   "name": "super-fast-tool",
   "private": true,
   "scripts": {
-    "build:i18n": "node ./scripts/build-hub-i18n.mjs && node ./scripts/build-tool-i18n.mjs && node ./scripts/build-guide-i18n.mjs",
+    "build:i18n": "node ./scripts/build-hub-i18n.mjs && node ./scripts/build-tool-note-i18n.mjs && node ./scripts/build-tool-i18n.mjs && node ./scripts/build-guide-i18n.mjs",
     "build:guides": "node ./scripts/build-guides.mjs && node ./scripts/build-guide-i18n.mjs",
-    "translate:guides": "node ./scripts/build-guide-i18n.mjs --translate",
     "check:i18n": "node ./scripts/build-tool-i18n.mjs --check",
     "build:css": "tailwindcss -i ./styles/tailwind.css -o ./assets/tailwind.css --minify",
-    "watch:css": "tailwindcss -i ./styles/tailwind.css -o ./assets/tailwind.css --watch"
+    "watch:css": "tailwindcss -i ./styles/tailwind.css -o ./assets/tailwind.css --watch",
+    "build:tool-notes": "node ./scripts/build-posts.mjs && node ./scripts/build-tool-note-i18n.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.2",
