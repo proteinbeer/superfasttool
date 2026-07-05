@@ -412,8 +412,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -858,7 +862,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. Alle Rechte vorbehalten.</p>
             <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
 
         </div>
     </footer>
@@ -890,7 +894,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">Datenschutzrichtlinie</strong></p>
                 <p>Super Fast Tool erfordert keine Konten und sammelt keine Rechnereingabewerte.</p>
                 <p>Einige externe Dienste können für Website-Funktionen geladen werden, z. B. Übersetzung, Styling, Symbole oder zukünftige Werbung. Diese Dienste können gemäß ihren Richtlinien eigene Cookies verwenden oder Protokolle anfordern.</p>
-                <p>Wenn in Zukunft Werbung hinzugefügt wird, wird diese Richtlinie aktualisiert, um werbebezogene Cookies und Optionen zu erläutern.</p>
+                <p>Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.</p>
                 <p><strong class="text-zinc-900">Lokale Daten</strong></p>
                 <p>Markierte Tools werden nur in Ihrem Browser im lokalen Speicher gespeichert, sodass Ihre Favoriten auch nach einer Aktualisierung verfügbar bleiben.</p>
                 <p><strong class="text-zinc-900">Kontaktformular</strong></p>
@@ -908,9 +912,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="Nachricht" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Nachricht senden</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                Gesendet
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Gesendet"></div>
         </div>
     </div>
     <script src="/game-tools.js"></script>
@@ -2059,6 +2061,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

@@ -378,8 +378,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -765,7 +769,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. Tous droits réservés.</p>
             <p id="footerDesc" class="mt-2 text-xs">La plupart des saisies dans les outils et des opérations sur les fichiers pris en charge sont traitées localement dans votre navigateur. Certaines fonctionnalités, telles que les formulaires de contact, l’hébergement, la publicité, les outils d’analyse, la traduction ou les services tiers, peuvent traiter des informations techniques limitées ou des informations que vous soumettez.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
 
         </div>
     </footer>
@@ -797,7 +801,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">Politique de confidentialité</strong></p>
                 <p>Super Fast Tool ne nécessite pas de compte et ne collecte pas les valeurs d'entrée de la calculatrice.</p>
                 <p>Certains services externes peuvent être chargés pour les fonctionnalités du site, telles que la traduction, le style, les icônes ou les publicités futures. Ces services peuvent utiliser leurs propres cookies ou demander des journaux conformément à leurs politiques.</p>
-                <p>Si de la publicité est ajoutée à l'avenir, cette politique sera mise à jour pour expliquer les cookies et les choix liés à la publicité.</p>
+                <p>La Politique de confidentialité complète explique la publicité et les cookies, y compris Google AdSense ou les services publicitaires associés s'ils sont activés sur le site.</p>
                 <p><strong class="text-zinc-900">Données locales</strong></p>
                 <p>Les outils favoris sont enregistrés uniquement dans votre navigateur à l'aide du stockage local, afin que vos favoris puissent rester disponibles après une actualisation.</p>
                 <p><strong class="text-zinc-900">Formulaire de contact</strong></p>
@@ -815,9 +819,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Envoyer un message</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                Envoyé
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Envoyé"></div>
         </div>
     </div>
     <script src="/compound-interest-calculator.js"></script>
@@ -1956,6 +1958,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

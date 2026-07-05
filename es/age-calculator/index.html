@@ -378,8 +378,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -735,7 +739,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. Reservados todos los derechos.</p>
             <p id="footerDesc" class="mt-2 text-xs">La mayoría de las entradas de las herramientas y las operaciones de archivos compatibles se procesan localmente en tu navegador. Algunas funciones, como los formularios de contacto, el alojamiento, la publicidad, las analíticas, la traducción o los servicios de terceros, pueden procesar información técnica limitada o información enviada por el usuario.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
 
         </div>
     </footer>
@@ -767,7 +771,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">Política de privacidad</strong></p>
                 <p>Super Fast Tool no requiere cuentas y no recopila valores de entrada de la calculadora.</p>
                 <p>Es posible que se carguen algunos servicios externos para la funcionalidad del sitio, como traducción, estilo, íconos o publicidad futura. Estos servicios pueden utilizar cookies propias o solicitar registros según sus políticas.</p>
-                <p>Si se agrega publicidad en el futuro, esta política se actualizará para explicar las cookies y las opciones relacionadas con la publicidad.</p>
+                <p>La Política de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si están habilitados en el sitio.</p>
                 <p><strong class="text-zinc-900">Datos locales</strong></p>
                 <p>Las herramientas destacadas se guardan solo en su navegador usando el almacenamiento local, por lo que sus favoritas pueden permanecer disponibles después de una actualización.</p>
                 <p><strong class="text-zinc-900">Formulario de contacto</strong></p>
@@ -785,9 +789,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="Mensaje" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Enviar mensaje</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                Enviado
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Enviado"></div>
         </div>
     </div>
     <script src="/age-calculator.js"></script>
@@ -1926,6 +1928,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

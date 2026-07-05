@@ -5,6 +5,18 @@ import { applyTranslationMap } from './auto-tool-i18n.mjs';
 
 const baseUrl = 'https://superfasttool.com';
 const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
+const oldAdvertisingPrivacyText = 'If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.';
+const advertisingPrivacyText = 'Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.';
+const advertisingPrivacyTranslations = {
+  en: advertisingPrivacyText,
+  ko: '광고 및 쿠키에 관한 내용은 전체 개인정보처리방침에 설명되어 있으며, 사이트에서 활성화된 경우 Google AdSense 또는 관련 광고 서비스에 대한 내용도 포함됩니다.',
+  ja: '広告と Cookie については、サイトで有効になっている場合の Google AdSense または関連する広告サービスを含め、完全なプライバシーポリシーで説明しています。',
+  'zh-CN': '有关广告和 Cookie 的说明请参阅完整的隐私政策，其中包括网站启用 Google AdSense 或相关广告服务时的相关内容。',
+  es: 'La Política de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si están habilitados en el sitio.',
+  de: 'Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
+  fr: "La Politique de confidentialité complète explique la publicité et les cookies, y compris Google AdSense ou les services publicitaires associés s'ils sont activés sur le site.",
+  'pt-BR': 'A Política de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviços de publicidade relacionados, caso estejam ativados no site.'
+};
 
 function escapeHtml(value) {
   return String(value)
@@ -98,6 +110,7 @@ function headerSubtitle(title) {
 }
 
 function prepareSharedSource(source, config, version) {
+  source = source.replaceAll(oldAdvertisingPrivacyText, advertisingPrivacyText);
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
   source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
   source = source.replace(/\n\s*const targetIds = \[[\s\S]*?\n\s*\];/, '');
@@ -120,6 +133,10 @@ function prepareSharedSource(source, config, version) {
   source = source.replace(/\s*<script>window\.SFT_LOCALE=.*?<\/script>/g, '');
   source = replaceRequired(source, /(<script>window\.SFT_TOOL_PAGE = \{[^<]+<\/script>)/, `$1\n    ${navigationScript(config, 'en')}`, 'tool page config');
   source = source.replace("starButton.setAttribute('aria-label', isStarred ? 'Remove from Starred' : 'Add to Starred');", "starButton.setAttribute('aria-label', isStarred ? (window.SFT_I18N?.removeStar || 'Remove from Starred') : (window.SFT_I18N?.addStar || 'Add to Starred')); ");
+  source = source.replace(/\.form-status,\s*#form-status(?:,\s*\[data-form-status\])?\s*\{\s*display:\s*none;\s*\}/, '.form-status,\n        #form-status,\n        [data-form-status] { display: none; }');
+  source = source.replace(/\.form-status\.show,\s*#form-status\.show(?:,\s*\[data-form-status\]\.show)?\s*\{\s*display:\s*block;\s*\}/, '.form-status.show,\n        #form-status.show,\n        [data-form-status].show { display: block; }');
+  source = source.replace(/\s*contactSentMessage\.textContent\s*=\s*contactSentMessage\.dataset\.successLabel\s*\|\|\s*'Sent';/g, '');
+  source = source.replace("contactSentMessage.classList.add('show');", "contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';\n                    contactSentMessage.classList.add('show');");
   return source.replace(/v1\.2\.\d+/g, version);
 }
 
@@ -138,6 +155,12 @@ function addNodeClass(node, className) {
   } else if (!classAttribute.value.split(/\s+/).includes(className)) {
     classAttribute.value = `${classAttribute.value} ${className}`;
   }
+}
+
+function setNodeAttribute(node, name, value) {
+  const attribute = node.attrs?.find(item => item.name === name);
+  if (attribute) attribute.value = value;
+  else node.attrs = [...(node.attrs || []), { name, value }];
 }
 
 function findNode(node, predicate) {
@@ -187,6 +210,7 @@ function finalizeToolDocument(source, config, code, locale) {
   const existingGuide = findNode(document, node => node.tagName === 'section'
     && hasNodeClass(node, 'max-w-4xl')
     && hasNodeClass(node, 'text-left'));
+  const formStatus = findNode(document, node => nodeAttribute(node, 'id') === 'contactSentMessage');
 
   if (!main || !cardsGrid || !activeCard || !title) {
     throw new Error(`Unable to create focused tool document for ${config.slug}`);
@@ -206,6 +230,12 @@ function finalizeToolDocument(source, config, code, locale) {
 
   title.nodeName = 'h1';
   title.tagName = 'h1';
+
+  if (formStatus) {
+    setNodeAttribute(formStatus, 'data-form-status', '');
+    setNodeAttribute(formStatus, 'data-success-label', locale.sent || locale.translations?.Sent || 'Sent');
+    formStatus.childNodes = [];
+  }
 
   const guide = existingGuide || createToolGuide(config, code, locale);
   detachNode(guide);
@@ -246,6 +276,7 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<span id="footerContact">)[^<]*(<\/span>)/, locale.contact, 'footer Contact');
   output = replaceCapturedText(output, /(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, locale.footer, 'footer description');
   output = output.replace(contactPrivacyText, escapeHtml(locale.privacyContact));
+  output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   output = output.replace(/<p>(?:&copy;|©|Â©) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
   output = replaceCapturedText(output, /(<h2 id="infoPanelTitle"[^>]*>)[^<]*(<\/h2>)/, locale.about, 'About title');
   output = preserveFooterBrandInHtml(output);
@@ -286,6 +317,7 @@ function localizeAuto(source, config, code, locale) {
   output = output.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${escapeHtml(locale.meta)}">`);
   output = localizeStructuredData(output, config, locale, url);
   output = applyTranslationMap(output, config.cardId, locale.translations || {});
+  output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   output = preserveFooterBrandInHtml(output);
   output = output.replace(/<span(?=[^>]*\bclass="[^"]*\blogo-sub-name\b)[^>]*>(?:<span class="logo-sub-letter">[\s\S]*?<\/span>)*<\/span>\s*<\/a>/, `${headerSubtitle(locale.title)}</a>`);
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
@@ -316,7 +348,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.413', lastmod = '2026-07-05' } = options;
+  const { write = true, version = 'v1.2.415', lastmod = '2026-07-05' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

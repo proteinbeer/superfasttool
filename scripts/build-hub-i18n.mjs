@@ -9,8 +9,20 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.413';
+const version = 'v1.2.415';
 const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
+const oldAdvertisingPrivacyText = 'If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.';
+const advertisingPrivacyText = 'Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.';
+const advertisingPrivacyTranslations = {
+  en: advertisingPrivacyText,
+  ko: '광고 및 쿠키에 관한 내용은 전체 개인정보처리방침에 설명되어 있으며, 사이트에서 활성화된 경우 Google AdSense 또는 관련 광고 서비스에 대한 내용도 포함됩니다.',
+  ja: '広告と Cookie については、サイトで有効になっている場合の Google AdSense または関連する広告サービスを含め、完全なプライバシーポリシーで説明しています。',
+  'zh-CN': '有关广告和 Cookie 的说明请参阅完整的隐私政策，其中包括网站启用 Google AdSense 或相关广告服务时的相关内容。',
+  es: 'La Política de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si están habilitados en el sitio.',
+  de: 'Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
+  fr: "La Politique de confidentialité complète explique la publicité et les cookies, y compris Google AdSense ou les services publicitaires associés s'ils sont activés sur le site.",
+  'pt-BR': 'A Política de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviços de publicidade relacionados, caso estejam ativados no site.'
+};
 const baseUrl = 'https://superfasttool.com';
 
 const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -149,6 +161,7 @@ function navigationScript(code) {
 }
 
 function prepareSource(source) {
+  source = source.replaceAll(oldAdvertisingPrivacyText, advertisingPrivacyText);
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
   source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
   source = source.replace(/\n\s*const targetIds = \[[\s\S]*?\n\s*\];/, '');
@@ -169,6 +182,10 @@ function prepareSource(source) {
   source = source.replace('</body>', `${tickerInteractionScript()}\n${navigationScript('en')}\n</body>`);
   source = source.replace(/\s*const localizedSlugs = new Set\([^;]+;\s*const localePrefix = [^;]+;\s*fadeToUrl\(`\$\{localePrefix\}\/\$\{slug\}\/`\);/, '\n            fadeToUrl(window.SFTLocale?.pathFor(window.SFTLocale.get(), `/${slug}/`) || `/${slug}/`);');
   source = source.replace('            fadeToUrl(`/${slug}/`);', '            fadeToUrl(window.SFTLocale?.pathFor(window.SFTLocale.get(), `/${slug}/`) || `/${slug}/`);');
+  source = source.replace(/\.form-status,\s*#form-status(?:,\s*\[data-form-status\])?\s*\{\s*display:\s*none;\s*\}/, '.form-status,\n        #form-status,\n        [data-form-status] { display: none; }');
+  source = source.replace(/\.form-status\.show,\s*#form-status\.show(?:,\s*\[data-form-status\]\.show)?\s*\{\s*display:\s*block;\s*\}/, '.form-status.show,\n        #form-status.show,\n        [data-form-status].show { display: block; }');
+  source = source.replace(/\s*contactSentMessage\.textContent\s*=\s*contactSentMessage\.dataset\.successLabel\s*\|\|\s*'Sent';/g, '');
+  source = source.replace("contactSentMessage.classList.add('show');", "contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';\n                    contactSentMessage.classList.add('show');");
   return source.replace(/v1\.2\.\d+/g, version).replace(/[ \t]+$/gm, '');
 }
 
@@ -192,8 +209,16 @@ function localize(source, code, locale) {
   output = output.replace(/(<span id="footerAbout">)[^<]*(<\/span>)/, `$1${locale.about}$2`);
   output = output.replace(/(<span id="footerPolicy">)[^<]*(<\/span>)/, `$1${locale.policy}$2`);
   output = output.replace(/(<span id="footerContact">)[^<]*(<\/span>)/, `$1${locale.contact}$2`);
+  const sentLabel = toolI18nConfigs[0]?.locales?.[code]?.sent || 'Sent';
+  output = output.replace(/<div id="contactSentMessage"([^>]*)>[\s\S]*?<\/div>/, (match, attributes) => {
+    const cleanAttributes = attributes
+      .replace(/\s+data-form-status(?:="[^"]*")?/g, '')
+      .replace(/\s+data-success-label="[^"]*"/g, '');
+    return `<div id="contactSentMessage" data-form-status data-success-label="${escapeHtml(sentLabel)}"${cleanAttributes}></div>`;
+  });
   output = output.replace(/(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, `$1${locale.footer}$2`);
   output = output.replace(contactPrivacyText, locale.privacyContact);
+  output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   if (code !== 'en') {
     const translationsByCardId = Object.fromEntries(toolI18nConfigs.map(config => {
       const english = config.locales.en;

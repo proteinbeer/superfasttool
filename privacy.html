@@ -169,8 +169,12 @@
         .contact-submit { display: block; width: 100%; padding: 8px 16px; border: 0; border-radius: 12px; background: #18181b; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 20px; cursor: pointer; transition: background-color 0.16s ease; }
         .contact-submit:hover { background: #3f3f46; }
         .contact-form.is-sending input, .contact-form.is-sending textarea, .contact-form.is-sending button { cursor: not-allowed; opacity: 0.5; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .contact-toast { position: absolute; top: 18px; left: 50%; padding: 5px 12px; border: 1px solid #a7f3d0; border-radius: 999px; background: #ecfdf5; color: #047857; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 16px; opacity: 0; pointer-events: none; transform: translate(-50%, -7px); transition: opacity 0.16s ease, transform 0.18s ease; }
         .contact-toast.show { opacity: 1; transform: translate(-50%, 0); }
         footer { border-top: 1px solid #e5e7eb; background: #fff; color: #a1a1aa; text-align: center; }
@@ -289,7 +293,7 @@
 
     <div id="contactBackdrop" class="contact-backdrop" aria-hidden="true"></div>
     <section id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
-        <div id="contactToast" class="form-status contact-toast" role="status">Sent</div>
+        <div id="contactToast" class="form-status contact-toast" data-form-status data-success-label="Sent" role="status"></div>
         <div class="contact-modal-content">
             <header class="contact-modal-header">
                 <div>
@@ -443,6 +447,8 @@
             if (policyContactForm.classList.contains('is-sending')) return;
 
             const controls = Array.from(policyContactForm.elements);
+            contactToast.classList.remove('show');
+            contactToast.textContent = '';
             policyContactForm.classList.add('is-sending');
             controls.forEach(control => { control.disabled = true; });
 
@@ -454,8 +460,12 @@
                 });
                 if (response.ok) {
                     policyContactForm.reset();
+                    contactToast.textContent = contactToast.dataset.successLabel || 'Sent';
                     contactToast.classList.add('show');
-                    setTimeout(() => contactToast.classList.remove('show'), 1700);
+                    setTimeout(() => {
+                        contactToast.classList.remove('show');
+                        contactToast.textContent = '';
+                    }, 1700);
                 }
             } finally {
                 policyContactForm.classList.remove('is-sending');

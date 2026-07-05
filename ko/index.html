@@ -490,8 +490,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -2529,7 +2533,7 @@
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">대부분의 도구 입력과 지원되는 파일 작업은 브라우저에서 로컬로 처리됩니다. 문의 양식, 호스팅, 광고, 분석, 번역 또는 제3자 서비스와 같은 일부 기능은 제한된 기술 정보나 사용자가 제출한 정보를 처리할 수 있습니다.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">이용약관</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -2569,7 +2573,7 @@
                 <p><strong class="text-zinc-900">Privacy Policy</strong></p>
                 <p>Super Fast Tool does not require accounts and does not collect calculator input values.</p>
                 <p>Some external services may be loaded for site functionality, such as translation, styling, icons, or future advertising. These services may use their own cookies or request logs according to their policies.</p>
-                <p>If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.</p>
+                <p>광고 및 쿠키에 관한 내용은 전체 개인정보처리방침에 설명되어 있으며, 사이트에서 활성화된 경우 Google AdSense 또는 관련 광고 서비스에 대한 내용도 포함됩니다.</p>
                 <p><strong class="text-zinc-900">Local data</strong></p>
                 <p>Starred tools are saved only in your browser using local storage, so your favorites can stay available after a refresh.</p>
                 <p><strong class="text-zinc-900">Contact form</strong></p>
@@ -2587,9 +2591,7 @@
                 <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Send Message</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                Sent
-            </div>
+            <div id="contactSentMessage" data-form-status data-success-label="전송 완료" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm"></div>
         </div>
     </div>
 
@@ -3754,6 +3756,7 @@
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

@@ -378,8 +378,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -765,7 +769,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. 版权所有。</p>
             <p id="footerDesc" class="mt-2 text-xs">大多数工具输入和受支持的文件操作都在您的浏览器中本地处理。某些功能（例如联系表单、托管、广告、分析、翻译或第三方服务）可能会处理有限的技术信息或您提交的信息。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
 
         </div>
     </footer>
@@ -797,7 +801,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">隐私政策</strong></p>
                 <p>超级快速工具不需要帐户，也不收集计算器输入值。</p>
                 <p>可能会加载一些外部服务以实现网站功能，例如翻译、样式、图标或未来的广告。这些服务可能会根据其政策使用自己的 cookie 或请求日志。</p>
-                <p>如果将来添加广告，本政策将更新以解释与广告相关的 cookie 和选择。</p>
+                <p>有关广告和 Cookie 的说明请参阅完整的隐私政策，其中包括网站启用 Google AdSense 或相关广告服务时的相关内容。</p>
                 <p><strong class="text-zinc-900">本地数据</strong></p>
                 <p>加星标的工具仅使用本地存储保存在您的浏览器中，因此您最喜欢的工具在刷新后仍然可用。</p>
                 <p><strong class="text-zinc-900">联系表</strong></p>
@@ -815,9 +819,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="消息" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">发送消息</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                已发送
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="已发送"></div>
         </div>
     </div>
     <script src="/profit-loss-calculator.js"></script>
@@ -1956,6 +1958,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

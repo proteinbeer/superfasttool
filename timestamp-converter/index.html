@@ -378,8 +378,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -732,7 +736,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">Most tool inputs and supported file operations are processed locally in your browser. Some features, such as contact forms, hosting, advertising, analytics, translation, or third-party services, may process limited technical or submitted information.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
 
         </div>
     </footer>
@@ -764,7 +768,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">Privacy Policy</strong></p>
                 <p>Super Fast Tool does not require accounts and does not collect calculator input values.</p>
                 <p>Some external services may be loaded for site functionality, such as translation, styling, icons, or future advertising. These services may use their own cookies or request logs according to their policies.</p>
-                <p>If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.</p>
+                <p>Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.</p>
                 <p><strong class="text-zinc-900">Local data</strong></p>
                 <p>Starred tools are saved only in your browser using local storage, so your favorites can stay available after a refresh.</p>
                 <p><strong class="text-zinc-900">Contact form</strong></p>
@@ -782,9 +786,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Send Message</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                Sent
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Sent"></div>
         </div>
     </div>
     <script src="/extra-converters.js"></script>
@@ -1923,6 +1925,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }

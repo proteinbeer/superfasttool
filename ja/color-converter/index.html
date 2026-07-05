@@ -378,8 +378,12 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
-        .form-status, #form-status { display: none; }
-        .form-status.show, #form-status.show { display: block; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
         .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
@@ -729,7 +733,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </div>
             <p>© 2026 Super Fast Tool. 無断転載を禁じます。</p>
             <p id="footerDesc" class="mt-2 text-xs">ほとんどのツール入力と対応するファイル操作は、ブラウザ内でローカルに処理されます。お問い合わせフォーム、ホスティング、広告、分析、翻訳、第三者サービスなどの一部機能では、限定的な技術情報または送信された情報が処理される場合があります。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
         </div>
     </footer>
 
@@ -760,7 +764,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <p><strong class="text-zinc-900">プライバシー ポリシー</strong></p>
                 <p>超高速ツールはアカウントを必要とせず、電卓の入力値を収集しません。</p>
                 <p>翻訳、スタイル、アイコン、将来の広告など、サイトの機能のために一部の外部サービスが読み込まれる場合があります。これらのサービスは、ポリシーに従って独自の Cookie を使用したり、ログを要求したりする場合があります。</p>
-                <p>将来広告が追加される場合、このポリシーは広告関連の Cookie と選択肢について説明するために更新されます。</p>
+                <p>広告と Cookie については、サイトで有効になっている場合の Google AdSense または関連する広告サービスを含め、完全なプライバシーポリシーで説明しています。</p>
                 <p><strong class="text-zinc-900">ローカル データ</strong></p>
                 <p>スター付きツールは、ローカル ストレージを使用してブラウザにのみ保存されるため、更新後もお気に入りを引き続き使用できます。</p>
                 <p><strong class="text-zinc-900">お問い合わせフォーム</strong></p>
@@ -778,9 +782,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <textarea name="message" rows="4" placeholder="メッセージ" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">メッセージを送信</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
-                送信しました
-            </div>
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="送信しました"></div>
         </div>
     </div>
     <script src="/extra-converters.js"></script>
@@ -1911,6 +1913,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
                 if (response.ok) {
                     contactForm.reset();
+                    contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';
                     contactSentMessage.classList.add('show');
                     setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }
