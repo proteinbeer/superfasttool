@@ -9,7 +9,8 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.408';
+const version = 'v1.2.413';
+const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
 const baseUrl = 'https://superfasttool.com';
 
 const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -192,6 +193,7 @@ function localize(source, code, locale) {
   output = output.replace(/(<span id="footerPolicy">)[^<]*(<\/span>)/, `$1${locale.policy}$2`);
   output = output.replace(/(<span id="footerContact">)[^<]*(<\/span>)/, `$1${locale.contact}$2`);
   output = output.replace(/(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, `$1${locale.footer}$2`);
+  output = output.replace(contactPrivacyText, locale.privacyContact);
   if (code !== 'en') {
     const translationsByCardId = Object.fromEntries(toolI18nConfigs.map(config => {
       const english = config.locales.en;

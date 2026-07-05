@@ -9,7 +9,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. All rights reserved.',
     contactIntro: 'Send feedback, bug reports, or generator ideas.',
     namePlaceholder: 'Name', emailPlaceholder: 'Email', messagePlaceholder: 'Message',
-    footer: 'No data is transmitted to the server; all operations are processed safely within your browser.',
+    footer: 'Most tool inputs and supported file operations are processed locally in your browser. Some features, such as contact forms, hosting, advertising, analytics, translation, or third-party services, may process limited technical or submitted information.',
+    privacyContact: 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.',
     paragraphs: [
       'Fantasy Person Name Generator is a focused browser-based tool for quickly creating names for characters in games, stories, tabletop campaigns, and original worlds. Open the page, choose how many names you need, and generate results without creating an account or installing software.',
       'Use the generator when a new character needs a name during writing, worldbuilding, role-playing, game design, or brainstorming. Each generation combines fantasy-inspired name parts, so repeated use can provide different starting points for heroes, rivals, travelers, nobles, and other fictional people.',
@@ -28,7 +29,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. 모든 권리 보유.',
     contactIntro: '의견, 오류 제보 또는 생성기 아이디어를 보내주세요.',
     namePlaceholder: '이름', emailPlaceholder: '이메일', messagePlaceholder: '메시지',
-    footer: '데이터는 서버로 전송되지 않으며 모든 작업은 브라우저 안에서 안전하게 처리됩니다.',
+    footer: '대부분의 도구 입력과 지원되는 파일 작업은 브라우저에서 로컬로 처리됩니다. 문의 양식, 호스팅, 광고, 분석, 번역 또는 제3자 서비스와 같은 일부 기능은 제한된 기술 정보나 사용자가 제출한 정보를 처리할 수 있습니다.',
+    privacyContact: '문의 양식을 제출하면 메시지를 전달하기 위해 이름, 이메일 주소 및 메시지가 Formspree로 전송됩니다. 비밀번호, 결제 세부정보, 결제 정보, 정부 발급 식별번호, 의료 기록 또는 기타 민감한 정보를 포함하지 마세요.',
     paragraphs: [
       '판타지 인물 이름 생성기는 게임, 소설, TRPG 캠페인과 창작 세계의 캐릭터 이름을 빠르게 만드는 브라우저 도구입니다. 계정을 만들거나 프로그램을 설치하지 않고 필요한 이름 개수를 선택해 바로 결과를 만들 수 있습니다.',
       '글쓰기, 세계관 구성, 역할극, 게임 디자인 또는 아이디어 구상 중 새로운 인물의 이름이 필요할 때 사용하세요. 판타지 분위기의 이름 조각을 조합하므로 여러 번 생성하면 영웅, 라이벌, 여행자, 귀족 등 다양한 인물을 위한 새로운 출발점을 얻을 수 있습니다.',
@@ -47,7 +49,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. 無断転載を禁じます。',
     contactIntro: 'ご意見、不具合の報告、ジェネレーターのアイデアをお送りください。',
     namePlaceholder: '名前', emailPlaceholder: 'メール', messagePlaceholder: 'メッセージ',
-    footer: 'データはサーバーへ送信されず、すべての処理はブラウザ内で安全に行われます。',
+    footer: 'ほとんどのツール入力と対応するファイル操作は、ブラウザ内でローカルに処理されます。お問い合わせフォーム、ホスティング、広告、分析、翻訳、第三者サービスなどの一部機能では、限定的な技術情報または送信された情報が処理される場合があります。',
+    privacyContact: 'お問い合わせフォームを送信すると、メッセージを当サイトに届けるため、氏名、メールアドレス、メッセージがFormspreeに送信されます。パスワード、支払いの詳細、支払い情報、政府発行の識別番号、医療記録、その他の機密情報を含めないでください。',
     paragraphs: [
       'ファンタジー人物名ジェネレーターは、ゲーム、小説、TRPGキャンペーン、創作世界のキャラクター名をすばやく作るブラウザツールです。アカウント登録やインストールをせずに、必要な件数を選んで結果を生成できます。',
       '執筆、世界観づくり、ロールプレイ、ゲームデザイン、アイデア出しで新しい人物名が必要なときに利用できます。ファンタジー風の音や名前の断片を組み合わせるため、繰り返し生成すると英雄、ライバル、旅人、貴族などの新しい候補が得られます。',
@@ -66,7 +69,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. 保留所有权利。',
     contactIntro: '欢迎发送反馈、错误报告或生成器建议。',
     namePlaceholder: '姓名', emailPlaceholder: '电子邮箱', messagePlaceholder: '消息',
-    footer: '数据不会发送到服务器，所有操作均在浏览器中安全处理。',
+    footer: '大多数工具输入和受支持的文件操作都在您的浏览器中本地处理。某些功能（例如联系表单、托管、广告、分析、翻译或第三方服务）可能会处理有限的技术信息或您提交的信息。',
+    privacyContact: '提交联系表单时，您的姓名、电子邮件地址和消息将发送至Formspree，以便将消息送达我们。请勿填写密码、付款详情、付款信息、政府签发的身份标识、医疗记录或其他敏感信息。',
     paragraphs: [
       '奇幻人物姓名生成器是一款浏览器工具，可快速为游戏、小说、桌面角色扮演和原创世界创建角色姓名。无需注册账户或安装软件，只需选择所需数量即可生成结果。',
       '在写作、世界观设计、角色扮演、游戏设计或头脑风暴时需要新角色姓名，可以使用本工具。它会组合具有奇幻风格的姓名片段，多次生成可为英雄、对手、旅人、贵族等角色提供不同灵感。',
@@ -85,7 +89,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. Todos los derechos reservados.',
     contactIntro: 'Envía comentarios, informes de errores o ideas para el generador.',
     namePlaceholder: 'Nombre', emailPlaceholder: 'Correo electrónico', messagePlaceholder: 'Mensaje',
-    footer: 'Los datos no se envían al servidor; todas las operaciones se procesan de forma segura en tu navegador.',
+    footer: 'La mayoría de las entradas de las herramientas y las operaciones de archivos compatibles se procesan localmente en tu navegador. Algunas funciones, como los formularios de contacto, el alojamiento, la publicidad, las analíticas, la traducción o los servicios de terceros, pueden procesar información técnica limitada o información enviada por el usuario.',
+    privacyContact: 'Cuando envías el formulario de contacto, tu nombre, dirección de correo electrónico y mensaje se envían a Formspree para que podamos recibirlo. No incluyas contraseñas, datos de pago, información de pago, identificadores gubernamentales, historiales médicos ni otra información sensible.',
     paragraphs: [
       'El Generador de nombres de personajes de fantasía es una herramienta del navegador para crear rápidamente nombres destinados a juegos, relatos, campañas de rol y mundos originales. Elige cuántos nombres necesitas y genera resultados sin instalar programas ni crear una cuenta.',
       'Úsalo cuando necesites un nombre durante la escritura, la creación de mundos, el rol, el diseño de juegos o una sesión de ideas. Cada resultado combina fragmentos con estilo fantástico y ofrece puntos de partida para héroes, rivales, viajeros, nobles y otros personajes ficticios.',
@@ -104,7 +109,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. Alle Rechte vorbehalten.',
     contactIntro: 'Sende Feedback, Fehlerberichte oder Ideen für den Generator.',
     namePlaceholder: 'Name', emailPlaceholder: 'E-Mail', messagePlaceholder: 'Nachricht',
-    footer: 'Es werden keine Daten an den Server übertragen; alle Vorgänge werden sicher in deinem Browser verarbeitet.',
+    footer: 'Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.',
+    privacyContact: 'Wenn du das Kontaktformular absendest, werden dein Name, deine E-Mail-Adresse und deine Nachricht an Formspree übermittelt, damit die Nachricht uns zugestellt werden kann. Gib keine Passwörter, Zahlungsdetails, Zahlungsinformationen, amtlichen Identifikationsnummern, medizinischen Unterlagen oder andere sensible Informationen an.',
     paragraphs: [
       'Der Generator für Fantasy-Personennamen ist ein Browserwerkzeug zum schnellen Erstellen von Namen für Spiele, Geschichten, Rollenspielkampagnen und eigene Welten. Wähle die gewünschte Anzahl und erhalte Ergebnisse ohne Konto oder Installation.',
       'Nutze den Generator beim Schreiben, Worldbuilding, Rollenspiel, Gamedesign oder Brainstorming. Jede Ausgabe kombiniert fantasyartige Namensbestandteile und liefert neue Ausgangspunkte für Helden, Rivalen, Reisende, Adlige und andere fiktive Personen.',
@@ -123,7 +129,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. Tous droits réservés.',
     contactIntro: 'Envoyez vos commentaires, signalements de bugs ou idées de générateur.',
     namePlaceholder: 'Nom', emailPlaceholder: 'E-mail', messagePlaceholder: 'Message',
-    footer: 'Aucune donnée n’est transmise au serveur ; toutes les opérations sont traitées en toute sécurité dans votre navigateur.',
+    footer: 'La plupart des saisies dans les outils et des opérations sur les fichiers pris en charge sont traitées localement dans votre navigateur. Certaines fonctionnalités, telles que les formulaires de contact, l’hébergement, la publicité, les outils d’analyse, la traduction ou les services tiers, peuvent traiter des informations techniques limitées ou des informations que vous soumettez.',
+    privacyContact: 'Lorsque vous envoyez le formulaire de contact, votre nom, votre adresse e-mail et votre message sont transmis à Formspree afin que le message puisse nous être remis. N’incluez aucun mot de passe, détail ou information de paiement, identifiant gouvernemental, dossier médical ni autre information sensible.',
     paragraphs: [
       'Le Générateur de noms de personnages fantastiques est un outil de navigateur conçu pour créer rapidement des noms destinés aux jeux, récits, campagnes de jeu de rôle et univers originaux. Choisissez le nombre souhaité sans installer de logiciel ni créer de compte.',
       'Utilisez-le pendant l’écriture, la création d’un univers, le jeu de rôle, la conception d’un jeu ou une séance d’idées. Chaque résultat combine des éléments au style fantastique et fournit de nouvelles pistes pour des héros, rivaux, voyageurs, nobles et autres personnages fictifs.',
@@ -142,7 +149,8 @@ export const locales = {
     rights: '© 2026 Super Fast Tool. Todos os direitos reservados.',
     contactIntro: 'Envie comentários, relatos de erros ou ideias para o gerador.',
     namePlaceholder: 'Nome', emailPlaceholder: 'E-mail', messagePlaceholder: 'Mensagem',
-    footer: 'Nenhum dado é enviado ao servidor; todas as operações são processadas com segurança no seu navegador.',
+    footer: 'A maioria das entradas das ferramentas e das operações de arquivo compatíveis é processada localmente no seu navegador. Alguns recursos, como formulários de contato, hospedagem, publicidade, análise, tradução ou serviços de terceiros, podem processar informações técnicas limitadas ou informações enviadas por você.',
+    privacyContact: 'Ao enviar o formulário de contato, seu nome, endereço de e-mail e mensagem são enviados ao Formspree para que a mensagem possa ser entregue a nós. Não inclua senhas, detalhes de pagamento, informações de pagamento, identificadores governamentais, prontuários médicos ou outras informações confidenciais.',
     paragraphs: [
       'O Gerador de nomes de personagens de fantasia é uma ferramenta de navegador para criar rapidamente nomes para jogos, histórias, campanhas de RPG e mundos originais. Escolha a quantidade desejada e gere resultados sem criar uma conta ou instalar programas.',
       'Use o gerador durante a escrita, criação de mundos, RPG, design de jogos ou sessões de ideias. Cada resultado combina partes de nomes com estilo fantástico e oferece novos pontos de partida para heróis, rivais, viajantes, nobres e outros personagens fictícios.',

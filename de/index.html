@@ -490,8 +490,10 @@
         .is-sending input, .is-sending textarea, .is-sending button { opacity: 0.55; cursor: not-allowed; }
         .is-sending input, .is-sending textarea { background-color: #f4f4f5; }
         .calculator-content > :last-child { margin-bottom: 0; }
+        .form-status, #form-status { display: none; }
+        .form-status.show, #form-status.show { display: block; }
         .sent-toast { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.16s ease, transform 0.18s ease; }
-        .sent-toast.is-visible { opacity: 1; transform: translateY(0); }
+        .sent-toast.show { opacity: 1; transform: translateY(0); }
         .image-preview-large {
             width: 100%;
             height: min(42vh, 360px);
@@ -988,7 +990,7 @@
     </style>
 <style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
 </head>
-<body class="page-transitions-disabled app-loading bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+<body class="page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
     <div id="pageBackdrop" class="page-backdrop" aria-hidden="true"></div>
 
@@ -2527,8 +2529,8 @@ Der</h3>
                 </button>
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p id="footerDesc" class="mt-2 text-xs">Es werden keine Daten an den Server übertragen; alle Vorgänge werden sicher in deinem Browser verarbeitet.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.408</p>
+            <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.413</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Nutzungsbedingungen</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -2572,7 +2574,7 @@ Der</h3>
                 <p><strong class="text-zinc-900">Local data</strong></p>
                 <p>Starred tools are saved only in your browser using local storage, so your favorites can stay available after a refresh.</p>
                 <p><strong class="text-zinc-900">Contact form</strong></p>
-                <p>The contact form opens your email app. Messages are not submitted to a Super Fast Tool server.</p>
+                <p>Wenn du das Kontaktformular absendest, werden dein Name, deine E-Mail-Adresse und deine Nachricht an Formspree übermittelt, damit die Nachricht uns zugestellt werden kann. Gib keine Passwörter, Zahlungsdetails, Zahlungsinformationen, amtlichen Identifikationsnummern, medizinischen Unterlagen oder andere sensible Informationen an.</p>
                 <p><strong class="text-zinc-900">No financial advice</strong></p>
                 <p>Finance-related calculators are provided for quick estimates only and should not be treated as investment, tax, or legal advice.</p>
                 <p><strong class="text-zinc-900">Updates</strong></p>
@@ -2586,7 +2588,7 @@ Der</h3>
                 <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Send Message</button>
             </form>
-            <div id="contactSentMessage" class="sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
+            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
                 Sent
             </div>
         </div>
@@ -3739,7 +3741,7 @@ Der</h3>
             const fields = contactForm.querySelectorAll('input, textarea, button');
             const submitButton = contactForm.querySelector('button[type="submit"]');
             const formData = new FormData(contactForm);
-            contactSentMessage.classList.remove('is-visible');
+            contactSentMessage.classList.remove('show');
             contactForm.classList.add('is-sending');
             fields.forEach(field => field.disabled = true);
             submitButton.innerText = 'Sending...';
@@ -3753,8 +3755,8 @@ Der</h3>
 
                 if (response.ok) {
                     contactForm.reset();
-                    contactSentMessage.classList.add('is-visible');
-                    setTimeout(() => contactSentMessage.classList.remove('is-visible'), 1500);
+                    contactSentMessage.classList.add('show');
+                    setTimeout(() => contactSentMessage.classList.remove('show'), 1500);
                 }
             } catch (error) {
                 console.error('Contact form submit failed:', error);

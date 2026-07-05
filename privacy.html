@@ -169,8 +169,10 @@
         .contact-submit { display: block; width: 100%; padding: 8px 16px; border: 0; border-radius: 12px; background: #18181b; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 20px; cursor: pointer; transition: background-color 0.16s ease; }
         .contact-submit:hover { background: #3f3f46; }
         .contact-form.is-sending input, .contact-form.is-sending textarea, .contact-form.is-sending button { cursor: not-allowed; opacity: 0.5; }
+        .form-status, #form-status { display: none; }
+        .form-status.show, #form-status.show { display: block; }
         .contact-toast { position: absolute; top: 18px; left: 50%; padding: 5px 12px; border: 1px solid #a7f3d0; border-radius: 999px; background: #ecfdf5; color: #047857; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 16px; opacity: 0; pointer-events: none; transform: translate(-50%, -7px); transition: opacity 0.16s ease, transform 0.18s ease; }
-        .contact-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+        .contact-toast.show { opacity: 1; transform: translate(-50%, 0); }
         footer { border-top: 1px solid #e5e7eb; background: #fff; color: #a1a1aa; text-align: center; }
         .footer-inner { padding: 34px 0; font-size: 12px; }
         .version { margin-top: 7px; color: #d4d4d8; font-size: 10px; }
@@ -281,13 +283,13 @@
     <footer>
         <div class="footer-inner">
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p class="version">v1.2.370</p>
+            <p class="version">v1.2.412</p>
         </div>
     </footer>
 
     <div id="contactBackdrop" class="contact-backdrop" aria-hidden="true"></div>
     <section id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
-        <div id="contactToast" class="contact-toast" role="status">Sent</div>
+        <div id="contactToast" class="form-status contact-toast" role="status">Sent</div>
         <div class="contact-modal-content">
             <header class="contact-modal-header">
                 <div>
@@ -452,8 +454,8 @@
                 });
                 if (response.ok) {
                     policyContactForm.reset();
-                    contactToast.classList.add('is-visible');
-                    setTimeout(() => contactToast.classList.remove('is-visible'), 1700);
+                    contactToast.classList.add('show');
+                    setTimeout(() => contactToast.classList.remove('show'), 1700);
                 }
             } finally {
                 policyContactForm.classList.remove('is-sending');

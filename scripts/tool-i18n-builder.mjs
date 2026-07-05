@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { parse, parseFragment, serialize } from 'parse5';
 import { applyTranslationMap } from './auto-tool-i18n.mjs';
 
 const baseUrl = 'https://superfasttool.com';
+const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
 
 function escapeHtml(value) {
   return String(value)
@@ -83,6 +85,7 @@ function localizeStructuredData(source, config, locale, url) {
     data.name = locale.title;
     data.url = url;
     data.description = locale.meta;
+    data.featureList = [locale.short || locale.meta];
     return `<script type="application/ld+json">\n${JSON.stringify(data, null, 4)}\n    </script>`;
   }, 'JSON-LD');
 }
@@ -120,6 +123,101 @@ function prepareSharedSource(source, config, version) {
   return source.replace(/v1\.2\.\d+/g, version);
 }
 
+function nodeAttribute(node, name) {
+  return node.attrs?.find(attribute => attribute.name === name)?.value || '';
+}
+
+function hasNodeClass(node, className) {
+  return nodeAttribute(node, 'class').split(/\s+/).includes(className);
+}
+
+function addNodeClass(node, className) {
+  const classAttribute = node.attrs?.find(attribute => attribute.name === 'class');
+  if (!classAttribute) {
+    node.attrs = [...(node.attrs || []), { name: 'class', value: className }];
+  } else if (!classAttribute.value.split(/\s+/).includes(className)) {
+    classAttribute.value = `${classAttribute.value} ${className}`;
+  }
+}
+
+function findNode(node, predicate) {
+  if (predicate(node)) return node;
+  for (const child of node.childNodes || []) {
+    const match = findNode(child, predicate);
+    if (match) return match;
+  }
+  return null;
+}
+
+function detachNode(node) {
+  if (!node?.parentNode?.childNodes) return;
+  node.parentNode.childNodes = node.parentNode.childNodes.filter(child => child !== node);
+  node.parentNode = null;
+}
+
+function removeMatchingDescendants(node, predicate) {
+  if (!node.childNodes) return;
+  node.childNodes = node.childNodes.filter(child => {
+    if (predicate(child)) {
+      child.parentNode = null;
+      return false;
+    }
+    removeMatchingDescendants(child, predicate);
+    return true;
+  });
+}
+
+function createToolGuide(config, code, locale) {
+  const guideLabel = locale.guide || locale.translations?.Guide || 'Guide';
+  const guideLink = config.guideHref
+    ? `<div class="mb-4 text-center"><a href="${localizedGuidePath(config, code)}" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>${escapeHtml(guideLabel)}</a></div>`
+    : '';
+  const html = `<section class="tool-guide mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${escapeHtml(locale.title)}</h2>${guideLink}<p>${escapeHtml(locale.meta)}</p></section>`;
+  return parseFragment(html).childNodes[0];
+}
+
+function finalizeToolDocument(source, config, code, locale) {
+  const document = parse(source);
+  const main = findNode(document, node => node.tagName === 'main');
+  const cardsGrid = findNode(document, node => nodeAttribute(node, 'id') === 'cardsGrid');
+  const activeCard = findNode(document, node => nodeAttribute(node, 'id') === config.cardId);
+  const title = (config.titleId
+    ? findNode(activeCard, node => nodeAttribute(node, 'id') === config.titleId)
+    : null) || findNode(activeCard, node => ['h1', 'h2', 'h3'].includes(node.tagName));
+  const existingGuide = findNode(document, node => node.tagName === 'section'
+    && hasNodeClass(node, 'max-w-4xl')
+    && hasNodeClass(node, 'text-left'));
+
+  if (!main || !cardsGrid || !activeCard || !title) {
+    throw new Error(`Unable to create focused tool document for ${config.slug}`);
+  }
+
+  detachNode(activeCard);
+  removeMatchingDescendants(main, node => (
+    hasNodeClass(node, 'expandable-card')
+    || hasNodeClass(node, 'temp-card')
+    || hasNodeClass(node, 'card-placeholder')
+    || ['hubHero', 'categoryBar', 'paginationControls'].includes(nodeAttribute(node, 'id'))
+  ));
+
+  addNodeClass(activeCard, 'tool-panel');
+  activeCard.parentNode = cardsGrid;
+  cardsGrid.childNodes = [activeCard];
+
+  title.nodeName = 'h1';
+  title.tagName = 'h1';
+
+  const guide = existingGuide || createToolGuide(config, code, locale);
+  detachNode(guide);
+  addNodeClass(guide, 'tool-guide');
+  const backLink = findNode(main, node => nodeAttribute(node, 'id') === 'toolBackHome');
+  const insertionIndex = backLink ? main.childNodes.indexOf(backLink) : main.childNodes.length;
+  guide.parentNode = main;
+  main.childNodes.splice(insertionIndex, 0, guide);
+
+  return serialize(document).replace(/[ \t]+$/gm, '');
+}
+
 function localizeCommon(source, config, code, locale) {
   let output = source;
   const url = localeUrl(config.slug, code);
@@ -136,7 +234,7 @@ function localizeCommon(source, config, code, locale) {
   output = output.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${escapeHtml(locale.meta)}">`);
   output = localizeStructuredData(output, config, locale, url);
 
-  output = replaceCapturedText(output, new RegExp(`(<h3 id="${config.titleId}"[^>]*>)[^<]*(<\\/h3>)`), locale.title, 'tool title');
+  output = replaceCapturedText(output, new RegExp(`(<h(?:1|3) id="${config.titleId}"[^>]*>)[^<]*(<\\/h(?:1|3)>)`), locale.title, 'tool title');
   output = replaceCapturedText(output, new RegExp(`(<p id="${config.descriptionId}"[^>]*>)[^<]*(<\\/p>)`), locale.short, 'tool description');
   for (const replacement of config.replacements) {
     output = replaceCapturedText(output, replacement.pattern, locale[replacement.key], replacement.key);
@@ -147,6 +245,7 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<span id="footerPolicy">)[^<]*(<\/span>)/, locale.policy, 'footer Policy');
   output = replaceCapturedText(output, /(<span id="footerContact">)[^<]*(<\/span>)/, locale.contact, 'footer Contact');
   output = replaceCapturedText(output, /(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, locale.footer, 'footer description');
+  output = output.replace(contactPrivacyText, escapeHtml(locale.privacyContact));
   output = output.replace(/<p>(?:&copy;|©|Â©) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
   output = replaceCapturedText(output, /(<h2 id="infoPanelTitle"[^>]*>)[^<]*(<\/h2>)/, locale.about, 'About title');
   output = preserveFooterBrandInHtml(output);
@@ -160,7 +259,7 @@ function localizeCommon(source, config, code, locale) {
 
   const paragraphs = locale.paragraphs.map((text, index) => `<p${index ? ' class="mt-3"' : ''}>${escapeHtml(text)}</p>`).join('\n                ');
   const infoSection = `<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${escapeHtml(locale.title)}</h2><div class="mb-4 text-center"><a href="${localizedGuidePath(config, code)}" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>${escapeHtml(locale.guide)}</a></div>${paragraphs}</section>`;
-  output = replaceRequired(output, /<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">[\s\S]*?<\/section>/, infoSection, 'tool information section');
+  output = replaceRequired(output, /<section class="[^"]*\bmax-w-4xl\b[^"]*\btext-left\b[^"]*">[\s\S]*?<\/section>/, infoSection, 'tool information section');
 
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
   output = replaceRequired(output, /window\.SFT_TOOL_PAGE = \{ cardId: "[^"]+", slug: "[^"]+", title: "[^"]+" \}/, `window.SFT_TOOL_PAGE = { cardId: "${config.cardId}", slug: "${config.slug}", title: ${JSON.stringify(locale.title)} }`, 'localized tool page config');
@@ -217,16 +316,17 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.408', lastmod = '2026-07-04' } = options;
+  const { write = true, version = 'v1.2.413', lastmod = '2026-07-05' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);
 
   const outputs = [];
   for (const [code, locale] of Object.entries(config.locales)) {
-    const output = config.mode === 'auto'
+    const localizedOutput = config.mode === 'auto'
       ? localizeAuto(source, config, code, locale)
       : localizeCommon(source, config, code, locale);
+    const output = finalizeToolDocument(localizedOutput, config, code, locale);
     const destination = code === 'en' ? englishPath : path.join(root, code, config.slug, 'index.html');
     outputs.push({ code, destination, output, changed: !fs.existsSync(destination) || fs.readFileSync(destination, 'utf8').replaceAll('\r\n', '\n') !== output });
     if (write) {
