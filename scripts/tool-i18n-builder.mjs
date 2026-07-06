@@ -109,7 +109,53 @@ function headerSubtitle(title) {
   return `<span class="logo-sub-name" aria-label="${escapeHtml(title)}">${letters}</span>`;
 }
 
+function normalizeInfoPanelScroll(source) {
+  source = source.replace(
+    /body\.info-panel-open \{[^}]*\}/,
+    'body.info-panel-open { width: 100%; overscroll-behavior: none; }'
+  );
+  source = source.replace(
+    /\.calculator-content, \.info-panel-scroll \{ overscroll-behavior: auto; \}/,
+    '.calculator-content { overscroll-behavior: auto; }\n        .info-panel-scroll { overscroll-behavior: contain; }'
+  );
+  const scrollControl = `
+        function lockPageForInfoPanel() {
+            if (document.body.classList.contains('info-panel-open')) return;
+            document.documentElement.classList.add('info-panel-open');
+            document.body.classList.add('info-panel-open');
+        }
+
+        function unlockPageAfterInfoPanel() {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            document.documentElement.classList.remove('info-panel-open');
+            document.body.classList.remove('info-panel-open');
+        }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
+
+        footerActions.forEach`;
+  return source.replace(
+    /\s*function lockPageForInfoPanel\(\) \{[\s\S]*?footerActions\.forEach/,
+    scrollControl
+  );
+}
+
 function prepareSharedSource(source, config, version) {
+  source = normalizeInfoPanelScroll(source);
   source = source.replaceAll(oldAdvertisingPrivacyText, advertisingPrivacyText);
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
   source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
@@ -368,7 +414,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.425', lastmod = '2026-07-06' } = options;
+  const { write = true, version = 'v1.2.429', lastmod = '2026-07-06' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

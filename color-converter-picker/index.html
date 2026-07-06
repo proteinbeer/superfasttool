@@ -50,7 +50,7 @@
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
-        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { width: 100%; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -366,7 +366,8 @@
         .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
+        .calculator-content { overscroll-behavior: auto; }
+        .info-panel-scroll { overscroll-behavior: contain; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
         #contactPanel { overflow-y: auto; box-sizing: border-box; }
@@ -740,7 +741,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             </section>
             <p>© 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">Most tool inputs and supported file operations are processed locally in your browser. Some features, such as contact forms, hosting, advertising, analytics, translation, or third-party services, may process limited technical or submitted information.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.423</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
 
         </div>
     </footer>
@@ -1792,22 +1793,33 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
-
         function lockPageForInfoPanel() {
             if (document.body.classList.contains('info-panel-open')) return;
-            infoPanelScrollY = window.scrollY;
             document.documentElement.classList.add('info-panel-open');
             document.body.classList.add('info-panel-open');
-            document.body.style.top = `-${infoPanelScrollY}px`;
         }
 
         function unlockPageAfterInfoPanel() {
             if (!document.body.classList.contains('info-panel-open')) return;
             document.documentElement.classList.remove('info-panel-open');
             document.body.classList.remove('info-panel-open');
-            document.body.style.top = '';
-            window.scrollTo(0, infoPanelScrollY);
         }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {

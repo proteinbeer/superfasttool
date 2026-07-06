@@ -63,7 +63,7 @@
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
-        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { width: 100%; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -455,7 +455,8 @@
         .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
+        .calculator-content { overscroll-behavior: auto; }
+        .info-panel-scroll { overscroll-behavior: contain; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
         #contactPanel { overflow-y: auto; box-sizing: border-box; }
@@ -1086,7 +1087,7 @@ Jordan</textarea></div>
             </div><section class="tool-guide mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 mb-8"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Qui paie ? Roulette</h2><div class="mb-4 text-center"><a href="/fr/guides/who-pays-roulette/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>Guide</a></div><p>Qui paie ? Roulette est un sélecteur de noms ludique dans le navigateur qui révèle une personne avec une animation de machine à sous. Saisissez au moins deux noms et utilisez le résultat pour une décision légère en groupe.</p><p class="mt-3">Modifiez directement la liste des noms pour commencer un nouveau groupe. La liste actuelle est enregistrée uniquement lorsque vous appuyez sur Spin ; la simple saisie ne remplace donc pas la liste déjà enregistrée.</p><p class="mt-3">La liste enregistrée reste dans ce navigateur et est restaurée à votre retour. Elle n’est pas envoyée à un serveur Super Fast Tool et disparaît lorsque le stockage du navigateur est effacé.</p><p class="mt-3">Le résultat est aléatoire et destiné aux décisions légères. Toutes les personnes concernées doivent accepter les règles avant le tirage, surtout lorsque de l’argent ou des responsabilités sont en jeu.</p></section>
             <p>© 2026 Super Fast Tool. Tous droits réservés.</p>
             <p id="footerDesc" class="mt-2 text-xs">La plupart des saisies dans les outils et des opérations sur les fichiers pris en charge sont traitées localement dans votre navigateur. Certaines fonctionnalités, telles que les formulaires de contact, l’hébergement, la publicité, les outils d’analyse, la traduction ou les services tiers, peuvent traiter des informations techniques limitées ou des informations que vous soumettez.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.425</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
 
         </div>
     </footer>
@@ -1162,7 +1163,7 @@ Jordan</textarea></div>
     <script src="/lunch-picker-food-additions.js"></script>
     <script src="/lunch-picker-photo-map.js"></script>
     <script src="/lunch-picker-foods.js"></script>
-    <script src="/generators.js?v=1.2.425"></script>
+    <script src="/generators.js?v=1.2.429"></script>
     <script src="/image-tools.js"></script>
     <script src="/video-tools.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
@@ -2166,22 +2167,33 @@ Jordan</textarea></div>
             privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
-
         function lockPageForInfoPanel() {
             if (document.body.classList.contains('info-panel-open')) return;
-            infoPanelScrollY = window.scrollY;
             document.documentElement.classList.add('info-panel-open');
             document.body.classList.add('info-panel-open');
-            document.body.style.top = `-${infoPanelScrollY}px`;
         }
 
         function unlockPageAfterInfoPanel() {
             if (!document.body.classList.contains('info-panel-open')) return;
             document.documentElement.classList.remove('info-panel-open');
             document.body.classList.remove('info-panel-open');
-            document.body.style.top = '';
-            window.scrollTo(0, infoPanelScrollY);
         }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {

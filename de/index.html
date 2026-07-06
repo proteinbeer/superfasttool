@@ -89,7 +89,7 @@
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
-        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { width: 100%; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -481,7 +481,8 @@
         .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
+        .calculator-content { overscroll-behavior: auto; }
+        .info-panel-scroll { overscroll-behavior: contain; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
         #contactPanel { overflow-y: auto; box-sizing: border-box; }
@@ -2555,7 +2556,7 @@ Der</h3>
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.425</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Nutzungsbedingungen</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -3644,19 +3645,31 @@ Der</h3>
 
         function lockPageForInfoPanel() {
             if (document.body.classList.contains('info-panel-open')) return;
-            infoPanelScrollY = window.scrollY;
             document.documentElement.classList.add('info-panel-open');
             document.body.classList.add('info-panel-open');
-            document.body.style.top = `-${infoPanelScrollY}px`;
         }
 
         function unlockPageAfterInfoPanel() {
             if (!document.body.classList.contains('info-panel-open')) return;
             document.documentElement.classList.remove('info-panel-open');
             document.body.classList.remove('info-panel-open');
-            document.body.style.top = '';
-            window.scrollTo(0, infoPanelScrollY);
         }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {

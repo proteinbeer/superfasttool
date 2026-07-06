@@ -63,7 +63,7 @@
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
-        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { width: 100%; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -455,7 +455,8 @@
         .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
+        .calculator-content { overscroll-behavior: auto; }
+        .info-panel-scroll { overscroll-behavior: contain; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
         #contactPanel { overflow-y: auto; box-sizing: border-box; }
@@ -1086,7 +1087,7 @@ Jordan</textarea></div>
             </div><section class="tool-guide mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 mb-8"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">誰が払う？ルーレット</h2><div class="mb-4 text-center"><a href="/ja/guides/who-pays-roulette/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>ガイド</a></div><p>誰が払う？ルーレットは、スロット風アニメーションで1人を選ぶ楽しいブラウザ型の名前抽選ツールです。2人以上の名前を入力して回し、気軽なグループの決定に使えます。</p><p class="mt-3">名前リストを直接編集して新しいグループを始めます。現在のリストは「Spin」を押したときだけ保存されるため、入力しただけでは以前の保存内容は上書きされません。</p><p class="mt-3">保存された名前リストはこのブラウザーに残り、次回アクセス時に復元されます。リストはSuper Fast Toolのサーバーへ送信されず、ブラウザーの保存データを消去すると削除されます。</p><p class="mt-3">結果はランダムで、気軽な決定を目的としています。お金や責任が関わる場合は、回す前に全員でルールに同意してください。</p></section>
             <p>© 2026 Super Fast Tool. 無断転載を禁じます。</p>
             <p id="footerDesc" class="mt-2 text-xs">ほとんどのツール入力と対応するファイル操作は、ブラウザ内でローカルに処理されます。お問い合わせフォーム、ホスティング、広告、分析、翻訳、第三者サービスなどの一部機能では、限定的な技術情報または送信された情報が処理される場合があります。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.425</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
 
         </div>
     </footer>
@@ -1162,7 +1163,7 @@ Jordan</textarea></div>
     <script src="/lunch-picker-food-additions.js"></script>
     <script src="/lunch-picker-photo-map.js"></script>
     <script src="/lunch-picker-foods.js"></script>
-    <script src="/generators.js?v=1.2.425"></script>
+    <script src="/generators.js?v=1.2.429"></script>
     <script src="/image-tools.js"></script>
     <script src="/video-tools.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
@@ -2166,22 +2167,33 @@ Jordan</textarea></div>
             privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
-
         function lockPageForInfoPanel() {
             if (document.body.classList.contains('info-panel-open')) return;
-            infoPanelScrollY = window.scrollY;
             document.documentElement.classList.add('info-panel-open');
             document.body.classList.add('info-panel-open');
-            document.body.style.top = `-${infoPanelScrollY}px`;
         }
 
         function unlockPageAfterInfoPanel() {
             if (!document.body.classList.contains('info-panel-open')) return;
             document.documentElement.classList.remove('info-panel-open');
             document.body.classList.remove('info-panel-open');
-            document.body.style.top = '';
-            window.scrollTo(0, infoPanelScrollY);
         }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {

@@ -51,7 +51,7 @@
     <style>
         html { overflow-y: scroll; scrollbar-gutter: stable; }
         html.info-panel-open { overflow-x: hidden !important; overflow-y: scroll !important; overscroll-behavior: none; }
-        body.info-panel-open { position: fixed; width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+        body.info-panel-open { width: 100%; overscroll-behavior: none; }
         .tool-card { transition: all 0.3s ease-in-out; cursor: pointer; }
         .tool-card:hover { transform: translateY(-4px); }
         @keyframes cardPageIn {
@@ -443,7 +443,8 @@
         .info-panel.active-panel { z-index: 70 !important; }
         .info-panel-content { opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
         .info-panel.is-open .info-panel-content { opacity: 1; transform: translateY(0); }
-        .calculator-content, .info-panel-scroll { overscroll-behavior: auto; }
+        .calculator-content { overscroll-behavior: auto; }
+        .info-panel-scroll { overscroll-behavior: contain; }
         .info-panel-scroll { max-height: min(18rem, calc(100vh - 12rem)); overflow-y: auto; padding-right: 0.25rem; }
         #aboutPanel { overflow-y: scroll; scrollbar-gutter: stable; }
         #contactPanel { overflow-y: auto; box-sizing: border-box; }
@@ -1078,7 +1079,7 @@
             </div><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide mb-8"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">午餐抽选器</h2><div class="mb-4 text-center"><a href="/zh-CN/guides/lunch-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>指南</a></div><p>午餐抽选器是一款在浏览器中运行的用餐决策工具，以老虎机方式展示结果。选择预设菜单或输入自己的午餐选项，然后转动并从可用菜单中随机选出一个。</p><p class="mt-3">可将售罄餐厅、不符合饮食要求的餐点、最近吃过的食物或今天无法购买的项目加入排除列表。启用避开最近结果后，只要还有其他选项，就会暂时跳过最近选中的菜单以增加变化。</p><p class="mt-3">自定义菜单、排除项、偏好设置和最近结果仅保存在当前浏览器中。本工具不会把午餐列表发送到Super Fast Tool服务器，清除浏览器存储后这些选择也会被删除。</p><p class="mt-3">结果只是轻松的建议，并非营养或过敏方面的指导。订购或烹饪前，请检查食材、饮食需求、价格、营业时间和供应情况。</p></section>
             <p>© 2026 Super Fast Tool. 版权所有。</p>
             <p id="footerDesc" class="mt-2 text-xs">大多数工具输入和受支持的文件操作都在您的浏览器中本地处理。某些功能（例如联系表单、托管、广告、分析、翻译或第三方服务）可能会处理有限的技术信息或您提交的信息。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.423</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
 
         </div>
     </footer>
@@ -1134,7 +1135,7 @@
     <script src="/lunch-picker-food-additions.js"></script>
     <script src="/lunch-picker-photo-map.js"></script>
     <script src="/lunch-picker-foods.js"></script>
-    <script src="/generators.js?v=1.2.423"></script>
+    <script src="/generators.js?v=1.2.429"></script>
     <script>window.SFT_TOOL_PAGE = { cardId: "lunchPickerCard", slug: "lunch-picker", title: "午餐抽选器" };</script>
     <script>window.SFT_LOCALE="zh-CN";window.SFT_LOCALE_URLS={"en":"/lunch-picker/","ko":"/ko/lunch-picker/","ja":"/ja/lunch-picker/","zh-CN":"/zh-CN/lunch-picker/","es":"/es/lunch-picker/","de":"/de/lunch-picker/","fr":"/fr/lunch-picker/","pt-BR":"/pt-BR/lunch-picker/"};window.SFT_I18N={"addStar":"添加到收藏","removeStar":"从收藏中移除"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
     <script type="text/javascript">
@@ -2133,22 +2134,33 @@
             privacyPanel: { title: 'Policy', icon: '&#128274;' },
             contactPanel: { title: 'Contact', icon: '&#9993;' }
         };
-
         function lockPageForInfoPanel() {
             if (document.body.classList.contains('info-panel-open')) return;
-            infoPanelScrollY = window.scrollY;
             document.documentElement.classList.add('info-panel-open');
             document.body.classList.add('info-panel-open');
-            document.body.style.top = `-${infoPanelScrollY}px`;
         }
 
         function unlockPageAfterInfoPanel() {
             if (!document.body.classList.contains('info-panel-open')) return;
             document.documentElement.classList.remove('info-panel-open');
             document.body.classList.remove('info-panel-open');
-            document.body.style.top = '';
-            window.scrollTo(0, infoPanelScrollY);
         }
+
+        function blockInfoPanelBackgroundScroll(event) {
+            if (!document.body.classList.contains('info-panel-open')) return;
+            if (!infoPanel.contains(event.target)) return;
+            const panelScroller = event.target.closest?.('.info-panel-scroll');
+            if (panelScroller && infoPanel.contains(panelScroller)) {
+                if (event.type !== 'wheel') return;
+                const canScrollUp = panelScroller.scrollTop > 0;
+                const canScrollDown = panelScroller.scrollTop + panelScroller.clientHeight < panelScroller.scrollHeight - 1;
+                if ((event.deltaY < 0 && canScrollUp) || (event.deltaY > 0 && canScrollDown)) return;
+            }
+            event.preventDefault();
+        }
+
+        document.addEventListener('wheel', blockInfoPanelBackgroundScroll, { passive: false });
+        document.addEventListener('touchmove', blockInfoPanelBackgroundScroll, { passive: false });
 
         footerActions.forEach(button => {
             button.addEventListener('click', () => {
