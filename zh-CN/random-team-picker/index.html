@@ -647,7 +647,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
         <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative"><div id="randomTeamPickerCard" data-category="game" data-tool-slug="random-team-picker" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0 tool-page-panel is-expanded active-panel shadow-2xl border-zinc-400 tool-panel">
                 <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="关闭游戏工具">×</button><div class="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-2xl mb-4">🤝</div><h1 id="tool68Title" class="text-lg font-bold text-zinc-900 mb-1">随机团队选择器</h1><p id="tool68Desc" class="card-description text-sm text-zinc-500 overflow-hidden">将姓名随机分成小组进行比赛、活动或练习。</p></div>
-                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5 opacity-100 translate-y-0"><textarea id="teamNames" rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm resize-none" placeholder="每行一个名称"></textarea><div><label class="block text-xs font-medium text-zinc-500 mb-1">团队</label><input id="teamCount" type="number" value="2" min="2" max="12" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><button id="pickTeams" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">选择团队</button><div id="teamResult" class="space-y-2 text-sm font-bold text-zinc-800"></div></div>
+                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-5 opacity-100 translate-y-0"><textarea id="teamNames" rows="4" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm resize-none" placeholder="每行一个名字"></textarea><div><label class="block text-xs font-medium text-zinc-500 mb-1">团队</label><input id="teamCount" type="number" value="2" min="2" max="12" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><button id="pickTeams" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">选择团队</button><div id="teamResult" class="space-y-2 text-sm font-bold text-zinc-800"></div></div>
             </div></div>
 
 
@@ -691,14 +691,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
 
 
-        <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide">
-                <h2 class="mb-4 text-center text-sm font-black text-zinc-500">随机团队选择器</h2>
-                <div class="mb-4 text-center"><a href="/zh-CN/guides/random-team-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>指南</a></div>
-                <p>Random Team Picker 是一款专门的基于浏览器的游戏和随机化工具，专为快速日常工作而构建。将人员随机分成小组进行比赛、活动或练习。它的设计保持简单：打开页面，输入或选择您需要的值，然后读取结果，而无需创建帐户、安装软件或浏览复杂的仪表板。</p>
-                <p class="mt-3">当您在写作、设计、编码、文件准备、研究、规划、测试或日常在线任务期间需要快速答案时，请使用随机团队选择器。随机团队选择器页面使控件保持接近结果，以便您可以调整输入并立即查看发生的变化。这使得它对于检查小细节、比较格式、准备内容、清理重复工作或在其他地方使用之前快速验证想法非常有用。</p>
-                <p class="mt-3">要使用随机团队选择器，请从工具面板内的可见输入字段、滑块、上传控件或按钮开始。如果您想了解结果是如何产生的，请一次更改一个值，或者在您已经知道需要什么时直接粘贴准备好的内容。当随机团队选择器提供下载按钮时，请先查看输出，然后将生成的文件保存到您的设备。</p>
-                <p class="mt-3">大多数随机团队选择器处理直接在您的浏览器中进行。这意味着该工具的目的是在正常使用时感觉快速且私密。尽管如此，在依赖每个结果进行专业或生产工作之前，请先检查每个结果，因为浏览器差异、设备内存、编码支持、文件元数据、不支持的格式和用户输入可能会影响最终输出。</p>
-            </section><div id="toolBackHome" class="mt-8 flex justify-center">
+        <div id="toolBackHome" class="mt-8 flex justify-center">
             <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
                 <span aria-hidden="true">⬅️</span>
                 返回
@@ -722,10 +715,17 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                     <span aria-hidden="true">✉</span>
                     <span id="footerContact">联系方式</span>
                 </button>
-            </div>
+            </div><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide mb-8">
+                <h2 class="mb-4 text-center text-sm font-black text-zinc-500">随机团队选择器</h2>
+                <div class="mb-4 text-center"><a href="/zh-CN/guides/random-team-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>指南</a></div>
+                <p>Random Team Picker 是一款专门的基于浏览器的游戏和随机化工具，专为快速日常工作而构建。将人员随机分成小组进行比赛、活动或练习。它的设计保持简单：打开页面，输入或选择您需要的值，然后读取结果，而无需创建帐户、安装软件或浏览复杂的仪表板。</p>
+                <p class="mt-3">当您在写作、设计、编码、文件准备、研究、规划、测试或日常在线任务期间需要快速答案时，请使用随机团队选择器。随机团队选择器页面使控件保持接近结果，以便您可以调整输入并立即查看发生的变化。这使得它对于检查小细节、比较格式、准备内容、清理重复工作或在其他地方使用之前快速验证想法非常有用。</p>
+                <p class="mt-3">要使用随机团队选择器，请从工具面板内的可见输入字段、滑块、上传控件或按钮开始。如果您想了解结果是如何产生的，请一次更改一个值，或者在您已经知道需要什么时直接粘贴准备好的内容。当随机团队选择器提供下载按钮时，请先查看输出，然后将生成的文件保存到您的设备。</p>
+                <p class="mt-3">大多数随机团队选择器处理直接在您的浏览器中进行。这意味着该工具的目的是在正常使用时感觉快速且私密。尽管如此，在依赖每个结果进行专业或生产工作之前，请先检查每个结果，因为浏览器差异、设备内存、编码支持、文件元数据、不支持的格式和用户输入可能会影响最终输出。</p>
+            </section>
             <p>© 2026 Super Fast Tool. 版权所有。</p>
             <p id="footerDesc" class="mt-2 text-xs">大多数工具输入和受支持的文件操作都在您的浏览器中本地处理。某些功能（例如联系表单、托管、广告、分析、翻译或第三方服务）可能会处理有限的技术信息或您提交的信息。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.423</p>
 
         </div>
     </footer>

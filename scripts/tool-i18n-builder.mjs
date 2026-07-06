@@ -137,6 +137,7 @@ function prepareSharedSource(source, config, version) {
   source = source.replace(/\.form-status\.show,\s*#form-status\.show(?:,\s*\[data-form-status\]\.show)?\s*\{\s*display:\s*block;\s*\}/, '.form-status.show,\n        #form-status.show,\n        [data-form-status].show { display: block; }');
   source = source.replace(/\s*contactSentMessage\.textContent\s*=\s*contactSentMessage\.dataset\.successLabel\s*\|\|\s*'Sent';/g, '');
   source = source.replace("contactSentMessage.classList.add('show');", "contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';\n                    contactSentMessage.classList.add('show');");
+  source = source.replace(/generators\.js(?:\?v=[^"']*)?/g, `generators.js?v=${version.replace(/^v/, '')}`);
   return source.replace(/v1\.2\.\d+/g, version);
 }
 
@@ -155,6 +156,13 @@ function addNodeClass(node, className) {
   } else if (!classAttribute.value.split(/\s+/).includes(className)) {
     classAttribute.value = `${classAttribute.value} ${className}`;
   }
+}
+
+function removeNodeClasses(node, classNames) {
+  const classAttribute = node.attrs?.find(attribute => attribute.name === 'class');
+  if (!classAttribute) return;
+  const blocked = new Set(classNames);
+  classAttribute.value = classAttribute.value.split(/\s+/).filter(className => !blocked.has(className)).join(' ');
 }
 
 function setNodeAttribute(node, name, value) {
@@ -224,9 +232,15 @@ function finalizeToolDocument(source, config, code, locale) {
     || ['hubHero', 'categoryBar', 'paginationControls'].includes(nodeAttribute(node, 'id'))
   ));
 
-  addNodeClass(activeCard, 'tool-panel');
+  ['tool-panel', 'tool-page-panel', 'is-expanded', 'active-panel', 'shadow-2xl', 'border-zinc-400'].forEach(className => addNodeClass(activeCard, className));
   activeCard.parentNode = cardsGrid;
   cardsGrid.childNodes = [activeCard];
+
+  const toolContent = findNode(activeCard, node => hasNodeClass(node, 'calculator-content'));
+  if (toolContent) {
+    removeNodeClasses(toolContent, ['hidden', 'opacity-0', 'translate-y-2']);
+    ['opacity-100', 'translate-y-0'].forEach(className => addNodeClass(toolContent, className));
+  }
 
   title.nodeName = 'h1';
   title.tagName = 'h1';
@@ -241,9 +255,15 @@ function finalizeToolDocument(source, config, code, locale) {
   detachNode(guide);
   addNodeClass(guide, 'tool-guide');
   const backLink = findNode(main, node => nodeAttribute(node, 'id') === 'toolBackHome');
-  const insertionIndex = backLink ? main.childNodes.indexOf(backLink) : main.childNodes.length;
-  guide.parentNode = main;
-  main.childNodes.splice(insertionIndex, 0, guide);
+  if (backLink) removeNodeClasses(backLink, ['hidden']);
+  const footerAbout = findNode(document, node => nodeAttribute(node, 'id') === 'footerAbout');
+  const footerActions = footerAbout?.parentNode?.parentNode;
+  const footerContainer = footerActions?.parentNode;
+  if (!footerActions || !footerContainer) throw new Error(`Missing footer actions for ${config.slug}`);
+  addNodeClass(guide, 'mb-8');
+  const insertionIndex = footerContainer.childNodes.indexOf(footerActions) + 1;
+  guide.parentNode = footerContainer;
+  footerContainer.childNodes.splice(insertionIndex, 0, guide);
 
   return serialize(document).replace(/[ \t]+$/gm, '');
 }
@@ -348,7 +368,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.415', lastmod = '2026-07-05' } = options;
+  const { write = true, version = 'v1.2.425', lastmod = '2026-07-06' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

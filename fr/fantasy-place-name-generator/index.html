@@ -701,10 +701,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 
 
 
-        <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Générateur de noms de lieux fantastiques</h2><div class="mb-4 text-center"><a href="/fr/guides/fantasy-place-name-generator/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>Guide</a></div><p>Le Générateur de noms de lieux fantastiques crée des lieux pour les jeux, récits, parties de rôle et univers originaux. Nommez royaumes, villes, forêts, ruines, îles et forteresses sans compte ni installation.</p>
-                <p class="mt-3">Générez un nouveau résultat lorsqu’une carte, un chapitre, une quête ou un décor a besoin d’un nom. L’outil combine des fragments fantastiques et des structures variées pour proposer différentes ambiances et échelles.</p>
-                <p class="mt-3">Réglez le nombre entre 1 et 100. Générer affiche un nom sur la page et Télécharger prépare un fichier texte avec le nombre demandé. Adaptez l’orthographe, la langue et la géographie à votre univers.</p>
-                <p class="mt-3">La génération s’exécute dans le navigateur. Les résultats sont des suggestions créatives et peuvent ressembler par hasard à des lieux réels ou fictifs existants.</p></section><div id="toolBackHome" class="mt-8 flex justify-center">
+        <div id="toolBackHome" class="mt-8 flex justify-center">
             <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
                 <span aria-hidden="true">⬅️</span>
                 Retour
@@ -728,10 +725,13 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                     <span aria-hidden="true">✉</span>
                     <span id="footerContact">Contact</span>
                 </button>
-            </div>
+            </div><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide mb-8"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Générateur de noms de lieux fantastiques</h2><div class="mb-4 text-center"><a href="/fr/guides/fantasy-place-name-generator/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>Guide</a></div><p>Le Générateur de noms de lieux fantastiques crée des lieux pour les jeux, récits, parties de rôle et univers originaux. Nommez royaumes, villes, forêts, ruines, îles et forteresses sans compte ni installation.</p>
+                <p class="mt-3">Générez un nouveau résultat lorsqu’une carte, un chapitre, une quête ou un décor a besoin d’un nom. L’outil combine des fragments fantastiques et des structures variées pour proposer différentes ambiances et échelles.</p>
+                <p class="mt-3">Réglez le nombre entre 1 et 100. Générer affiche un nom sur la page et Télécharger prépare un fichier texte avec le nombre demandé. Adaptez l’orthographe, la langue et la géographie à votre univers.</p>
+                <p class="mt-3">La génération s’exécute dans le navigateur. Les résultats sont des suggestions créatives et peuvent ressembler par hasard à des lieux réels ou fictifs existants.</p></section>
             <p>© 2026 Super Fast Tool. Tous droits réservés.</p>
             <p id="footerDesc" class="mt-2 text-xs">La plupart des saisies dans les outils et des opérations sur les fichiers pris en charge sont traitées localement dans votre navigateur. Certaines fonctionnalités, telles que les formulaires de contact, l’hébergement, la publicité, les outils d’analyse, la traduction ou les services tiers, peuvent traiter des informations techniques limitées ou des informations que vous soumettez.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.423</p>
 
         </div>
     </footer>
@@ -773,7 +773,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Envoyé"></div>
         </div>
     </div>
-    <script src="/generators.js"></script>
+    <script src="/generators.js?v=1.2.423"></script>
     <script>window.SFT_TOOL_PAGE = { cardId: "fantasyPlaceCard", slug: "fantasy-place-name-generator", title: "Générateur de noms de lieux fantastiques" };</script>
     <script>window.SFT_LOCALE="fr";window.SFT_LOCALE_URLS={"en":"/fantasy-place-name-generator/","ko":"/ko/fantasy-place-name-generator/","ja":"/ja/fantasy-place-name-generator/","zh-CN":"/zh-CN/fantasy-place-name-generator/","es":"/es/fantasy-place-name-generator/","de":"/de/fantasy-place-name-generator/","fr":"/fr/fantasy-place-name-generator/","pt-BR":"/pt-BR/fantasy-place-name-generator/"};window.SFT_I18N={"addStar":"Ajouter aux favoris","removeStar":"Retirer des favoris"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
 

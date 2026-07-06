@@ -884,7 +884,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "프리셋을 선택하거나 한 줄에 메뉴 하나씩 입력하고, 이용할 수 없는 항목을 제외한 다음 돌리세요. 최근 당첨 메뉴 피하기를 켜면 메뉴를 영구히 삭제하지 않고도 여러 번의 점심에 변화를 줄 수 있습니다.",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "결과는 제안일 뿐 식단 권고가 아닙니다. 주문하기 전에 알레르기, 재료, 영양 요구 사항, 영업시간, 가격 및 이용 가능 여부를 확인하세요.",
       "Does Lunch Picker require an account?": "점심 뽑기를 사용하려면 계정이 필요한가요?",
-      "Open Lunch Picker": "점심 뽑기 열기"
+      "Open Lunch Picker": "점심 뽑기 열기",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "누가 계산할까? 룰렛 사용 방법 | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "누가 계산할까? 룰렛 사용 방법. 결과를 사용하기 전에 핵심 개념, 실용적인 절차, 흔한 실수와 제한 사항을 알아보세요.",
+      "How to Use Who Pays? Roulette": "누가 계산할까? 룰렛 사용 방법",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "이름을 돌려 이번에는 누가 계산할지 운에 맡겨 보세요. 이 가이드는 도구의 작동 방식, 주의 깊게 사용하는 방법과 빠른 브라우저 결과의 한계를 설명합니다.",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "누가 계산할까? 룰렛은 현재 목록에서 이름 하나를 선택합니다. 균등 무작위 선택을 사용하면 고유한 각 이름이 선택될 확률은 같습니다.",
+      "How to use Who Pays? Roulette": "누가 계산할까? 룰렛 사용 방법",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "이름을 두 개 이상 입력하고 선택된 사람을 제외할지 정한 다음 돌리세요. 초기화는 기본 목록을 복원하고 최근 결과를 지웁니다.",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "결과는 가벼운 모임 결정을 위한 것입니다. 돌리기 전에 규칙에 동의하고 모두의 동의 없이 무작위 추첨으로 금전적 의무를 강요하지 마세요.",
+      "Does Who Pays? Roulette require an account?": "누가 계산할까? 룰렛에 계정이 필요한가요?",
+      "Open Who Pays? Roulette": "누가 계산할까? 룰렛 열기",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "점심 뽑기는 이용 가능한 메뉴 목록에서 하나를 선택합니다. 균등 무작위 선택을 사용하면 남은 모든 항목이 같은 확률로 선택됩니다.",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "프리셋을 선택하거나 한 줄에 점심 메뉴 하나씩 입력하고, 이용할 수 없는 항목을 제거한 뒤 돌리세요. 최근 당첨 메뉴를 피하면 여러 번의 식사에서 다양성을 높일 수 있습니다.",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "이름을 두 개 이상 입력하고 Spin을 누르세요. 그 순간 현재 목록이 이 브라우저에 저장되고 다음 방문 때 복원됩니다."
     },
     "ja": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 は RGB(63, 63, 70) に対応します。 HSL は、色相、彩度、明度によって同じ色を表します。",
@@ -1769,7 +1782,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "プリセットを選ぶか1行に1品ずつ入力し、利用できない候補を除外して回してください。最近の当選を避けると、候補を削除せずに数回の食事へ変化を付けられます。",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "結果は提案であり、食事指導ではありません。注文前にアレルギー、材料、栄養上の要件、営業時間、価格、提供状況を確認してください。",
       "Does Lunch Picker require an account?": "ランチ抽選にアカウントは必要ですか？",
-      "Open Lunch Picker": "ランチ抽選を開く"
+      "Open Lunch Picker": "ランチ抽選を開く",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "誰が払う？ルーレットの使い方 | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "誰が払う？ルーレットの使い方。結果を使う前に基本、実用的な手順、よくある間違い、制限を確認します。",
+      "How to Use Who Pays? Roulette": "誰が払う？ルーレットの使い方",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "名前を回して今回は誰が払うかを運に任せましょう。このガイドでは仕組み、注意深い使い方、ブラウザ結果の限界を説明します。",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "誰が払う？ルーレットは現在のリストから1人を選びます。均等なランダム選択では、各固有名が同じ確率で選ばれます。",
+      "How to use Who Pays? Roulette": "誰が払う？ルーレットの使い方",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "2人以上の名前を入力し、選ばれた人を除外するか決めて回します。リセットは初期リストを戻し、最近の結果を消去します。",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "結果は気軽なグループ決定向けです。回す前にルールへ同意し、全員の同意なしに金銭的義務を課すために使わないでください。",
+      "Does Who Pays? Roulette require an account?": "誰が払う？ルーレットにアカウントは必要ですか？",
+      "Open Who Pays? Roulette": "誰が払う？ルーレットを開く",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "ランチ抽選は利用可能なメニューから1つを選びます。均等なランダム選択では、残っているすべての候補が同じ確率で選ばれます。",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "プリセットを選ぶか1行に1つずつ候補を入力し、利用できない項目を除いて回します。最近の当選を避けると、複数回の食事に変化を付けられます。",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "2人以上の名前を入力して「Spin」を押します。その時点のリストがこのブラウザーに保存され、次回アクセス時に復元されます。"
     },
     "zh-CN": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 对应 RGB(63, 63, 70)。 HSL 通过色调、饱和度和亮度来描述相同的颜色。",
@@ -2654,7 +2680,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "选择预设菜单或每行输入一种餐点，排除不可用项目，然后开始转动。启用避开最近结果后，无需永久删除选项也能让多次午餐更有变化。",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "结果只是建议，并非饮食指导。订购前请检查过敏原、食材、营养需求、营业时间、价格和供应情况。",
       "Does Lunch Picker require an account?": "使用午餐抽选器需要账户吗？",
-      "Open Lunch Picker": "打开午餐抽选器"
+      "Open Lunch Picker": "打开午餐抽选器",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "谁买单？轮盘使用指南 | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "谁买单？轮盘使用指南。在使用结果前了解核心原理、实用流程、常见错误和限制。",
+      "How to Use Who Pays? Roulette": "谁买单？轮盘使用指南",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "转动名字，让随机结果决定这次谁买单。本指南说明工具原理、谨慎使用方法以及快速浏览器结果的局限。",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "谁买单？轮盘会从当前列表中选出一个名字。均匀随机选择时，每个不同名字被选中的概率相同。",
+      "How to use Who Pays? Roulette": "如何使用谁买单？轮盘",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "输入至少两个名字，选择是否移除每次选中的人，然后转动。重置会恢复初始列表并清除最近结果。",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "结果仅用于轻松的群体决定。转动前请同意规则，不要在未经所有人同意时用随机选择强加金钱义务。",
+      "Does Who Pays? Roulette require an account?": "谁买单？轮盘需要账户吗？",
+      "Open Who Pays? Roulette": "打开谁买单？轮盘",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "午餐抽选器会从可用菜单列表中选出一项。采用均匀随机选择时，所有剩余选项被选中的概率相同。",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "选择预设或每行输入一个午餐选项，移除不可用项后开始转动。避开最近结果可以让多次用餐更有变化。",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "输入至少两个名字并按下“Spin”。当前列表会在此时保存到浏览器中，并在下次访问时恢复。"
     },
     "es": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 corresponde a RGB(63, 63, 70). HSL describe el mismo color a través del tono, la saturación y la luminosidad.",
@@ -3539,7 +3578,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Elige un preajuste o escribe una comida por línea, excluye lo que no esté disponible y gira. Evitar resultados recientes aporta variedad sin eliminar una opción permanentemente.",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "El resultado es una sugerencia, no una recomendación dietética. Comprueba alergias, ingredientes, necesidades nutricionales, horario, precio y disponibilidad antes de pedir.",
       "Does Lunch Picker require an account?": "¿Selector de almuerzo requiere una cuenta?",
-      "Open Lunch Picker": "Abrir Selector de almuerzo"
+      "Open Lunch Picker": "Abrir Selector de almuerzo",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "Cómo usar ¿Quién paga? Ruleta | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Cómo usar ¿Quién paga? Ruleta. Conoce la idea principal, un flujo práctico, errores comunes y limitaciones antes de usar el resultado.",
+      "How to Use Who Pays? Roulette": "Cómo usar ¿Quién paga? Ruleta",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Gira los nombres y deja que el azar decida quién paga esta vez. Esta guía explica el funcionamiento, el uso cuidadoso y los límites de un resultado rápido en el navegador.",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "¿Quién paga? Ruleta selecciona un nombre de la lista actual. Cada nombre único tiene la misma probabilidad con una selección aleatoria uniforme.",
+      "How to use Who Pays? Roulette": "Cómo usar ¿Quién paga? Ruleta",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "Introduce al menos dos nombres, elige si quieres retirar a cada persona seleccionada y gira. Restablecer recupera la lista inicial y borra los resultados recientes.",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "El resultado está pensado para decisiones informales. Acordad las reglas antes de girar y no impongáis obligaciones económicas sin el consentimiento de todos.",
+      "Does Who Pays? Roulette require an account?": "¿Quién paga? Ruleta requiere una cuenta?",
+      "Open Who Pays? Roulette": "Abrir ¿Quién paga? Ruleta",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "El selector de almuerzo elige un elemento de la lista disponible. Con una selección aleatoria uniforme, todas las opciones restantes tienen la misma probabilidad.",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "Elige un preajuste o introduce una opción por línea, elimina lo que no esté disponible y gira. Evitar resultados recientes puede aportar variedad a varias comidas.",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "Introduce al menos dos nombres y pulsa Spin. La lista actual se guarda en este navegador en ese momento y se restaura en tu próxima visita."
     },
     "de": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 entspricht RGB(63, 63, 70). HSL beschreibt dieselbe Farbe durch Farbton, Sättigung und Helligkeit.",
@@ -4424,7 +4476,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Wähle eine Voreinstellung oder gib eine Mahlzeit pro Zeile ein, schließe nicht verfügbare Einträge aus und drehe. Das Vermeiden letzter Ergebnisse sorgt für Abwechslung, ohne Optionen dauerhaft zu entfernen.",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "Das Ergebnis ist ein Vorschlag und keine Ernährungsempfehlung. Prüfe Allergien, Zutaten, Nährstoffbedarf, Öffnungszeiten, Preis und Verfügbarkeit vor der Bestellung.",
       "Does Lunch Picker require an account?": "Benötigt die Mittagessen-Auswahl ein Konto?",
-      "Open Lunch Picker": "Mittagessen-Auswahl öffnen"
+      "Open Lunch Picker": "Mittagessen-Auswahl öffnen",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "Wer zahlt? Roulette verwenden | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Wer zahlt? Roulette verwenden. Lerne Grundidee, praktischen Ablauf, häufige Fehler und Grenzen kennen.",
+      "How to Use Who Pays? Roulette": "Wer zahlt? Roulette verwenden",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Drehe die Namen und lass den Zufall entscheiden, wer diesmal zahlt. Dieser Leitfaden erklärt Funktionsweise, sorgfältige Nutzung und Grenzen eines schnellen Browser-Ergebnisses.",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "Wer zahlt? Roulette wählt einen Namen aus der aktuellen Liste. Bei gleichmäßiger Zufallsauswahl hat jeder eindeutige Name die gleiche Chance.",
+      "How to use Who Pays? Roulette": "So verwendest du Wer zahlt? Roulette",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "Gib mindestens zwei Namen ein, entscheide, ob ausgewählte Personen entfernt werden, und drehe. Zurücksetzen stellt die Startliste wieder her und löscht letzte Ergebnisse.",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "Das Ergebnis ist für lockere Gruppenentscheidungen gedacht. Einigt euch vorher auf die Regeln und erzwingt ohne Zustimmung aller keine finanziellen Verpflichtungen per Zufall.",
+      "Does Who Pays? Roulette require an account?": "Benötigt Wer zahlt? Roulette ein Konto?",
+      "Open Who Pays? Roulette": "Wer zahlt? Roulette öffnen",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "Die Mittagessen-Auswahl wählt einen Eintrag aus der verfügbaren Menüliste. Bei gleichmäßiger Zufallsauswahl hat jede verbleibende Option die gleiche Chance.",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "Wähle eine Voreinstellung oder gib eine Option pro Zeile ein, entferne nicht verfügbare Einträge und drehe. Das Vermeiden letzter Ergebnisse kann für mehr Abwechslung sorgen.",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "Gib mindestens zwei Namen ein und drücke Spin. Die aktuelle Liste wird in diesem Moment im Browser gespeichert und beim nächsten Besuch wiederhergestellt."
     },
     "fr": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 correspond à RVB(63, 63, 70). HSL décrit la même couleur à travers la teinte, la saturation et la luminosité.",
@@ -5309,7 +5374,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Choisissez un préréglage ou saisissez un repas par ligne, excluez les options indisponibles et lancez la sélection. Éviter les résultats récents ajoute de la variété sans supprimer définitivement une option.",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "Le résultat est une suggestion, pas une recommandation alimentaire. Vérifiez les allergies, les ingrédients, les besoins nutritionnels, les horaires, le prix et la disponibilité avant de commander.",
       "Does Lunch Picker require an account?": "Le Sélecteur de déjeuner nécessite-t-il un compte ?",
-      "Open Lunch Picker": "Ouvrir le Sélecteur de déjeuner"
+      "Open Lunch Picker": "Ouvrir le Sélecteur de déjeuner",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "Comment utiliser Qui paie ? Roulette | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Comment utiliser Qui paie ? Roulette. Découvrez le principe, une méthode pratique, les erreurs courantes et les limites avant d’utiliser le résultat.",
+      "How to Use Who Pays? Roulette": "Comment utiliser Qui paie ? Roulette",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Faites défiler les noms et laissez le hasard décider qui paie cette fois. Ce guide explique le fonctionnement, l’utilisation prudente et les limites d’un résultat rapide dans le navigateur.",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "Qui paie ? Roulette choisit un nom dans la liste actuelle. Avec une sélection aléatoire uniforme, chaque nom unique a la même chance.",
+      "How to use Who Pays? Roulette": "Comment utiliser Qui paie ? Roulette",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "Saisissez au moins deux noms, choisissez de retirer ou non chaque personne sélectionnée, puis lancez. Réinitialiser restaure la liste initiale et efface les résultats récents.",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "Le résultat est destiné aux décisions légères en groupe. Acceptez les règles avant le tirage et n’imposez aucune obligation financière sans le consentement de tous.",
+      "Does Who Pays? Roulette require an account?": "Qui paie ? Roulette nécessite-t-il un compte ?",
+      "Open Who Pays? Roulette": "Ouvrir Qui paie ? Roulette",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "Le Sélecteur de déjeuner choisit un élément dans la liste disponible. Avec une sélection aléatoire uniforme, chaque option restante a la même chance.",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "Choisissez un préréglage ou saisissez une option par ligne, retirez les éléments indisponibles et lancez la sélection. Éviter les résultats récents peut varier plusieurs repas.",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "Saisissez au moins deux noms et appuyez sur Spin. La liste actuelle est alors enregistrée dans ce navigateur et restaurée lors de votre prochaine visite."
     },
     "pt-BR": {
       "#3f3f46 corresponds to RGB(63, 63, 70). HSL describes the same color through hue, saturation, and lightness.": "#3f3f46 corresponde a RGB(63, 63, 70). HSL descreve a mesma cor por meio de matiz, saturação e luminosidade.",
@@ -6194,7 +6272,20 @@
       "Choose a preset or enter one meal per line, exclude anything unavailable, and spin. Enabling recent-winner avoidance helps vary several lunches without permanently removing an option.": "Escolha uma predefinição ou digite uma refeição por linha, exclua o que estiver indisponível e gire. Evitar resultados recentes acrescenta variedade sem remover uma opção permanentemente.",
       "The result is a suggestion, not a dietary recommendation. Check allergies, ingredients, nutrition needs, opening hours, price, and availability before ordering.": "O resultado é uma sugestão, não uma recomendação alimentar. Verifique alergias, ingredientes, necessidades nutricionais, horário, preço e disponibilidade antes de pedir.",
       "Does Lunch Picker require an account?": "O Seletor de almoço exige uma conta?",
-      "Open Lunch Picker": "Abrir Seletor de almoço"
+      "Open Lunch Picker": "Abrir Seletor de almoço",
+      "How to Use Who Pays? Roulette | Super Fast Tool": "Como usar Quem paga? Roleta | Super Fast Tool",
+      "How to Use Who Pays? Roulette. Learn the core idea, a practical workflow, common mistakes, and limitations before using the result.": "Como usar Quem paga? Roleta. Conheça a ideia central, um fluxo prático, erros comuns e limitações antes de usar o resultado.",
+      "How to Use Who Pays? Roulette": "Como usar Quem paga? Roleta",
+      "Spin the names and let chance decide who pays this time. This guide explains what the tool calculates or changes, how to use it carefully, and where a quick browser result has limits.": "Gire os nomes e deixe o acaso decidir quem paga desta vez. Este guia explica o funcionamento, o uso cuidadoso e os limites de um resultado rápido no navegador.",
+      "Who Pays? Roulette selects one name from the current list. Each unique name has the same chance when the picker uses uniform random selection.": "Quem paga? Roleta seleciona um nome da lista atual. Com seleção aleatória uniforme, cada nome único tem a mesma chance.",
+      "How to use Who Pays? Roulette": "Como usar Quem paga? Roleta",
+      "Enter at least two names, choose whether to remove each selected person, and spin. Reset restores the starter list and clears the recent results.": "Digite pelo menos dois nomes, escolha se cada pessoa selecionada será removida e gire. Redefinir restaura a lista inicial e limpa os resultados recentes.",
+      "The result is meant for lighthearted group decisions. Agree on the rules before spinning, and do not use a random picker to impose financial obligations without everyone's consent.": "O resultado é destinado a decisões descontraídas em grupo. Concordem com as regras antes do giro e não imponham obrigações financeiras sem o consentimento de todos.",
+      "Does Who Pays? Roulette require an account?": "Quem paga? Roleta exige uma conta?",
+      "Open Who Pays? Roulette": "Abrir Quem paga? Roleta",
+      "A lunch picker selects one item from the available menu list. Every remaining option has the same chance when the picker uses uniform random selection.": "O Seletor de almoço escolhe um item da lista disponível. Com seleção aleatória uniforme, todas as opções restantes têm a mesma chance.",
+      "Choose a preset or enter one lunch option per line, remove anything unavailable, and spin. Avoiding recent winners can add variety across several meals.": "Escolha uma predefinição ou digite uma opção por linha, remova o que estiver indisponível e gire. Evitar resultados recentes pode trazer variedade a várias refeições.",
+      "Enter at least two names and press Spin. The current list is saved in this browser at that moment and restored on your next visit.": "Digite pelo menos dois nomes e pressione Spin. A lista atual é salva neste navegador nesse momento e restaurada na próxima visita."
     }
   }
 }

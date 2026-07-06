@@ -88,6 +88,7 @@ function initGenerators() {
     setupCountSlider('loremCount');
     setupClampedNumberInput('loremLength', clampLoremLength);
     initLunchPicker();
+    initWhoPaysRoulette();
 
     document.getElementById('generatePassword').addEventListener('click', () => {
         document.getElementById('valPassword').innerText = createPassword();
@@ -149,6 +150,7 @@ function initLunchPicker() {
     const customStorageKey = 'sft-lunch-picker-custom-options';
     const defaultCustomOptions = (window.SFT_LUNCH_CUSTOM_DEFAULTS?.[locale] || ['Menu 1', 'Menu 2', 'Menu 3']).join('\n');
     let recent = [];
+    let audioContext;
     let customOptions = defaultCustomOptions;
     let hasSavedCustom = false;
     try {
@@ -160,6 +162,7 @@ function initLunchPicker() {
         ready: previousRow.textContent.trim(),
         choose: currentRow.textContent.trim(),
         spinWhenReady: nextRow.textContent.trim(),
+        spin: spinButton.textContent.trim(),
         spinning: text('lunchLabelSpinning', 'Spinning...'),
         spinAgain: text('lunchLabelSpinAgain', 'Spin Again'),
         recent: text('lunchLabelRecent', 'Recent'),
@@ -239,6 +242,33 @@ function initLunchPicker() {
         saveState();
     };
     const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+    const getAudioContext = () => {
+        if (audioContext) return audioContext;
+        const Context = window.AudioContext || window.webkitAudioContext;
+        if (!Context) return null;
+        audioContext = new Context();
+        return audioContext;
+    };
+    const playTone = (frequency, duration, volume = 0.035, delay = 0) => {
+        const context = getAudioContext();
+        if (!context) return;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        const start = context.currentTime + delay;
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.02);
+    };
+    const playWinSound = () => {
+        playTone(523.25, 0.16, 0.05);
+        playTone(659.25, 0.18, 0.055, 0.11);
+        playTone(783.99, 0.24, 0.06, 0.23);
+    };
     const burstCelebration = reducedMotion => {
         if (!fireworks) return;
         if (fireworks.parentElement !== document.body) document.body.appendChild(fireworks);
@@ -303,17 +333,20 @@ function initLunchPicker() {
         spinButton.textContent = labels.spinning;
         slotMachine.classList.remove('is-complete');
         slotMachine.classList.add('is-spinning');
+        getAudioContext()?.resume?.();
         const winner = randomItem(candidates);
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const steps = reducedMotion ? 3 : 24;
         for (let step = 0; step < steps; step += 1) {
             setRows(randomItem(candidates), candidates);
+            if (!reducedMotion && step % 2 === 0) playTone(220 + (step * 8), 0.045, 0.02);
             const progress = step / Math.max(steps - 1, 1);
             await wait(reducedMotion ? 35 : 45 + Math.round(progress * progress * 145));
         }
         setRows(winner, available);
         slotMachine.classList.remove('is-spinning');
         slotMachine.classList.add('is-complete');
+        playWinSound();
         burstCelebration(reducedMotion);
         recent = [winner, ...recent.filter(item => item !== winner)].slice(0, 5);
         renderRecent();
@@ -357,9 +390,170 @@ function initLunchPicker() {
     }
 }
 
+function initWhoPaysRoulette() {
+    const namesInput = document.getElementById('payerNames');
+    const spinButton = document.getElementById('spinPayer');
+    const slotMachine = document.getElementById('payerSlotMachine');
+    const previousRow = document.getElementById('payerSlotPrevious');
+    const currentRow = document.getElementById('payerSlotCurrent');
+    const nextRow = document.getElementById('payerSlotNext');
+    const message = document.getElementById('payerMessage');
+    const fireworks = document.getElementById('payerFireworks');
+    if (!namesInput || !spinButton || !slotMachine) return;
+
+    const storageKey = 'sft-who-pays-roulette';
+    const text = (id, fallback) => document.getElementById(id)?.textContent.trim() || fallback;
+    const labels = {
+        ready: previousRow.textContent.trim(),
+        choose: currentRow.textContent.trim(),
+        spinWhenReady: nextRow.textContent.trim(),
+        spin: spinButton.textContent.trim(),
+        spinning: text('payerLabelSpinning', 'Spinning...'),
+        spinAgain: text('payerLabelSpinAgain', 'Spin Again'),
+        pays: text('payerLabelPays', 'pays!'),
+        empty: message.textContent.trim() || 'Add at least two names.'
+    };
+    let audioContext;
+
+    const normalizeNames = value => [...new Set(value.split(/\r?\n/).map(name => name.trim()).filter(Boolean))];
+    const randomIndex = length => {
+        if (length <= 1) return 0;
+        if (!window.crypto?.getRandomValues) return Math.floor(Math.random() * length);
+        const limit = Math.floor(0x100000000 / length) * length;
+        const values = new Uint32Array(1);
+        do window.crypto.getRandomValues(values); while (values[0] >= limit);
+        return values[0] % length;
+    };
+    const randomName = names => names[randomIndex(names.length)] || '';
+    const getAudioContext = () => {
+        if (audioContext) return audioContext;
+        const Context = window.AudioContext || window.webkitAudioContext;
+        if (!Context) return null;
+        audioContext = new Context();
+        return audioContext;
+    };
+    const playTone = (frequency, duration, volume = 0.035, delay = 0) => {
+        const context = getAudioContext();
+        if (!context) return;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        const start = context.currentTime + delay;
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.02);
+    };
+    const playWinSound = () => {
+        playTone(523.25, 0.16, 0.05);
+        playTone(659.25, 0.18, 0.055, 0.11);
+        playTone(783.99, 0.24, 0.06, 0.23);
+    };
+    const saveState = () => {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify({ names: namesInput.value }));
+        } catch {}
+    };
+    const renderRow = (row, name, fallback, winner = false) => {
+        const avatar = document.createElement('span');
+        avatar.className = 'payer-slot-avatar';
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.textContent = winner ? '💸' : '🧾';
+        const label = document.createElement('span');
+        label.className = 'lunch-slot-name';
+        label.textContent = name ? `${name}${winner ? ` ${labels.pays}` : ''}` : fallback;
+        row.replaceChildren(avatar, label);
+    };
+    const setRows = (selected, names, winner = false) => {
+        const alternatives = names.filter(name => name !== selected);
+        renderRow(previousRow, randomName(alternatives), labels.ready);
+        renderRow(currentRow, selected, labels.choose, winner);
+        renderRow(nextRow, randomName(alternatives), labels.spinWhenReady);
+    };
+    const burstCelebration = reducedMotion => {
+        if (!fireworks) return;
+        if (fireworks.parentElement !== document.body) document.body.appendChild(fireworks);
+        fireworks.replaceChildren();
+        const colors = ['#f97316', '#facc15', '#ef4444', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#ffffff'];
+        const origins = [14, 35, 65, 86];
+        const count = reducedMotion ? 20 : 88;
+        const fragment = document.createDocumentFragment();
+        for (let index = 0; index < count; index += 1) {
+            const particle = document.createElement('span');
+            const origin = origins[index % origins.length] + ((Math.random() * 8) - 4);
+            const horizontal = (Math.random() - 0.5) * Math.min(window.innerWidth * 0.46, 460);
+            const vertical = -(window.innerHeight * (0.58 + Math.random() * 0.5));
+            const rotation = Math.round((Math.random() * 900) - 450);
+            particle.className = 'lunch-confetti';
+            particle.style.setProperty('--confetti-color', colors[index % colors.length]);
+            particle.style.setProperty('--confetti-origin', `${origin}%`);
+            particle.style.setProperty('--confetti-x', `${horizontal}px`);
+            particle.style.setProperty('--confetti-y', `${vertical}px`);
+            particle.style.setProperty('--confetti-fall-x', `${horizontal + ((Math.random() - 0.5) * 32)}px`);
+            particle.style.setProperty('--confetti-fall-y', `${vertical + 18 + (Math.random() * 36)}px`);
+            particle.style.setProperty('--confetti-rotate', `${rotation}deg`);
+            particle.style.setProperty('--confetti-end-rotate', `${rotation + 260 + Math.round(Math.random() * 420)}deg`);
+            particle.style.setProperty('--confetti-width', `${8 + Math.round(Math.random() * 8)}px`);
+            particle.style.setProperty('--confetti-height', `${12 + Math.round(Math.random() * 13)}px`);
+            particle.style.setProperty('--confetti-radius', index % 3 === 0 ? '999px' : '2px');
+            particle.style.setProperty('--confetti-delay', `${Math.round(Math.random() * 150)}ms`);
+            fragment.appendChild(particle);
+        }
+        fireworks.appendChild(fragment);
+        window.setTimeout(() => fireworks.replaceChildren(), 1750);
+    };
+    const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+
+    spinButton.addEventListener('click', async () => {
+        const names = normalizeNames(namesInput.value);
+        if (names.length < 2) {
+            message.textContent = labels.empty;
+            message.classList.remove('hidden');
+            return;
+        }
+        saveState();
+        message.classList.add('hidden');
+        spinButton.disabled = true;
+        spinButton.textContent = labels.spinning;
+        slotMachine.classList.remove('is-complete');
+        slotMachine.classList.add('is-spinning');
+        getAudioContext()?.resume?.();
+        const winner = randomName(names);
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const steps = reducedMotion ? 3 : 25;
+        for (let step = 0; step < steps; step += 1) {
+            setRows(randomName(names), names);
+            if (!reducedMotion && step % 2 === 0) playTone(220 + (step * 8), 0.045, 0.02);
+            const progress = step / Math.max(steps - 1, 1);
+            await wait(reducedMotion ? 35 : 42 + Math.round(progress * progress * 150));
+        }
+        setRows(winner, names, true);
+        slotMachine.classList.remove('is-spinning');
+        slotMachine.classList.add('is-complete');
+        playWinSound();
+        burstCelebration(reducedMotion);
+        spinButton.textContent = labels.spinAgain;
+        spinButton.disabled = false;
+    });
+
+    try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        if (typeof saved.names === 'string' && saved.names.trim()) namesInput.value = saved.names;
+    } catch {}
+    renderRow(previousRow, '', labels.ready);
+    renderRow(currentRow, '', labels.choose);
+    renderRow(nextRow, '', labels.spinWhenReady);
+}
+
 function setupNameGenerator(config, generatedLists) {
     const countInput = document.getElementById(config.countId);
     const output = document.getElementById(config.outputId);
+    const generateButton = document.getElementById(config.generateId);
+    const downloadButton = document.getElementById(config.downloadId);
+    if (!countInput || !output || !generateButton || !downloadButton) return;
     setupCountSlider(config.countId);
     const recent = [];
     const createFreshName = () => {
@@ -372,12 +566,12 @@ function setupNameGenerator(config, generatedLists) {
         return name;
     };
 
-    document.getElementById(config.generateId).addEventListener('click', () => {
+    generateButton.addEventListener('click', () => {
         generatedLists[config.key] = [createFreshName()];
         output.innerText = generatedLists[config.key].join('\n');
     });
 
-    document.getElementById(config.downloadId).addEventListener('click', () => {
+    downloadButton.addEventListener('click', () => {
         const count = clampCount(countInput.value);
         countInput.value = count;
         const downloadNames = Array.from({ length: count }, createFreshName);

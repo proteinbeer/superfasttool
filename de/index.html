@@ -109,6 +109,9 @@
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current { min-height: 126px; gap: 18px; animation: lunchWinnerPop 0.62s cubic-bezier(.2,.85,.25,1.2) 1; background: #fff7ed; color: #c2410c; font-size: 36px; text-shadow: 0 0 12px rgba(249,115,22,0.38); }
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current .lunch-slot-image { width: 96px; height: 96px; }
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current .lunch-slot-image { filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.12)) drop-shadow(0 0 10px rgba(249,115,22,0.72)); }
+        .payer-slot-avatar { display: inline-grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border: 1px solid #fed7aa; border-radius: 10px; background: #ffedd5; font-size: 18px; box-shadow: 0 2px 5px rgb(249 115 22 / 0.16); transition: width 0.42s cubic-bezier(.2,.8,.2,1), height 0.42s cubic-bezier(.2,.8,.2,1), font-size 0.42s cubic-bezier(.2,.8,.2,1), filter 0.28s ease; }
+        .lunch-slot-row.is-current .payer-slot-avatar { width: 48px; height: 48px; font-size: 25px; }
+        .lunch-slot-machine.is-complete .lunch-slot-row.is-current .payer-slot-avatar { width: 82px; height: 82px; font-size: 42px; filter: drop-shadow(0 0 12px rgba(249,115,22,0.66)); }
         .lunch-fireworks { position: fixed; inset: 0; z-index: 250; pointer-events: none; overflow: hidden; }
         .lunch-confetti { position: absolute; left: var(--confetti-origin); bottom: -28px; width: var(--confetti-width); height: var(--confetti-height); border-radius: var(--confetti-radius); background: var(--confetti-color); opacity: 0; transform: translate(-50%, 0) scale(0.45) rotate(0deg); will-change: transform, opacity; animation: lunchConfettiBurst 1.35s cubic-bezier(.12,.72,.16,1) var(--confetti-delay) forwards; }
         @keyframes lunchWinnerPop { 0% { transform: scale(0.94); box-shadow: inset 0 0 0 0 rgba(249,115,22,0); } 48% { transform: scale(1.045); box-shadow: inset 0 0 0 3px rgba(249,115,22,0.48); } 100% { transform: scale(1); box-shadow: inset 0 0 0 1px rgba(249,115,22,0.18); } }
@@ -2072,6 +2075,24 @@ Der</h3>
 
             <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
 
+            <div id="whoPaysCard" data-category="generator" data-tool-slug="who-pays-roulette" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
+                <div class="card-content p-6 w-full">
+                    <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Generator schließen">&times;</button>
+                    <div class="w-12 h-12 bg-orange-50 border border-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4">&#129534;</div>
+                    <h3 id="tool77Title" class="text-lg font-bold text-zinc-900 mb-1">Wer zahlt? Roulette</h3>
+                    <p id="tool77Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Drehe die Namen und lass den Zufall entscheiden, wer diesmal zahlt.</p>
+                </div>
+                <div class="calculator-content hidden opacity-0 translate-y-2 px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-4">
+                    <div class="lunch-slot-stage"><div id="payerSlotMachine" class="lunch-slot-machine" role="status" aria-live="polite" aria-label="Ergebnis des Wer-zahlt-Roulettes"><div id="payerSlotPrevious" class="lunch-slot-row">Bereit</div><div id="payerSlotCurrent" class="lunch-slot-row is-current">Wer zahlt?</div><div id="payerSlotNext" class="lunch-slot-row">Drehe, wenn du bereit bist</div></div><div id="payerFireworks" class="lunch-fireworks" aria-hidden="true"></div></div>
+                    <div><label for="payerNames" class="block text-xs font-bold text-zinc-500 mb-1">Namen</label><textarea id="payerNames" rows="5" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm resize-none" placeholder="Ein Name pro Zeile">Alex&#10;Sam&#10;Jordan</textarea></div>
+                    <button id="spinPayer" type="button" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm font-bold cursor-pointer hover:bg-zinc-700 disabled:cursor-not-allowed disabled:bg-zinc-300">Drehen</button>
+                    <p id="payerMessage" class="hidden text-center text-xs font-bold text-red-600" role="alert">Füge mindestens zwei Namen hinzu.</p>
+                    <div class="hidden" aria-hidden="true"><span id="payerLabelSpinning">Wird gedreht...</span><span id="payerLabelSpinAgain">Erneut drehen</span><span id="payerLabelPays">zahlt!</span></div>
+                </div>
+            </div>
+
+            <div class="card-placeholder hidden bg-transparent border border-transparent w-full h-full"></div>
+
             <div id="passwordCard" data-category="generator" data-tool-slug="password-generator" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0">
                 <div class="card-content p-6 w-full">
                     <button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Generator schließen">&times;</button>
@@ -2534,7 +2555,7 @@ Der</h3>
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
             <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.425</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Nutzungsbedingungen</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -2618,7 +2639,7 @@ Der</h3>
     <script src="/lunch-picker-food-additions.js"></script>
     <script src="/lunch-picker-photo-map.js"></script>
     <script src="/lunch-picker-foods.js"></script>
-    <script src="/generators.js"></script>
+    <script src="/generators.js?v=1.2.424"></script>
     <script src="/image-tools.js"></script>
     <script src="/video-tools.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>

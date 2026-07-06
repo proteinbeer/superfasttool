@@ -71,6 +71,9 @@
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current { min-height: 126px; gap: 18px; animation: lunchWinnerPop 0.62s cubic-bezier(.2,.85,.25,1.2) 1; background: #fff7ed; color: #c2410c; font-size: 36px; text-shadow: 0 0 12px rgba(249,115,22,0.38); }
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current .lunch-slot-image { width: 96px; height: 96px; }
         .lunch-slot-machine.is-complete .lunch-slot-row.is-current .lunch-slot-image { filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.12)) drop-shadow(0 0 10px rgba(249,115,22,0.72)); }
+        .payer-slot-avatar { display: inline-grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border: 1px solid #fed7aa; border-radius: 10px; background: #ffedd5; font-size: 18px; box-shadow: 0 2px 5px rgb(249 115 22 / 0.16); transition: width 0.42s cubic-bezier(.2,.8,.2,1), height 0.42s cubic-bezier(.2,.8,.2,1), font-size 0.42s cubic-bezier(.2,.8,.2,1), filter 0.28s ease; }
+        .lunch-slot-row.is-current .payer-slot-avatar { width: 48px; height: 48px; font-size: 25px; }
+        .lunch-slot-machine.is-complete .lunch-slot-row.is-current .payer-slot-avatar { width: 82px; height: 82px; font-size: 42px; filter: drop-shadow(0 0 12px rgba(249,115,22,0.66)); }
         .lunch-fireworks { position: fixed; inset: 0; z-index: 250; pointer-events: none; overflow: hidden; }
         .lunch-confetti { position: absolute; left: var(--confetti-origin); bottom: -28px; width: var(--confetti-width); height: var(--confetti-height); border-radius: var(--confetti-radius); background: var(--confetti-color); opacity: 0; transform: translate(-50%, 0) scale(0.45) rotate(0deg); will-change: transform, opacity; animation: lunchConfettiBurst 1.35s cubic-bezier(.12,.72,.16,1) var(--confetti-delay) forwards; }
         @keyframes lunchWinnerPop { 0% { transform: scale(0.94); box-shadow: inset 0 0 0 0 rgba(249,115,22,0); } 48% { transform: scale(1.045); box-shadow: inset 0 0 0 3px rgba(249,115,22,0.48); } 100% { transform: scale(1); box-shadow: inset 0 0 0 1px rgba(249,115,22,0.18); } }
@@ -985,7 +988,7 @@
                     <h1 id="tool76Title" class="text-lg font-bold text-zinc-900 mb-1">Mittagessen-Auswahl</h1>
                     <p id="tool76Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Drehe den Mittagessen-Automaten und überlasse die heutige Mahlzeit dem Zufall.</p>
                 </div>
-                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-4">
+                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-4 opacity-100 translate-y-0">
                     <div class="lunch-slot-stage"><div id="lunchSlotMachine" class="lunch-slot-machine" role="status" aria-live="polite" aria-label="Ergebnis der Mittagessen-Auswahl"><div id="lunchSlotPrevious" class="lunch-slot-row">Bereit</div><div id="lunchSlotCurrent" class="lunch-slot-row is-current">Wähle dein Mittagessen</div><div id="lunchSlotNext" class="lunch-slot-row">Drehe, wenn du bereit bist</div></div><div id="lunchFireworks" class="lunch-fireworks" aria-hidden="true"></div></div>
                     <div class="flex justify-end"><a id="lunchPhotoCredits" href="/assets/lunch-photos/credits.html" target="_blank" rel="noopener" class="text-[10px] font-bold text-zinc-400 hover:text-orange-700">Photo credits</a></div>
                     <div><label for="lunchPreset" class="block text-xs font-bold text-zinc-500 mb-1">Voreinstellung</label><select id="lunchPreset" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm cursor-pointer"><option value="mixed">Weltweite Mischung</option><option value="korean">Koreanisch</option><option value="japanese">Japanisch</option><option value="chinese">Chinesisch</option><option value="thai">Thailändisch</option><option value="vietnamese">Vietnamesisch</option><option value="indian">Indisch</option><option value="mexican">Mexikanisch</option><option value="italian">Italienisch</option><option value="western">Westlich</option><option value="fastFood">Fast Food</option><option value="custom">Benutzerdefiniert</option></select></div>
@@ -1048,7 +1051,7 @@
 
 
 
-        <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Mittagessen-Auswahl</h2><div class="mb-4 text-center"><a href="/de/guides/lunch-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>-Leitfaden</a></div><p>Die Mittagessen-Auswahl ist ein browserbasiertes Entscheidungstool mit einer Spielautomaten-Anzeige. Wähle ein voreingestelltes Menü oder gib eigene Optionen ein und drehe, um zufällig eine verfügbare Mahlzeit auszuwählen.</p><p class="mt-3">Nutze die Ausschlussliste für ausverkaufte Restaurants, Ernährungskonflikte, kürzlich gegessene Mahlzeiten oder heute nicht verfügbare Optionen. Das Vermeiden letzter Ergebnisse sorgt für Abwechslung, solange andere Optionen übrig sind.</p><p class="mt-3">Deine Menüliste, Ausschlüsse, Einstellungen und letzten Ergebnisse werden nur in diesem Browser gespeichert. Die Liste wird nicht an einen Server von Super Fast Tool gesendet und beim Löschen des Browser-Speichers entfernt.</p><p class="mt-3">Das Ergebnis ist ein lockerer Vorschlag und keine Ernährungs- oder Allergieberatung. Prüfe Zutaten, Ernährungsanforderungen, Preis, Öffnungszeiten und Verfügbarkeit vor der Bestellung oder Zubereitung.</p></section><div id="toolBackHome" class="mt-8 flex justify-center">
+        <div id="toolBackHome" class="mt-8 flex justify-center">
             <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
                 <span aria-hidden="true">⬅️</span>
                 Zurück
@@ -1072,10 +1075,10 @@
                     <span aria-hidden="true">✉</span>
                     <span id="footerContact">Kontakt</span>
                 </button>
-            </div>
+            </div><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide mb-8"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Mittagessen-Auswahl</h2><div class="mb-4 text-center"><a href="/de/guides/lunch-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>-Leitfaden</a></div><p>Die Mittagessen-Auswahl ist ein browserbasiertes Entscheidungstool mit einer Spielautomaten-Anzeige. Wähle ein voreingestelltes Menü oder gib eigene Optionen ein und drehe, um zufällig eine verfügbare Mahlzeit auszuwählen.</p><p class="mt-3">Nutze die Ausschlussliste für ausverkaufte Restaurants, Ernährungskonflikte, kürzlich gegessene Mahlzeiten oder heute nicht verfügbare Optionen. Das Vermeiden letzter Ergebnisse sorgt für Abwechslung, solange andere Optionen übrig sind.</p><p class="mt-3">Deine Menüliste, Ausschlüsse, Einstellungen und letzten Ergebnisse werden nur in diesem Browser gespeichert. Die Liste wird nicht an einen Server von Super Fast Tool gesendet und beim Löschen des Browser-Speichers entfernt.</p><p class="mt-3">Das Ergebnis ist ein lockerer Vorschlag und keine Ernährungs- oder Allergieberatung. Prüfe Zutaten, Ernährungsanforderungen, Preis, Öffnungszeiten und Verfügbarkeit vor der Bestellung oder Zubereitung.</p></section>
             <p>© 2026 Super Fast Tool. Alle Rechte vorbehalten.</p>
             <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.415</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.423</p>
 
         </div>
     </footer>
@@ -1125,13 +1128,13 @@
                 <textarea name="message" rows="4" placeholder="Nachricht" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required=""></textarea>
                 <button type="submit" class="w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Nachricht senden</button>
             </form>
-            <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Gesendet"></div>
+            <div id="contactSentMessage" data-form-status="" data-success-label="Gesendet" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm"></div>
         </div>
     </div>
     <script src="/lunch-picker-food-additions.js"></script>
     <script src="/lunch-picker-photo-map.js"></script>
     <script src="/lunch-picker-foods.js"></script>
-    <script src="/generators.js"></script>
+    <script src="/generators.js?v=1.2.423"></script>
     <script>window.SFT_TOOL_PAGE = { cardId: "lunchPickerCard", slug: "lunch-picker", title: "Mittagessen-Auswahl" };</script>
     <script>window.SFT_LOCALE="de";window.SFT_LOCALE_URLS={"en":"/lunch-picker/","ko":"/ko/lunch-picker/","ja":"/ja/lunch-picker/","zh-CN":"/zh-CN/lunch-picker/","es":"/es/lunch-picker/","de":"/de/lunch-picker/","fr":"/fr/lunch-picker/","pt-BR":"/pt-BR/lunch-picker/"};window.SFT_I18N={"addStar":"Zu Favoriten hinzufügen","removeStar":"Aus Favoriten entfernen"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
     <script type="text/javascript">

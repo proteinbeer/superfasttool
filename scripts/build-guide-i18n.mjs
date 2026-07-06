@@ -8,7 +8,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const baseUrl = 'https://superfasttool.com';
-const version = 'v1.2.408';
+const version = 'v1.2.425';
 const catalogPath = path.join(here, 'guide-i18n.catalog.json');
 const localeDefinitions = {
   en: { label: 'English', target: 'en' },
@@ -177,7 +177,7 @@ catalog.version = 1;
 
 for (const code of localeCodes.filter(item => item !== 'en')) {
   const missing = allStrings.filter(value => !catalog.translations[code]?.[value]);
-  if (missing.length) throw new Error(`${code} is missing ${missing.length} static guide translations.`);
+  if (missing.length) throw new Error(`${code} is missing ${missing.length} static guide translations:\n${missing.join('\n')}`);
 }
 
 for (const record of guideRecords) {
