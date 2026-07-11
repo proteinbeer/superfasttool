@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const version = 'v1.2.442';
+const version = 'v1.2.443';
 const today = '2026-07-03';
 
 const posts = [
