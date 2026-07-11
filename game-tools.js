@@ -12,6 +12,97 @@ function initGameTools() {
         if (element) element.addEventListener(event, handler);
     };
     const cardLine = text => `<div class="rounded-xl border border-gray-200 bg-zinc-50 px-3 py-2">${text}</div>`;
+    let rewardAudioContext = null;
+    const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+    function playRewardSound(strong = false) {
+        try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return;
+            rewardAudioContext ||= new AudioContextClass();
+            const now = rewardAudioContext.currentTime;
+            [392, 523.25, strong ? 783.99 : 659.25].forEach((frequency, index) => {
+                const oscillator = rewardAudioContext.createOscillator();
+                const gain = rewardAudioContext.createGain();
+                oscillator.type = index === 2 ? 'triangle' : 'square';
+                oscillator.frequency.setValueAtTime(frequency, now + index * 0.055);
+                gain.gain.setValueAtTime(0.0001, now + index * 0.055);
+                gain.gain.exponentialRampToValueAtTime(strong ? 0.14 : 0.08, now + index * 0.055 + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.055 + 0.16);
+                oscillator.connect(gain).connect(rewardAudioContext.destination);
+                oscillator.start(now + index * 0.055);
+                oscillator.stop(now + index * 0.055 + 0.18);
+            });
+        } catch {}
+    }
+    function ensureRewardFxStyles() {
+        if (document.getElementById('rewardFxStyles')) return;
+        const style = document.createElement('style');
+        style.id = 'rewardFxStyles';
+        style.textContent = `
+            .lunch-fireworks { position: fixed; inset: 0; z-index: 250; pointer-events: none; overflow: hidden; }
+            .lunch-confetti { position: absolute; left: var(--confetti-origin); bottom: -28px; width: var(--confetti-width); height: var(--confetti-height); border-radius: var(--confetti-radius); background: var(--confetti-color); opacity: 0; transform: translate(-50%, 0) scale(0.45) rotate(0deg); will-change: transform, opacity; animation: lunchConfettiBurst 1.35s cubic-bezier(.12,.72,.16,1) var(--confetti-delay) forwards; }
+            .reward-roll-card { grid-column: 1 / -1; min-height: 4.4rem; display: flex; align-items: center; justify-content: center; text-align: center; perspective: 420px; }
+            .reward-roll-dice { position: relative; width: 2.9rem; height: 2.9rem; transform-style: preserve-3d; animation: rewardDiceRoll3d 0.72s cubic-bezier(.3,.72,.18,1) infinite; }
+            .reward-roll-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 0.62rem; border: 1px solid rgba(24,24,27,0.22); background: linear-gradient(145deg, #ffffff, #f4f4f5); box-shadow: inset -8px -8px 14px rgba(24,24,27,0.1), inset 5px 5px 10px rgba(255,255,255,0.92), 0 10px 18px rgba(24,24,27,0.12); color: #18181b; font-size: 1.25rem; font-weight: 900; line-height: 1; backface-visibility: hidden; }
+            .reward-roll-face:nth-child(1) { transform: translateZ(1.45rem); }
+            .reward-roll-face:nth-child(2) { transform: rotateY(90deg) translateZ(1.45rem); }
+            .reward-roll-face:nth-child(3) { transform: rotateY(180deg) translateZ(1.45rem); }
+            .reward-roll-face:nth-child(4) { transform: rotateY(-90deg) translateZ(1.45rem); }
+            .reward-roll-face:nth-child(5) { transform: rotateX(90deg) translateZ(1.45rem); }
+            .reward-roll-face:nth-child(6) { transform: rotateX(-90deg) translateZ(1.45rem); }
+            @keyframes rewardDiceRoll3d { 0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0); } 35% { transform: rotateX(120deg) rotateY(170deg) rotateZ(24deg) translateY(-4px); } 70% { transform: rotateX(245deg) rotateY(300deg) rotateZ(-18deg) translateY(1px); } 100% { transform: rotateX(360deg) rotateY(540deg) rotateZ(0deg) translateY(0); } }
+            @keyframes lunchConfettiBurst { 0% { opacity: 0; transform: translate(-50%, 0) scale(0.45) rotate(0deg); } 8% { opacity: 1; } 72% { opacity: 1; transform: translate(calc(-50% + var(--confetti-x)), var(--confetti-y)) scale(1) rotate(var(--confetti-rotate)); } 100% { opacity: 0; transform: translate(calc(-50% + var(--confetti-fall-x)), var(--confetti-fall-y)) scale(0.92) rotate(var(--confetti-end-rotate)); } }
+        `;
+        document.head.appendChild(style);
+    }
+    function burstRewardConfetti(strong = false) {
+        if (!strong) return;
+        ensureRewardFxStyles();
+        const layer = document.createElement('div');
+        layer.className = 'lunch-fireworks';
+        document.body.appendChild(layer);
+        const colors = ['#f97316', '#facc15', '#ef4444', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#ffffff'];
+        const count = 72;
+        const fragment = document.createDocumentFragment();
+        for (let index = 0; index < count; index += 1) {
+            const particle = document.createElement('span');
+            const origin = 15 + Math.random() * 70;
+            const horizontal = (Math.random() - 0.5) * window.innerWidth * 0.9;
+            const vertical = -(window.innerHeight * (0.35 + Math.random() * 0.55));
+            const rotation = Math.round((Math.random() * 900) - 450);
+            particle.className = 'lunch-confetti';
+            particle.style.setProperty('--confetti-color', colors[index % colors.length]);
+            particle.style.setProperty('--confetti-origin', `${origin}%`);
+            particle.style.setProperty('--confetti-x', `${horizontal}px`);
+            particle.style.setProperty('--confetti-y', `${vertical}px`);
+            particle.style.setProperty('--confetti-fall-x', `${horizontal + ((Math.random() - 0.5) * 28)}px`);
+            particle.style.setProperty('--confetti-fall-y', `${vertical + 16 + (Math.random() * 34)}px`);
+            particle.style.setProperty('--confetti-rotate', `${rotation}deg`);
+            particle.style.setProperty('--confetti-end-rotate', `${rotation + 260 + Math.round(Math.random() * 420)}deg`);
+            particle.style.setProperty('--confetti-width', `${8 + Math.round(Math.random() * 8)}px`);
+            particle.style.setProperty('--confetti-height', `${12 + Math.round(Math.random() * 13)}px`);
+            particle.style.setProperty('--confetti-radius', index % 3 === 0 ? '999px' : '2px');
+            particle.style.setProperty('--confetti-delay', `${Math.round(Math.random() * 130)}ms`);
+            fragment.appendChild(particle);
+        }
+        layer.appendChild(fragment);
+        window.setTimeout(() => layer.remove(), 1750);
+    }
+    function rewardRollCard() {
+        ensureRewardFxStyles();
+        return '<div class="reward-roll-card rounded-xl border border-orange-200 bg-orange-50 px-3 py-3 shadow-sm"><span class="reward-roll-dice" aria-hidden="true"><span class="reward-roll-face">1</span><span class="reward-roll-face">2</span><span class="reward-roll-face">3</span><span class="reward-roll-face">4</span><span class="reward-roll-face">5</span><span class="reward-roll-face">6</span></span></div>';
+    }
+    async function animateReward(outputId, finalHtml, rollingLabels, strong = false) {
+        const output = $(outputId);
+        if (!output) return;
+        for (let index = 0; index < 12; index += 1) {
+            output.innerHTML = rewardRollCard();
+            await wait(45 + index * 6);
+        }
+        output.innerHTML = finalHtml;
+        playRewardSound(strong);
+        burstRewardConfetti(strong);
+    }
 
     const rarityTheme = {
         normal: {
@@ -102,9 +193,11 @@ function initGameTools() {
         return { rarity, name: pick(heroes[rarity]) };
     }
 
-    function renderGachaResults(results) {
+    async function renderGachaResults(results) {
         set('gachaPity', `${gachaPity} / 90`);
-        set('gachaResults', results.map(item => rarityCard(item.rarity, item.name, 'Hero summon')).join(''));
+        const finalHtml = results.map(item => rarityCard(item.rarity, item.name, 'Hero summon')).join('');
+        const strong = results.some(item => item.rarity === 'legendary' || item.rarity === 'mythic');
+        await animateReward('gachaResults', finalHtml, Object.values(heroes).flat(), strong);
     }
 
     bind('gachaPullOne', 'click', () => renderGachaResults([gachaPull(false)]));
@@ -123,10 +216,17 @@ function initGameTools() {
 
     function lootDrop() {
         const rarity = weightedRarity(probabilityWeights('loot', defaultLootWeights), false);
-        return rarityCard(rarity, pick(lootByRarity[rarity]), 'Loot box reward');
+        const name = pick(lootByRarity[rarity]);
+        return { rarity, name, html: rarityCard(rarity, name, 'Loot box reward') };
     }
-    bind('lootOpenOne', 'click', () => set('lootBoxResults', lootDrop()));
-    bind('lootOpenTen', 'click', () => set('lootBoxResults', Array.from({ length: 10 }, lootDrop).join('')));
+    bind('lootOpenOne', 'click', () => {
+        const reward = lootDrop();
+        animateReward('lootBoxResults', reward.html, Object.values(lootByRarity).flat(), reward.rarity === 'legendary' || reward.rarity === 'mythic');
+    });
+    bind('lootOpenTen', 'click', () => {
+        const rewards = Array.from({ length: 10 }, lootDrop);
+        animateReward('lootBoxResults', rewards.map(item => item.html).join(''), Object.values(lootByRarity).flat(), rewards.some(item => item.rarity === 'legendary' || item.rarity === 'mythic'));
+    });
 
     bind('rollDice', 'click', () => {
         const sides = clamp($('diceSides').value, 2, 100);

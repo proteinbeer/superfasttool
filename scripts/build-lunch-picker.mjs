@@ -1,11 +1,11 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
 const slug = 'lunch-picker';
 const title = 'Lunch Picker';
 const description = "Spin a lunch slot machine, customize the menu list, exclude unavailable choices, and let chance choose today's meal.";
-const version = 'v1.2.429';
+const version = 'v1.2.442';
 
 function replaceRequired(source, pattern, replacement, label) {
   pattern.lastIndex = 0;
@@ -58,7 +58,7 @@ function buildToolPage() {
   output = output.replace('<div id="toolBackHome" class="hidden mt-8 flex justify-center">', '<div id="toolBackHome" class="mt-8 flex justify-center">');
   const information = `<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${title}</h2><div class="mb-4 text-center"><a href="/guides/${slug}/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>Guide</a></div><p>Lunch Picker is a browser-based meal decision tool with a slot-machine-style reveal. Choose a preset menu or enter your own lunch options, then spin to select one available meal at random.</p><p class="mt-3">Use the exclusion list for sold-out restaurants, dietary conflicts, meals you already had, or anything that is unavailable today. The recent-winner option temporarily favors variety by avoiding the last few results whenever another choice remains.</p><p class="mt-3">Your custom menu, exclusions, preference, and recent results are stored locally in this browser. The tool does not send the lunch list to a Super Fast Tool server, and clearing browser storage removes the saved choices.</p><p class="mt-3">The result is a casual suggestion rather than nutrition or allergy advice. Check ingredients, dietary needs, price, restaurant hours, and availability before ordering or preparing a meal.</p></section>`;
   output = replaceRequired(output, /<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">[\s\S]*?<\/section>/, information, 'tool information');
-  output = replaceRequired(output, /\s*<script src="\.\/stock-crypto-avg-cost-calculator\.js"><\/script>[\s\S]*?<script src="\.\/game-tools\.js"><\/script>/, '\n    <script src="/lunch-picker-food-additions.js"></script>\n    <script src="/lunch-picker-photo-map.js"></script>\n    <script src="/lunch-picker-foods.js"></script>\n    <script src="/generators.js?v=1.2.424"></script>', 'tool scripts');
+  output = replaceRequired(output, /\s*<script src="\.\/stock-crypto-avg-cost-calculator\.js"><\/script>[\s\S]*?<script src="\.\/game-tools\.js"><\/script>/, '\n    <script src="/lunch-picker-food-additions.js"></script>\n    <script src="/lunch-picker-photo-map.js"></script>\n    <script src="/lunch-picker-foods.js"></script>\n    <script src="/generators.js?v=1.2.440"></script>', 'tool scripts');
   output = replaceRequired(output, /(<script type="text\/javascript">)/, `<script>window.SFT_TOOL_PAGE = { cardId: "lunchPickerCard", slug: "${slug}", title: "${title}" };</script>\n    $1`, 'tool page config');
   output = output.replace(/<script id="sftHubLocaleScript">[\s\S]*?<\/script>/, '<script>window.SFT_LOCALE="en";window.SFT_LOCALE_URLS={"en":"/lunch-picker/"};window.SFT_I18N={"addStar":"Add to Starred","removeStar":"Remove from Starred"};</script>');
   output = output.replace(/v1\.2\.\d+/g, version);

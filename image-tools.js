@@ -34,8 +34,9 @@ function initImageTools() {
         const file = getSelectedFile('imageResizerInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
-        const width = clampNumber(document.getElementById('resizeWidth').value, 1, 5000, 800);
-        document.getElementById('resizeWidth').value = width;
+        const widthInput = document.getElementById('resizeWidth');
+        const width = clampNumber(widthInput?.value, 1, 5000, 800);
+        if (widthInput) widthInput.value = width;
         const height = Math.max(1, Math.round(width * (image.naturalHeight / image.naturalWidth)));
         const canvas = drawImageToCanvas(image, width, height, '#ffffff');
         await downloadCanvas(canvas, buildFileName(file.name, 'resized', 'jpg'), 'image/jpeg', 0.92);
@@ -45,7 +46,7 @@ function initImageTools() {
         const file = getSelectedFile('imageCompressorInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
-        const quality = clampNumber(document.getElementById('compressQuality').value, 10, 100, 80) / 100;
+        const quality = clampNumber(document.getElementById('compressQuality')?.value, 10, 100, 80) / 100;
         const canvas = drawImageToCanvas(image, image.naturalWidth, image.naturalHeight, '#ffffff');
         await downloadCanvas(canvas, buildFileName(file.name, 'compressed', 'jpg'), 'image/jpeg', quality);
     });
@@ -95,7 +96,7 @@ function initImageTools() {
         const file = getSelectedFile('imageFilterInput');
         if (!file) return;
         const image = await loadImageFromFile(file);
-        const canvas = renderFilteredCanvas(image, document.getElementById('imageFilterMode').value);
+        const canvas = renderFilteredCanvas(image, document.getElementById('imageFilterMode')?.value || 'none');
         await downloadCanvas(canvas, buildFileName(file.name, 'filtered', 'jpg'), 'image/jpeg', 0.92);
     });
 }
@@ -127,6 +128,7 @@ function bindImageAction(buttonId, action) {
 function setupImagePreview(inputId, previewId, onLoad) {
     const input = document.getElementById(inputId);
     const preview = document.getElementById(previewId);
+    if (!input || !preview) return;
     input.addEventListener('change', () => {
         const file = getSelectedFile(inputId);
         if (!file) {
@@ -152,6 +154,7 @@ function setupImageCropper() {
     const workspace = document.getElementById('imageCropperWorkspace');
     const canvas = document.getElementById('imageCropperCanvas');
     const selection = document.getElementById('cropSelection');
+    if (!input || !workspace || !canvas || !selection) return;
     const handles = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
     let dragState = null;
 
@@ -230,6 +233,7 @@ function setupRotateFlipTool() {
     const workspace = document.getElementById('imageRotateFlipWorkspace');
     const canvas = document.getElementById('imageRotateFlipCanvas');
     const buttons = Array.from(document.querySelectorAll('#imageTransformButtons .transform-btn'));
+    if (!input || !workspace || !canvas || buttons.length === 0) return;
 
     buttons.forEach(button => {
         button.addEventListener('click', async () => {
@@ -259,6 +263,7 @@ function setupFilterPreview() {
     const workspace = document.getElementById('imageFilterWorkspace');
     const canvas = document.getElementById('imageFilterCanvas');
     const mode = document.getElementById('imageFilterMode');
+    if (!input || !workspace || !canvas || !mode) return;
     const update = async () => {
         const file = getSelectedFile('imageFilterInput');
         if (!file) {
@@ -278,6 +283,8 @@ function setupFilterPreview() {
 function setupImageToBase64() {
     const input = document.getElementById('imageToBase64Input');
     const output = document.getElementById('imageBase64Output');
+    const downloadButton = document.getElementById('downloadImageBase64');
+    if (!input || !output || !downloadButton) return;
     input.addEventListener('change', () => {
         const file = getSelectedFile('imageToBase64Input');
         output.value = '';
@@ -289,7 +296,7 @@ function setupImageToBase64() {
         };
         reader.readAsDataURL(file);
     });
-    document.getElementById('downloadImageBase64').addEventListener('click', () => {
+    downloadButton.addEventListener('click', () => {
         if (!output.value.trim()) return;
         downloadText(output.value.trim(), 'image-base64.txt');
     });
@@ -298,6 +305,8 @@ function setupImageToBase64() {
 function setupBase64ToImage() {
     const input = document.getElementById('base64ImageInput');
     const preview = document.getElementById('base64ImagePreview');
+    const downloadButton = document.getElementById('downloadBase64Image');
+    if (!input || !preview || !downloadButton) return;
     input.addEventListener('input', () => {
         const value = normalizeBase64Image(input.value);
         if (!value) {
@@ -309,7 +318,7 @@ function setupBase64ToImage() {
         preview.classList.remove('hidden');
         resizeCardFromElement(input);
     });
-    document.getElementById('downloadBase64Image').addEventListener('click', () => {
+    downloadButton.addEventListener('click', () => {
         const value = normalizeBase64Image(input.value);
         if (!value) return;
         const extension = getBase64ImageExtension(value);
@@ -324,6 +333,8 @@ function setupBase64ToImage() {
 
 function setupImageMetadataViewer() {
     const input = document.getElementById('imageMetadataInput');
+    const downloadButton = document.getElementById('downloadImageMetadata');
+    if (!input || !downloadButton) return;
     let metadataText = '';
 
     input.addEventListener('change', async () => {
@@ -344,7 +355,7 @@ function setupImageMetadataViewer() {
         resizeCardFromElement(input);
     });
 
-    document.getElementById('downloadImageMetadata').addEventListener('click', () => {
+    downloadButton.addEventListener('click', () => {
         if (!metadataText) return;
         downloadText(metadataText, 'image-metadata.txt');
     });
@@ -356,6 +367,7 @@ function setupImageColorPicker() {
     const canvas = document.getElementById('imageColorCanvas');
     const swatch = document.getElementById('pickedColorSwatch');
     const value = document.getElementById('pickedColorValue');
+    if (!input || !workspace || !canvas || !swatch || !value) return;
 
     input.addEventListener('change', async () => {
         const file = getSelectedFile('imageColorPickerInput');
@@ -403,6 +415,7 @@ function setupImageColorPicker() {
 function setupQualitySlider(inputId, valueId) {
     const input = document.getElementById(inputId);
     const value = document.getElementById(valueId);
+    if (!input || !value) return;
     const update = () => {
         value.innerText = `${clampNumber(input.value, 10, 100, 80)}%`;
     };
@@ -411,7 +424,7 @@ function setupQualitySlider(inputId, valueId) {
 }
 
 function getSelectedFile(inputId) {
-    return document.getElementById(inputId).files[0] || null;
+    return document.getElementById(inputId)?.files?.[0] || null;
 }
 
 function loadImageFromFile(file) {

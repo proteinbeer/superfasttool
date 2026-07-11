@@ -48,6 +48,7 @@ function initVideoTools() {
 
     bindVideoTrimWaveform();
     bindVideoGifWaveform();
+    bindVideoGifPreviewLoop();
 
     bindVideoAction('compressVideo', compressVideoFile);
     bindVideoAction('convertVideoFormat', convertVideoFormat, () => {
@@ -263,6 +264,7 @@ async function setupVideoGifWaveform(file, duration) {
         videoGifState.samples = null;
     }
     requestAnimationFrame(drawVideoGifWaveform);
+    syncVideoGifPreview(true);
 }
 
 function resetVideoGifWaveform() {
@@ -275,6 +277,7 @@ function resetVideoGifWaveform() {
         selection.style.width = '';
     }
     setVideoGifLabels(0, 0);
+    syncVideoGifPreview(false, true);
 }
 
 function drawVideoGifWaveform() {
@@ -331,6 +334,7 @@ function updateVideoGifSelection() {
     selection.classList.remove('hidden');
     setVideoGifLabels(videoGifState.start, videoGifState.end);
     updateVideoGifEstimate();
+    syncVideoGifPreview(videoGifState.dragging);
 }
 
 function setVideoGifLabels(start, end) {
@@ -338,6 +342,35 @@ function setVideoGifLabels(start, end) {
     const endLabel = document.getElementById('videoGifEndLabel');
     if (startLabel) startLabel.textContent = `${start.toFixed(2)}s`;
     if (endLabel) endLabel.textContent = `${end.toFixed(2)}s`;
+}
+
+function syncVideoGifPreview(seekToStart = false, reset = false) {
+    const preview = document.getElementById('videoGifPreview');
+    if (!preview) return;
+    if (reset || !videoGifState.duration) {
+        preview.dataset.previewStart = '0';
+        preview.dataset.previewEnd = '0';
+        return;
+    }
+    const start = Math.max(0, Math.min(videoGifState.start, videoGifState.duration));
+    const end = Math.max(start + 0.05, Math.min(videoGifState.end, videoGifState.duration));
+    preview.dataset.previewStart = String(start);
+    preview.dataset.previewEnd = String(end);
+    if (seekToStart && Number.isFinite(preview.duration)) {
+        preview.currentTime = start;
+    }
+}
+
+function bindVideoGifPreviewLoop() {
+    const preview = document.getElementById('videoGifPreview');
+    if (!preview) return;
+    preview.addEventListener('play', () => syncVideoGifPreview(true));
+    preview.addEventListener('timeupdate', () => {
+        const start = Number(preview.dataset.previewStart || 0);
+        const end = Number(preview.dataset.previewEnd || 0);
+        if (!end || !Number.isFinite(preview.currentTime)) return;
+        if (preview.currentTime < start || preview.currentTime >= end) preview.currentTime = start;
+    });
 }
 
 function updateVideoGifEstimate() {

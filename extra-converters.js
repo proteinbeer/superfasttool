@@ -17,8 +17,9 @@ function initExtraConverters() {
 }
 
 function bindConverter(ids, update) {
-    ids.forEach(id => {
-        const element = document.getElementById(id);
+    const elements = ids.map(id => document.getElementById(id));
+    if (elements.some(element => !element)) return;
+    elements.forEach(element => {
         element.addEventListener('input', update);
         element.addEventListener('change', update);
     });

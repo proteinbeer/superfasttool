@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="de"><head>
+﻿<!DOCTYPE html><html lang="de"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frequency Converter | Super Fast Tool</title>
@@ -19,7 +19,8 @@
     <!-- SFT_I18N_ALTERNATES_END -->
     <script src="/locale-routing.js"></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4400508127713059" crossorigin="anonymous"></script>
+    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7394313826787209" crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-7394313826787209">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://superfasttool.com/de/frequency-converter/">
     <meta property="og:title" content="Frequency Converter | Super Fast Tool">
@@ -188,6 +189,7 @@
         }
         .rarity-legendary { animation: legendaryGlow 1.4s ease-in-out infinite; }
         .rarity-mythic { animation: mythicGlow 1.1s ease-in-out infinite; }
+        .memory-card { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
         .memory-card.is-matched { animation: memoryMatchGlow 1.05s ease-in-out infinite; }
         .memory-card.is-missed { animation: memoryMissGlow 0.42s ease-in-out; }
         .memory-timer-box.is-low-time { animation: memoryTimerWarning 0.55s ease-in-out infinite; }
@@ -632,70 +634,26 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
     <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 relative z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="site-brand-link text-xl font-black tracking-tight text-zinc-900 flex items-center gap-2 min-w-0">
-                <span class="logo-bolt">⚡</span> <span class="logo-text" aria-label="Super Fast Tool"><span class="logo-word" aria-hidden="true"><span class="logo-letter">S</span><span class="logo-letter">u</span><span class="logo-letter">p</span><span class="logo-letter">e</span><span class="logo-letter">r</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">F</span><span class="logo-letter">a</span><span class="logo-letter">s</span><span class="logo-letter">t</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">T</span><span class="logo-letter">o</span><span class="logo-letter">o</span><span class="logo-letter">l</span></span></span>
-                <span class="logo-sub-name" aria-label="Frequency Converter"><span class="logo-sub-letter">-</span><span class="logo-sub-letter">&nbsp;</span><span class="logo-sub-letter">F</span><span class="logo-sub-letter">r</span><span class="logo-sub-letter">e</span><span class="logo-sub-letter">q</span><span class="logo-sub-letter">u</span><span class="logo-sub-letter">e</span><span class="logo-sub-letter">n</span><span class="logo-sub-letter">c</span><span class="logo-sub-letter">y</span><span class="logo-sub-letter">&nbsp;</span><span class="logo-sub-letter">C</span><span class="logo-sub-letter">o</span><span class="logo-sub-letter">n</span><span class="logo-sub-letter">v</span><span class="logo-sub-letter">e</span><span class="logo-sub-letter">r</span><span class="logo-sub-letter">t</span><span class="logo-sub-letter">e</span><span class="logo-sub-letter">r</span></span></a>
+                <span class="logo-bolt">&#9889;</span> <span class="logo-text" aria-label="Super Fast Tool"><span class="logo-word" aria-hidden="true"><span class="logo-letter">S</span><span class="logo-letter">u</span><span class="logo-letter">p</span><span class="logo-letter">e</span><span class="logo-letter">r</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">F</span><span class="logo-letter">a</span><span class="logo-letter">s</span><span class="logo-letter">t</span></span><span class="logo-word" aria-hidden="true"><span class="logo-letter">T</span><span class="logo-letter">o</span><span class="logo-letter">o</span><span class="logo-letter">l</span></span></span>
+                <span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span>
+            </a>
 
-            <div class="language-menu relative shrink-0" data-sft-language-control=""><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>Deutsch</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>English</span><span class="text-[10px] text-zinc-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>한국어</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>日本語</span><span class="text-[10px] text-zinc-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>简体中文</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Español</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>Deutsch</span><span class="text-[10px] text-orange-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Français</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Português (Brasil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div></div>
+            <div class="language-menu relative shrink-0" data-sft-language-control=""><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>Deutsch</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl"><button type="button" role="menuitem" data-locale="en" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>English</span><span class="text-[10px] text-zinc-300">EN</span></button><button type="button" role="menuitem" data-locale="ko" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Korean</span><span class="text-[10px] text-zinc-300">KO</span></button><button type="button" role="menuitem" data-locale="ja" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Japanese</span><span class="text-[10px] text-zinc-300">JA</span></button><button type="button" role="menuitem" data-locale="zh-CN" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Simplified Chinese</span><span class="text-[10px] text-zinc-300">ZH-CN</span></button><button type="button" role="menuitem" data-locale="es" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Spanish</span><span class="text-[10px] text-zinc-300">ES</span></button><button type="button" role="menuitem" data-locale="de" aria-current="true" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-zinc-900 text-white"><span>Deutsch</span><span class="text-[10px] text-orange-300">DE</span></button><button type="button" role="menuitem" data-locale="fr" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>French</span><span class="text-[10px] text-zinc-300">FR</span></button><button type="button" role="menuitem" data-locale="pt-BR" aria-current="false" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors bg-white text-zinc-700 hover:bg-zinc-100"><span>Portuguese (Brazil)</span><span class="text-[10px] text-zinc-300">PT-BR</span></button></div></div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 py-16 flex-1 w-full relative">
         <div class="bg-radial-glow absolute inset-0 -z-10 pointer-events-none"></div>
 
-
-
-
-
         <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative"><div id="frequencyConverterCard" data-category="converter" data-tool-slug="frequency-converter" class="expandable-card expand-transition relative z-10 block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-zinc-400 backdrop-blur-xs flex-col overflow-hidden w-full h-full max-w-lg mx-auto md:mx-0 tool-page-panel is-expanded active-panel shadow-2xl border-zinc-400 tool-panel">
-                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Konverter schließen">×</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-[12px] font-black mb-4">Hz</div><h1 id="tool52Title" class="text-lg font-bold text-zinc-900 mb-1">Frequency Converter</h1><p id="tool52Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Konvertieren Sie Hz, kHz, MHz und GHz.</p></div>
-                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6 opacity-100 translate-y-0"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Wert</label><input type="number" id="frequencyValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">Von</label><select id="frequencyFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz">kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">An</label><select id="frequencyTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz" selected="">kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Konvertiert</span><span id="valFrequencyConverted" class="text-sm font-black text-zinc-900">—</span></div></div></div>
+                <div class="card-content p-6 w-full"><button class="close-expanded-btn expand-close absolute top-5 right-5 text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Konverter schlieÃŸen">&times;</button><div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-[12px] font-black mb-4">Hz</div><h1 id="tool52Title" class="text-lg font-bold text-zinc-900 mb-1">Frequency Converter</h1><p id="tool52Desc" class="card-description text-sm text-zinc-500 overflow-hidden">Konvertieren Sie Hz, kHz, MHz und GHz.</p></div>
+                <div class="calculator-content px-6 pb-5 flex flex-col w-full transition-all duration-150 ease-out space-y-6 opacity-100 translate-y-0"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-zinc-500 mb-1">Wert</label><input type="number" id="frequencyValue" placeholder="0" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">Von</label><select id="frequencyFrom" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz">kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div><div><label class="block text-xs font-medium text-zinc-500 mb-1">An</label><select id="frequencyTo" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"><option value="hz">Hz</option><option value="khz" selected="">kHz</option><option value="mhz">MHz</option><option value="ghz">GHz</option></select></div></div><div class="bg-zinc-50 border border-gray-200/60 rounded-2xl p-4 shadow-inner"><div class="flex justify-between items-center"><span class="text-xs text-zinc-500 font-medium">Konvertiert</span><span id="valFrequencyConverted" class="text-sm font-black text-zinc-900">&mdash;</span></div></div></div>
             </div></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <div id="toolBackHome" class="mt-8 flex justify-center">
             <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
-                <span aria-hidden="true">⬅️</span>
-                Zurück
+                <span aria-hidden="true">&#11013;&#65039;</span>
+                ZurÃ¼ck
             </a>
         </div>
 
@@ -705,28 +663,28 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="aboutPanel">
-                    <span aria-hidden="true">🧭</span>
-                    <span id="footerAbout">Über</span>
+                    <span aria-hidden="true">&#129517;</span>
+                    <span id="footerAbout">Ãœber</span>
                 </button>
                 <a href="/privacy.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer hover:border-zinc-400">
-                    <span aria-hidden="true">🔒</span>
+                    <span aria-hidden="true">&#128274;</span>
                     <span id="footerPolicy">Richtlinie</span>
                 </a>
                 <button class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" data-info-panel="contactPanel">
-                    <span aria-hidden="true">✉</span>
+                    <span aria-hidden="true">&#9993;</span>
                     <span id="footerContact">Kontakt</span>
                 </button>
             </div><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide mb-8">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Frequency Converter</h2>
-                <div class="mb-4 text-center"><a href="/de/guides/frequency-converter/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>-Leitfaden</a></div>
-                <p>Frequency Converter ist ein fokussiertes browserbasiertes Konvertierungstool, das für die schnelle tägliche Arbeit entwickelt wurde. Konvertieren Sie Hz, kHz, MHz und GHz. Es ist so konzipiert, dass es einfach bleibt: Öffnen Sie die Seite, geben Sie die benötigten Werte ein oder wählen Sie sie aus und lesen Sie das Ergebnis, ohne ein Konto zu erstellen, Software zu installieren oder sich durch ein kompliziertes Dashboard zu bewegen.</p>
-                <p class="mt-3">Verwenden Sie den Frequenzumrichter, wenn Sie beim Schreiben, Entwerfen, Codieren, bei der Dateivorbereitung, beim Lernen, Planen, Testen oder bei routinemäßigen Online-Aufgaben eine schnelle Antwort benötigen. Auf der Seite „Frequenzwandler“ bleiben die Steuerelemente nah am Ergebnis, sodass Sie Eingaben anpassen und sofort sehen können, welche Änderungen sich ergeben. Dies macht es nützlich, um kleine Details zu überprüfen, Formate zu vergleichen, Inhalte vorzubereiten, wiederholte Arbeiten zu bereinigen oder eine Idee schnell zu validieren, bevor sie woanders verwendet wird.</p>
-                <p class="mt-3">Um den Frequenzumrichter zu verwenden, beginnen Sie mit den sichtbaren Eingabefeldern, Schiebereglern, Upload-Steuerelementen oder Schaltflächen im Werkzeugfenster. Ändern Sie jeweils einen Wert, wenn Sie verstehen möchten, wie das Ergebnis zustande kommt, oder fügen Sie Ihre vorbereiteten Inhalte direkt ein, wenn Sie bereits wissen, was Sie benötigen. Wenn Frequency Converter eine Download-Schaltfläche anbietet, überprüfen Sie zunächst die Ausgabe und speichern Sie dann die generierte Datei auf Ihrem Gerät.</p>
-                <p class="mt-3">Die meisten Frequenzumrichter-Verarbeitungen erfolgen direkt in Ihrem Browser. Das bedeutet, dass sich das Tool bei normaler Verwendung schnell und privat anfühlen soll. Überprüfen Sie dennoch jedes Ergebnis, bevor Sie es für professionelle oder produktive Arbeiten verwenden, da Browserunterschiede, Gerätespeicher, Codierungsunterstützung, Dateimetadaten, nicht unterstützte Formate und Benutzereingaben die endgültige Ausgabe beeinflussen können.</p>
+                <div class="mb-4 text-center"><a href="/de/guides/frequency-converter/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>-Leitfaden</a></div>
+                <p>Frequency Converter ist ein fokussiertes browserbasiertes Konvertierungstool, das fÃ¼r die schnelle tÃ¤gliche Arbeit entwickelt wurde. Konvertieren Sie Hz, kHz, MHz und GHz. Es ist so konzipiert, dass es einfach bleibt: Ã–ffnen Sie die Seite, geben Sie die benÃ¶tigten Werte ein oder wÃ¤hlen Sie sie aus und lesen Sie das Ergebnis, ohne ein Konto zu erstellen, Software zu installieren oder sich durch ein kompliziertes Dashboard zu bewegen.</p>
+                <p class="mt-3">Verwenden Sie den Frequenzumrichter, wenn Sie beim Schreiben, Entwerfen, Codieren, bei der Dateivorbereitung, beim Lernen, Planen, Testen oder bei routinemÃ¤ÃŸigen Online-Aufgaben eine schnelle Antwort benÃ¶tigen. Auf der Seite â€žFrequenzwandler&ldquo; bleiben die Steuerelemente nah am Ergebnis, sodass Sie Eingaben anpassen und sofort sehen kÃ¶nnen, welche Ã„nderungen sich ergeben. Dies macht es nÃ¼tzlich, um kleine Details zu Ã¼berprÃ¼fen, Formate zu vergleichen, Inhalte vorzubereiten, wiederholte Arbeiten zu bereinigen oder eine Idee schnell zu validieren, bevor sie woanders verwendet wird.</p>
+                <p class="mt-3">Um den Frequenzumrichter zu verwenden, beginnen Sie mit den sichtbaren Eingabefeldern, Schiebereglern, Upload-Steuerelementen oder SchaltflÃ¤chen im Werkzeugfenster. Ã„ndern Sie jeweils einen Wert, wenn Sie verstehen mÃ¶chten, wie das Ergebnis zustande kommt, oder fÃ¼gen Sie Ihre vorbereiteten Inhalte direkt ein, wenn Sie bereits wissen, was Sie benÃ¶tigen. Wenn Frequency Converter eine Download-SchaltflÃ¤che anbietet, Ã¼berprÃ¼fen Sie zunÃ¤chst die Ausgabe und speichern Sie dann die generierte Datei auf Ihrem GerÃ¤t.</p>
+                <p class="mt-3">Die meisten Frequenzumrichter-Verarbeitungen erfolgen direkt in Ihrem Browser. Das bedeutet, dass sich das Tool bei normaler Verwendung schnell und privat anfÃ¼hlen soll. ÃœberprÃ¼fen Sie dennoch jedes Ergebnis, bevor Sie es fÃ¼r professionelle oder produktive Arbeiten verwenden, da Browserunterschiede, GerÃ¤tespeicher, CodierungsunterstÃ¼tzung, Dateimetadaten, nicht unterstÃ¼tzte Formate und Benutzereingaben die endgÃ¼ltige Ausgabe beeinflussen kÃ¶nnen.</p>
             </section>
-            <p>© 2026 Super Fast Tool. Alle Rechte vorbehalten.</p>
-            <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstützten Dateivorgänge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Übersetzungen oder Dienste von Drittanbietern, können begrenzte technische oder übermittelte Informationen verarbeiten.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.429</p>
+            <p>&copy; 2026 Super Fast Tool. Alle Rechte vorbehalten.</p>
+            <p id="footerDesc" class="mt-2 text-xs">Die meisten Tool-Eingaben und unterstÃ¼tzten DateivorgÃ¤nge werden lokal in deinem Browser verarbeitet. Einige Funktionen, etwa Kontaktformulare, Hosting, Werbung, Analysen, Ãœbersetzungen oder Dienste von Drittanbietern, kÃ¶nnen begrenzte technische oder Ã¼bermittelte Informationen verarbeiten.</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.442</p>
 
         </div>
     </footer>
@@ -735,38 +693,38 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         <div class="info-panel-content p-6 text-left">
             <div class="flex items-start justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
                 <div>
-                    <div id="infoPanelIcon" class="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center text-xl mb-3">🧭</div>
-                    <h2 id="infoPanelTitle" class="text-xl font-black text-zinc-900">Über</h2>
+                    <div id="infoPanelIcon" class="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center text-xl mb-3">&#129517;</div>
+                    <h2 id="infoPanelTitle" class="text-xl font-black text-zinc-900">Ãœber</h2>
                 </div>
-                <button id="closeInfoPanelBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Informationsfeld schließen">×</button>
+                <button id="closeInfoPanelBtn" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" aria-label="Informationsfeld schlieÃŸen">&times;</button>
             </div>
 
             <div id="aboutPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
-                <p><strong class="text-zinc-900">Superschnelles Werkzeug</strong> ist eine Sammlung schneller Rechner und Hilfsprogramme für alltägliche Aufgaben.</p>
-                <p>Es ist für schnelle Antworten ohne Anmeldung, Installation oder komplizierte Menüs konzipiert.</p>
-                <p>Die Sammlung umfasst Taschenrechner, Konverter, Generatoren, Bild-, Video- und Audio-Dienstprogramme sowie leichte Browserspiele. Jedes Tool verfügt über eine fokussierte Seite, sodass Sie zum Ergebnis gelangen, ohne unnötige Schritte ausführen zu müssen.</p>
+                <p><strong class="text-zinc-900">Superschnelles Werkzeug</strong> ist eine Sammlung schneller Rechner und Hilfsprogramme fÃ¼r alltÃ¤gliche Aufgaben.</p>
+                <p>Es ist fÃ¼r schnelle Antworten ohne Anmeldung, Installation oder komplizierte MenÃ¼s konzipiert.</p>
+                <p>Die Sammlung umfasst Taschenrechner, Konverter, Generatoren, Bild-, Video- und Audio-Dienstprogramme sowie leichte Browserspiele. Jedes Tool verfÃ¼gt Ã¼ber eine fokussierte Seite, sodass Sie zum Ergebnis gelangen, ohne unnÃ¶tige Schritte ausfÃ¼hren zu mÃ¼ssen.</p>
                 <p><strong class="text-zinc-900">Von Natur aus privat</strong></p>
-                <p>Rechnereingaben und unterstützte Dateivorgänge werden nach Möglichkeit lokal in Ihrem Browser verarbeitet. Super Fast Tool lädt diese Eingaben oder Dateien nicht auf seinen eigenen Server hoch.</p>
-                <p><strong class="text-zinc-900">Gebaut für den täglichen Gebrauch</strong></p>
-                <p>Die Tools sind für den Einsatz auf Desktop- und mobilen Browsern konzipiert und bieten klare Steuerelemente, sofortiges Feedback und ggf. herunterladbare Ergebnisse. Neue Dienstprogramme und Verbesserungen werden hinzugefügt, sobald nützliche Ideen auftauchen.</p>
+                <p>Rechnereingaben und unterstÃ¼tzte DateivorgÃ¤nge werden nach MÃ¶glichkeit lokal in Ihrem Browser verarbeitet. Super Fast Tool lÃ¤dt diese Eingaben oder Dateien nicht auf seinen eigenen Server hoch.</p>
+                <p><strong class="text-zinc-900">Gebaut fÃ¼r den tÃ¤glichen Gebrauch</strong></p>
+                <p>Die Tools sind fÃ¼r den Einsatz auf Desktop- und mobilen Browsern konzipiert und bieten klare Steuerelemente, sofortiges Feedback und ggf. herunterladbare Ergebnisse. Neue Dienstprogramme und Verbesserungen werden hinzugefÃ¼gt, sobald nÃ¼tzliche Ideen auftauchen.</p>
                 <p><strong class="text-zinc-900">Ergebnisse und Verantwortung</strong></p>
-                <p>Die Ergebnisse werden zur Vereinfachung und allgemeinen Orientierung bereitgestellt. Wichtige finanzielle, gesundheitliche, rechtliche oder technische Entscheidungen sollten anhand einer seriösen Quelle oder eines qualifizierten Fachmanns überprüft werden.</p>
-                <p>Fragen, Fehlerberichte und Vorschläge für neue Tools sind jederzeit über das Kontaktformular willkommen.</p>
+                <p>Die Ergebnisse werden zur Vereinfachung und allgemeinen Orientierung bereitgestellt. Wichtige finanzielle, gesundheitliche, rechtliche oder technische Entscheidungen sollten anhand einer seriÃ¶sen Quelle oder eines qualifizierten Fachmanns Ã¼berprÃ¼ft werden.</p>
+                <p>Fragen, Fehlerberichte und VorschlÃ¤ge fÃ¼r neue Tools sind jederzeit Ã¼ber das Kontaktformular willkommen.</p>
             </div>
 
             <div id="privacyPanel" class="info-panel-section info-panel-scroll space-y-3 text-sm leading-6 text-zinc-600">
                 <p><strong class="text-zinc-900">Datenschutzrichtlinie</strong></p>
                 <p>Super Fast Tool erfordert keine Konten und sammelt keine Rechnereingabewerte.</p>
-                <p>Einige externe Dienste können für Website-Funktionen geladen werden, z. B. Übersetzung, Styling, Symbole oder zukünftige Werbung. Diese Dienste können gemäß ihren Richtlinien eigene Cookies verwenden oder Protokolle anfordern.</p>
-                <p>Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.</p>
+                <p>Einige externe Dienste kÃ¶nnen fÃ¼r Website-Funktionen geladen werden, z. B. Ãœbersetzung, Styling, Symbole oder zukÃ¼nftige Werbung. Diese Dienste kÃ¶nnen gemÃ¤ÃŸ ihren Richtlinien eigene Cookies verwenden oder Protokolle anfordern.</p>
+                <p>Werbung und Cookies werden in der vollstÃ¤ndigen DatenschutzerklÃ¤rung erlÃ¤utert, einschlieÃŸlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.</p>
                 <p><strong class="text-zinc-900">Lokale Daten</strong></p>
-                <p>Markierte Tools werden nur in Ihrem Browser im lokalen Speicher gespeichert, sodass Ihre Favoriten auch nach einer Aktualisierung verfügbar bleiben.</p>
+                <p>Markierte Tools werden nur in Ihrem Browser im lokalen Speicher gespeichert, sodass Ihre Favoriten auch nach einer Aktualisierung verfÃ¼gbar bleiben.</p>
                 <p><strong class="text-zinc-900">Kontaktformular</strong></p>
-                <p>Wenn du das Kontaktformular absendest, werden dein Name, deine E-Mail-Adresse und deine Nachricht an Formspree übermittelt, damit die Nachricht uns zugestellt werden kann. Gib keine Passwörter, Zahlungsdetails, Zahlungsinformationen, amtlichen Identifikationsnummern, medizinischen Unterlagen oder andere sensible Informationen an.</p>
+                <p>Wenn du das Kontaktformular absendest, werden dein Name, deine E-Mail-Adresse und deine Nachricht an Formspree Ã¼bermittelt, damit die Nachricht uns zugestellt werden kann. Gib keine PasswÃ¶rter, Zahlungsdetails, Zahlungsinformationen, amtlichen Identifikationsnummern, medizinischen Unterlagen oder andere sensible Informationen an.</p>
                 <p><strong class="text-zinc-900">Keine Finanzberatung</strong></p>
-                <p>Finanzbezogene Rechner werden nur für schnelle Schätzungen bereitgestellt und sollten nicht als Investitions-, Steuer- oder Rechtsberatung betrachtet werden.</p>
+                <p>Finanzbezogene Rechner werden nur fÃ¼r schnelle SchÃ¤tzungen bereitgestellt und sollten nicht als Investitions-, Steuer- oder Rechtsberatung betrachtet werden.</p>
                 <p><strong class="text-zinc-900">Updates</strong></p>
-                <p>Diese Richtlinie kann aktualisiert werden, wenn neue Tools, Analyse-, Werbe- oder Hostingfunktionen hinzugefügt werden.</p>
+                <p>Diese Richtlinie kann aktualisiert werden, wenn neue Tools, Analyse-, Werbe- oder Hostingfunktionen hinzugefÃ¼gt werden.</p>
             </div>
 
             <form id="contactPanel" class="info-panel-section info-panel-scroll hidden space-y-3" action="https://formspree.io/f/mjggknek" method="POST">
@@ -779,9 +737,9 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             <div id="contactSentMessage" class="form-status sent-toast absolute top-5 left-1/2 -translate-x-1/2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full px-3 py-1 text-xs font-bold shadow-sm" data-form-status="" data-success-label="Gesendet"></div>
         </div>
     </div>
-    <script src="/extra-converters.js"></script>
+    <script src="/extra-converters.js?v=1.2.441"></script>
     <script>window.SFT_TOOL_PAGE = { cardId: "frequencyConverterCard", slug: "frequency-converter", title: "Frequency Converter" };</script>
-    <script>window.SFT_LOCALE="de";window.SFT_LOCALE_URLS={"en":"/frequency-converter/","ko":"/ko/frequency-converter/","ja":"/ja/frequency-converter/","zh-CN":"/zh-CN/frequency-converter/","es":"/es/frequency-converter/","de":"/de/frequency-converter/","fr":"/fr/frequency-converter/","pt-BR":"/pt-BR/frequency-converter/"};window.SFT_I18N={"addStar":"Zu Favoriten hinzufügen","removeStar":"Aus Favoriten entfernen"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
+    <script>window.SFT_LOCALE="de";window.SFT_LOCALE_URLS={"en":"/frequency-converter/","ko":"/ko/frequency-converter/","ja":"/ja/frequency-converter/","zh-CN":"/zh-CN/frequency-converter/","es":"/es/frequency-converter/","de":"/de/frequency-converter/","fr":"/fr/frequency-converter/","pt-BR":"/pt-BR/frequency-converter/"};window.SFT_I18N={"addStar":"Zu Favoriten hinzufÃ¼gen","removeStar":"Aus Favoriten entfernen"};document.addEventListener('DOMContentLoaded',()=>{const button=document.getElementById('languageMenuButton');const menu=document.getElementById('languageMenu');const chevron=document.getElementById('languageMenuChevron');if(!button||!menu)return;const closeMenu=()=>{menu.classList.add('hidden');button.setAttribute('aria-expanded','false');chevron?.classList.remove('rotate-180');};button.addEventListener('click',event=>{event.stopPropagation();const opening=menu.classList.contains('hidden');menu.classList.toggle('hidden',!opening);button.setAttribute('aria-expanded',String(opening));chevron?.classList.toggle('rotate-180',opening);});menu.addEventListener('click',event=>{const item=event.target.closest('[data-locale]');if(!item)return;window.SFTLocale?.set(item.dataset.locale);const url=window.SFT_LOCALE_URLS[item.dataset.locale];if(url)location.assign(url);});document.addEventListener('click',event=>{if(!event.target.closest('.language-menu'))closeMenu();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});});</script>
     <script type="text/javascript">
 
         const cardsGrid = document.getElementById('cardsGrid');
@@ -948,7 +906,6 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             fadeToUrl(`/${slug}/`);
         }
 
-
         function visibleElement(element) {
             return element && element.offsetParent !== null;
         }
@@ -1094,6 +1051,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         }
 
         function renderHeaderToolName(title) {
+            if (!headerToolName) return;
             headerToolName.innerHTML = '';
             const subStart = logoMainWaveEndSeconds + 0.22;
             `- ${title}`.split('').forEach((char, index) => {
@@ -1140,6 +1098,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         function setInitialCategory() {
             const starredTab = document.querySelector('[data-category-filter="starred"]');
             const allTab = document.querySelector('[data-category-filter="all"]');
+            if (!allTab) return;
             const savedState = getSavedHubState();
             if (savedState?.searchQuery && toolSearchInput) {
                 toolSearchInput.value = savedState.searchQuery;
@@ -1159,7 +1118,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             if (savedTab && !savedTab.classList.contains('is-hidden') && (savedState.category !== 'starred' || starredCards.length > 0)) {
                 savedTab.classList.add('is-active');
                 currentPage = Number.isFinite(Number(savedState.page)) ? Number(savedState.page) : 1;
-            } else if (starredCards.length > 0) {
+            } else if (starredCards.length > 0 && starredTab) {
                 starredTab.classList.add('is-active');
                 currentPage = 1;
             } else {
@@ -1174,12 +1133,12 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             const card = document.getElementById(toolPageConfig.cardId);
             if (!card) return;
             document.body.classList.add('tool-page');
-            hubHero.classList.add('hidden');
-            categoryBar.classList.add('hidden');
-            paginationControls.classList.add('hidden');
-            toolBackHome.classList.remove('hidden');
-            renderHeaderToolName(toolPageConfig.title);
-            headerToolName.classList.remove('hidden');
+            hubHero?.classList.add('hidden');
+            categoryBar?.classList.add('hidden');
+            paginationControls?.classList.add('hidden');
+            toolBackHome?.classList.remove('hidden');
+            if (typeof renderHeaderToolName === 'function') renderHeaderToolName(toolPageConfig.title);
+            headerToolName?.classList.remove('hidden');
         }
 
         function openToolPageCard() {
@@ -1280,15 +1239,18 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 card.classList.toggle('hidden', !visibleCards.has(card));
                 card.style.order = '';
                 card.classList.remove('card-page-in');
-                card.nextElementSibling.classList.add('hidden');
-                card.nextElementSibling.style.order = '';
+                const placeholder = card.nextElementSibling;
+                if (placeholder) {
+                    placeholder.classList.add('hidden');
+                    placeholder.style.order = '';
+                }
             });
             tempCards.forEach(card => card.classList.add('hidden'));
 
             currentCards.forEach(card => {
                 const placeholder = card.nextElementSibling;
                 cardsGrid.appendChild(card);
-                cardsGrid.appendChild(placeholder);
+                if (placeholder) cardsGrid.appendChild(placeholder);
             });
             const visibleTempCards = tempCards.slice(0, Math.max(0, cardsPerPage - currentCards.length));
             visibleTempCards.forEach(card => {
@@ -1503,13 +1465,14 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                     const isActiveTool = card === activeCard;
                     card.classList.toggle('hidden', !isActiveTool);
                     card.classList.remove('card-page-in');
-                    card.nextElementSibling.classList.add('hidden');
+                    const placeholder = card.nextElementSibling;
+                    if (placeholder) placeholder.classList.add('hidden');
                 });
                 tempCards.forEach(card => card.classList.add('hidden'));
-                if (activeCard) {
+                if (activeCard && cardsGrid) {
                     const placeholder = activeCard.nextElementSibling;
                     cardsGrid.appendChild(activeCard);
-                    cardsGrid.appendChild(placeholder);
+                    if (placeholder) cardsGrid.appendChild(placeholder);
                     activeCard.style.position = '';
                     activeCard.style.top = '';
                     activeCard.style.left = '';
@@ -1517,7 +1480,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                     activeCard.style.height = '';
                     activeCard.style.margin = '';
                 }
-                paginationControls.classList.add('hidden');
+                if (paginationControls) paginationControls.classList.add('hidden');
                 return;
             }
             if (isSearching()) {
@@ -1539,15 +1502,18 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 card.classList.toggle('hidden', !visibleCards.has(card));
                 card.style.order = '';
                 card.classList.remove('card-page-in');
-                card.nextElementSibling.classList.add('hidden');
-                card.nextElementSibling.style.order = '';
+                const placeholder = card.nextElementSibling;
+                if (placeholder) {
+                    placeholder.classList.add('hidden');
+                    placeholder.style.order = '';
+                }
             });
             tempCards.forEach(card => card.classList.add('hidden'));
 
             currentCards.forEach(card => {
                 const placeholder = card.nextElementSibling;
                 cardsGrid.appendChild(card);
-                cardsGrid.appendChild(placeholder);
+                if (placeholder) cardsGrid.appendChild(placeholder);
             });
             const visibleTempCards = tempCards.slice(0, Math.max(0, cardsPerPage - currentCards.length));
             visibleTempCards.forEach(card => {
@@ -2162,10 +2128,5 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             startLogoAndEmojiCycle();
         }, 0);
     </script>
-
-
-
-
-
 
 </body></html>

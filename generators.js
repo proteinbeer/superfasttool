@@ -89,37 +89,79 @@ function initGenerators() {
     setupClampedNumberInput('loremLength', clampLoremLength);
     initLunchPicker();
     initWhoPaysRoulette();
+    setupPasswordGenerator();
+    setupRandomNumberGenerator();
+    setupUuidGenerator();
+    setupLoremIpsumGenerator();
+}
 
-    document.getElementById('generatePassword').addEventListener('click', () => {
-        document.getElementById('valPassword').innerText = createPassword();
+function setupPasswordGenerator() {
+    const generateButton = document.getElementById('generatePassword');
+    const downloadButton = document.getElementById('downloadPassword');
+    const output = document.getElementById('valPassword');
+    const countInput = document.getElementById('passwordCount');
+    const lengthInput = document.getElementById('passwordLength');
+    if (!generateButton || !downloadButton || !output || !countInput || !lengthInput) return;
+
+    generateButton.addEventListener('click', () => {
+        output.innerText = createPassword();
     });
-    document.getElementById('downloadPassword').addEventListener('click', () => {
-        const count = clampCount(document.getElementById('passwordCount').value);
-        document.getElementById('passwordCount').value = count;
+    downloadButton.addEventListener('click', () => {
+        const count = clampCount(countInput.value);
+        countInput.value = count;
         downloadTextFile('passwords.txt', Array.from({ length: count }, createPassword).join('\n'));
     });
-    document.getElementById('generateRandomNumber').addEventListener('click', () => {
-        document.getElementById('valRandomNumber').innerText = createRandomNumber().toLocaleString();
+}
+
+function setupRandomNumberGenerator() {
+    const generateButton = document.getElementById('generateRandomNumber');
+    const downloadButton = document.getElementById('downloadRandomNumber');
+    const output = document.getElementById('valRandomNumber');
+    const countInput = document.getElementById('randomNumberCount');
+    const minInput = document.getElementById('randomMin');
+    const maxInput = document.getElementById('randomMax');
+    if (!generateButton || !downloadButton || !output || !countInput || !minInput || !maxInput) return;
+
+    generateButton.addEventListener('click', () => {
+        output.innerText = createRandomNumber().toLocaleString();
     });
-    document.getElementById('downloadRandomNumber').addEventListener('click', () => {
-        const count = clampCount(document.getElementById('randomNumberCount').value);
-        document.getElementById('randomNumberCount').value = count;
+    downloadButton.addEventListener('click', () => {
+        const count = clampCount(countInput.value);
+        countInput.value = count;
         downloadTextFile('random-numbers.txt', Array.from({ length: count }, () => createRandomNumber()).join('\n'));
     });
-    document.getElementById('generateUuid').addEventListener('click', () => {
-        document.getElementById('valUuid').innerText = createUuid();
+}
+
+function setupUuidGenerator() {
+    const generateButton = document.getElementById('generateUuid');
+    const downloadButton = document.getElementById('downloadUuid');
+    const output = document.getElementById('valUuid');
+    const countInput = document.getElementById('uuidCount');
+    if (!generateButton || !downloadButton || !output || !countInput) return;
+
+    generateButton.addEventListener('click', () => {
+        output.innerText = createUuid();
     });
-    document.getElementById('downloadUuid').addEventListener('click', () => {
-        const count = clampCount(document.getElementById('uuidCount').value);
-        document.getElementById('uuidCount').value = count;
+    downloadButton.addEventListener('click', () => {
+        const count = clampCount(countInput.value);
+        countInput.value = count;
         downloadTextFile('uuids.txt', Array.from({ length: count }, createUuid).join('\n'));
     });
-    document.getElementById('downloadLoremIpsum').addEventListener('click', () => {
-        const length = clampLoremLength(document.getElementById('loremLength').value);
-        const count = clampCount(document.getElementById('loremCount').value);
-        document.getElementById('loremLength').value = length;
-        document.getElementById('loremCount').value = count;
-        document.getElementById('loremCountValue').innerText = count;
+}
+
+function setupLoremIpsumGenerator() {
+    const downloadButton = document.getElementById('downloadLoremIpsum');
+    const lengthInput = document.getElementById('loremLength');
+    const countInput = document.getElementById('loremCount');
+    const countValue = document.getElementById('loremCountValue');
+    if (!downloadButton || !lengthInput || !countInput || !countValue) return;
+
+    downloadButton.addEventListener('click', () => {
+        const length = clampLoremLength(lengthInput.value);
+        const count = clampCount(countInput.value);
+        lengthInput.value = length;
+        countInput.value = count;
+        countValue.innerText = count;
         downloadTextFile('lorem-ipsum.txt', Array.from({ length: count }, () => createLoremIpsum(length)).join('\n\n'));
     });
 }
@@ -655,15 +697,16 @@ function clampLoremLength(value) {
 }
 
 function createPassword() {
-    const length = Math.min(64, Math.max(6, parseInt(document.getElementById('passwordLength').value, 10) || 25));
-    document.getElementById('passwordLength').value = length;
+    const lengthInput = document.getElementById('passwordLength');
+    const length = Math.min(64, Math.max(6, parseInt(lengthInput?.value, 10) || 25));
+    if (lengthInput) lengthInput.value = length;
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?';
     return Array.from({ length }, () => chars[randomInt(0, chars.length - 1)]).join('');
 }
 
 function createRandomNumber() {
-    const min = parseInt(document.getElementById('randomMin').value, 10) || 0;
-    const max = parseInt(document.getElementById('randomMax').value, 10) || 0;
+    const min = parseInt(document.getElementById('randomMin')?.value, 10) || 0;
+    const max = parseInt(document.getElementById('randomMax')?.value, 10) || 0;
     return randomInt(Math.min(min, max), Math.max(min, max));
 }
 

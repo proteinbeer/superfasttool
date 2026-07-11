@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, serialize } from 'parse5';
@@ -8,17 +8,17 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const baseUrl = 'https://superfasttool.com';
-const version = 'v1.2.429';
+const version = 'v1.2.442';
 const catalogPath = path.join(here, 'guide-i18n.catalog.json');
 const localeDefinitions = {
   en: { label: 'English', target: 'en' },
-  ko: { label: '한국어', target: 'ko' },
-  ja: { label: '日本語', target: 'ja' },
-  'zh-CN': { label: '简体中文', target: 'zh-CN' },
-  es: { label: 'Español', target: 'es' },
+  ko: { label: 'Korean', target: 'ko' },
+  ja: { label: 'Japanese', target: 'ja' },
+  'zh-CN': { label: 'Simplified Chinese', target: 'zh-CN' },
+  es: { label: 'Spanish', target: 'es' },
   de: { label: 'Deutsch', target: 'de' },
-  fr: { label: 'Français', target: 'fr' },
-  'pt-BR': { label: 'Português (Brasil)', target: 'pt' }
+  fr: { label: 'French', target: 'fr' },
+  'pt-BR': { label: 'Portuguese (Brazil)', target: 'pt' }
 };
 const localeCodes = Object.keys(localeDefinitions);
 const guideSlugFor = slug => slug === 'stock-crypto-avg-cost-calculator' ? 'how-to-calculate-average-stock-cost' : slug;
@@ -114,11 +114,11 @@ function translateValue(value, translations) {
 function openToolLabel(code, title) {
   return {
     en: `Open ${title}`,
-    ko: `${title} 열기`,
-    ja: `${title}を開く`,
-    'zh-CN': `打开${title}`,
+    ko: `${title} ì—´ê¸°`,
+    ja: `${title}ã‚’é–‹ã`,
+    'zh-CN': `æ‰“å¼€${title}`,
     es: `Abrir ${title}`,
-    de: `${title} öffnen`,
+    de: `${title} Ã¶ffnen`,
     fr: `Ouvrir ${title}`,
     'pt-BR': `Abrir ${title}`
   }[code];

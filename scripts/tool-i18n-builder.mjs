@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { parse, parseFragment, serialize } from 'parse5';
 import { applyTranslationMap } from './auto-tool-i18n.mjs';
@@ -9,13 +9,13 @@ const oldAdvertisingPrivacyText = 'If advertising is added in the future, this p
 const advertisingPrivacyText = 'Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.';
 const advertisingPrivacyTranslations = {
   en: advertisingPrivacyText,
-  ko: '광고 및 쿠키에 관한 내용은 전체 개인정보처리방침에 설명되어 있으며, 사이트에서 활성화된 경우 Google AdSense 또는 관련 광고 서비스에 대한 내용도 포함됩니다.',
-  ja: '広告と Cookie については、サイトで有効になっている場合の Google AdSense または関連する広告サービスを含め、完全なプライバシーポリシーで説明しています。',
-  'zh-CN': '有关广告和 Cookie 的说明请参阅完整的隐私政策，其中包括网站启用 Google AdSense 或相关广告服务时的相关内容。',
-  es: 'La Política de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si están habilitados en el sitio.',
-  de: 'Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
-  fr: "La Politique de confidentialité complète explique la publicité et les cookies, y compris Google AdSense ou les services publicitaires associés s'ils sont activés sur le site.",
-  'pt-BR': 'A Política de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviços de publicidade relacionados, caso estejam ativados no site.'
+  ko: 'ê´‘ê³  ë° ì¿ í‚¤ì— ê´€í•œ ë‚´ìš©ì€ ì „ì²´ ê°œì¸ì •ë³´ì²˜ë¦¬ë°©ì¹¨ì— ì„¤ëª…ë˜ì–´ ìžˆìœ¼ë©°, ì‚¬ì´íŠ¸ì—ì„œ í™œì„±í™”ëœ ê²½ìš° Google AdSense ë˜ëŠ” ê´€ë ¨ ê´‘ê³  ì„œë¹„ìŠ¤ì— ëŒ€í•œ ë‚´ìš©ë„ í¬í•¨ë©ë‹ˆë‹¤.',
+  ja: 'åºƒå‘Šã¨ Cookie ã«ã¤ã„ã¦ã¯ã€ã‚µã‚¤ãƒˆã§æœ‰åŠ¹ã«ãªã£ã¦ã„ã‚‹å ´åˆã® Google AdSense ã¾ãŸã¯é–¢é€£ã™ã‚‹åºƒå‘Šã‚µãƒ¼ãƒ“ã‚¹ã‚’å«ã‚ã€å®Œå…¨ãªãƒ—ãƒ©ã‚¤ãƒã‚·ãƒ¼ãƒãƒªã‚·ãƒ¼ã§èª¬æ˜Žã—ã¦ã„ã¾ã™ã€‚',
+  'zh-CN': 'æœ‰å…³å¹¿å‘Šå’Œ Cookie çš„è¯´æ˜Žè¯·å‚é˜…å®Œæ•´çš„éšç§æ”¿ç­–ï¼Œå…¶ä¸­åŒ…æ‹¬ç½‘ç«™å¯ç”¨ Google AdSense æˆ–ç›¸å…³å¹¿å‘ŠæœåŠ¡æ—¶çš„ç›¸å…³å†…å®¹ã€‚',
+  es: 'La PolÃ­tica de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si estÃ¡n habilitados en el sitio.',
+  de: 'Werbung und Cookies werden in der vollstÃ¤ndigen DatenschutzerklÃ¤rung erlÃ¤utert, einschlieÃŸlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
+  fr: "La Politique de confidentialitÃ© complÃ¨te explique la publicitÃ© et les cookies, y compris Google AdSense ou les services publicitaires associÃ©s s'ils sont activÃ©s sur le site.",
+  'pt-BR': 'A PolÃ­tica de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviÃ§os de publicidade relacionados, caso estejam ativados no site.'
 };
 
 function escapeHtml(value) {
@@ -26,10 +26,52 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;');
 }
 
+const safeLanguageLabels = {
+  en: 'English',
+  ko: 'Korean',
+  ja: 'Japanese',
+  'zh-CN': 'Simplified Chinese',
+  es: 'Spanish',
+  de: 'Deutsch',
+  fr: 'French',
+  'pt-BR': 'Portuguese (Brazil)'
+};
+
+function languageLabel(code, locale) {
+  return safeLanguageLabels[code] || locale.label || code;
+}
+
+function repairMojibake(source) {
+  return String(source)
+    .replaceAll('\u00e2\u0161\u00a1', '&#9889;')
+    .replaceAll('\u00e2\u00ac\u2026\u00ef\u00b8\u008f', '&#11013;&#65039;')
+    .replaceAll('\u00f0\u0178\u00a7\u00ad', '&#129517;')
+    .replaceAll('\u00f0\u0178\u201d\u2019', '&#128274;')
+    .replaceAll('\u00e2\u0153\u2030', '&#9993;')
+    .replaceAll('\u00f0\u0178\u201c\u02c6', '&#128200;')
+    .replaceAll('\u00f0\u0178\u201c\u2013', '&#128214;')
+    .replaceAll('\u00e2\u02c6\u00a0', '&#8736;')
+    .replaceAll('\u00e2\u20ac\u201d', '&mdash;')
+    .replaceAll('\u00e2\u20ac\u201c', '&ndash;')
+    .replaceAll('\u00e2\u20ac\u02dc', '&lsquo;')
+    .replaceAll('\u00e2\u20ac\u2122', '&rsquo;')
+    .replaceAll('\u00e2\u20ac\u0153', '&ldquo;')
+    .replaceAll('\u00e2\u20ac\u009d', '&rdquo;')
+    .replaceAll('\u00c3\u2014', '&times;')
+    .replaceAll('&copy;', '&copy;')
+    .replaceAll('Ã‚&copy;', '&copy;')
+    .replaceAll('Spanish', 'Spanish')
+    .replaceAll('French', 'French')
+    .replaceAll('Portuguese (Brazil)', 'Portuguese (Brazil)')
+    .replaceAll('Korean', 'Korean')
+    .replaceAll('Japanese', 'Japanese')
+    .replaceAll('Simplified Chinese', 'Simplified Chinese');
+}
+
 function preserveFooterBrand(value) {
   const text = String(value);
-  const match = text.match(/^(.+?\s*2026)\s+.*?([.。]\s*.*)$/);
-  return match ? `${match[1]} Super Fast Tool.${match[2].replace(/^[.。]\s*/, ' ')}` : text;
+  const match = text.match(/^(.+?\s*2026)\s+.*?([.ã€‚]\s*.*)$/);
+  return match ? `${match[1]} Super Fast Tool.${match[2].replace(/^[.ã€‚]\s*/, ' ')}` : text;
 }
 
 function preserveFooterBrandInHtml(source) {
@@ -74,9 +116,9 @@ function languageControl(config, selectedCode) {
     const selected = code === selectedCode;
     const classes = selected ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-700 hover:bg-zinc-100';
     const codeClasses = selected ? 'text-orange-300' : 'text-zinc-300';
-    return `<button type="button" role="menuitem" data-locale="${code}" aria-current="${selected ? 'true' : 'false'}" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors ${classes}"><span>${escapeHtml(locale.label)}</span><span class="text-[10px] ${codeClasses}">${code.toUpperCase()}</span></button>`;
+    return `<button type="button" role="menuitem" data-locale="${code}" aria-current="${selected ? 'true' : 'false'}" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold transition-colors ${classes}"><span>${escapeHtml(languageLabel(code, locale))}</span><span class="text-[10px] ${codeClasses}">${code.toUpperCase()}</span></button>`;
   }).join('');
-  return `<div class="language-menu relative shrink-0" data-sft-language-control><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${escapeHtml(config.locales[selectedCode].label)}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div></div>`;
+  return `<div class="language-menu relative shrink-0" data-sft-language-control><button id="languageMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex min-w-[7.5rem] items-center justify-between gap-3 rounded-xl border border-zinc-900 bg-zinc-900 px-3 py-2 text-xs font-black text-white shadow-sm transition-colors hover:bg-zinc-700"><span>${escapeHtml(languageLabel(selectedCode, config.locales[selectedCode]))}</span><span id="languageMenuChevron" aria-hidden="true" class="inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform"><span class="block h-1.5 w-1.5 -translate-y-px rotate-45 border-b-2 border-r-2 border-white"></span></span></button><div id="languageMenu" role="menu" class="absolute right-0 top-full z-[70] mt-2 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl">${items}</div></div>`;
 }
 
 function navigationScript(config, code) {
@@ -103,10 +145,7 @@ function localizeStructuredData(source, config, locale, url) {
 }
 
 function headerSubtitle(title) {
-  const letters = [...`- ${title}`].map(character =>
-    `<span class="logo-sub-letter">${character === ' ' ? '&nbsp;' : escapeHtml(character)}</span>`
-  ).join('');
-  return `<span class="logo-sub-name" aria-label="${escapeHtml(title)}">${letters}</span>`;
+  return `<span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span>`;
 }
 
 function normalizeInfoPanelScroll(source) {
@@ -156,6 +195,42 @@ function normalizeInfoPanelScroll(source) {
 
 function prepareSharedSource(source, config, version) {
   source = normalizeInfoPanelScroll(source);
+  source = source.replace(
+    "                    card.nextElementSibling.classList.add('hidden');",
+    "                    const placeholder = card.nextElementSibling;\n                    if (placeholder) placeholder.classList.add('hidden');"
+  );
+  source = source.replaceAll(
+    "                card.nextElementSibling.classList.add('hidden');\n                card.nextElementSibling.style.order = '';",
+    "                const placeholder = card.nextElementSibling;\n                if (placeholder) {\n                    placeholder.classList.add('hidden');\n                    placeholder.style.order = '';\n                }"
+  );
+  source = source.replaceAll(
+    "                cardsGrid.appendChild(card);\n                cardsGrid.appendChild(placeholder);",
+    "                cardsGrid.appendChild(card);\n                if (placeholder) cardsGrid.appendChild(placeholder);"
+  );
+  source = source.replace(
+    "                if (activeCard) {\n                    const placeholder = activeCard.nextElementSibling;\n                    cardsGrid.appendChild(activeCard);\n                    cardsGrid.appendChild(placeholder);",
+    "                if (activeCard && cardsGrid) {\n                    const placeholder = activeCard.nextElementSibling;\n                    cardsGrid.appendChild(activeCard);\n                    if (placeholder) cardsGrid.appendChild(placeholder);"
+  );
+  source = source.replace(
+    "                paginationControls.classList.add('hidden');",
+    "                if (paginationControls) paginationControls.classList.add('hidden');"
+  );
+  source = source.replace(
+    "            hubHero.classList.add('hidden');\n            categoryBar.classList.add('hidden');\n            paginationControls.classList.add('hidden');\n            toolBackHome.classList.remove('hidden');\n            renderHeaderToolName(toolPageConfig.title);\n            headerToolName.classList.remove('hidden');",
+    "            hubHero?.classList.add('hidden');\n            categoryBar?.classList.add('hidden');\n            paginationControls?.classList.add('hidden');\n            toolBackHome?.classList.remove('hidden');\n            if (typeof renderHeaderToolName === 'function') renderHeaderToolName(toolPageConfig.title);\n            headerToolName?.classList.remove('hidden');"
+  );
+  source = source.replace(
+    "        function renderHeaderToolName(title) {\n            headerToolName.innerHTML = '';",
+    "        function renderHeaderToolName(title) {\n            if (!headerToolName) return;\n            headerToolName.innerHTML = '';"
+  );
+  source = source.replace(
+    "        function setInitialCategory() {\n            const starredTab = document.querySelector('[data-category-filter=\"starred\"]');\n            const allTab = document.querySelector('[data-category-filter=\"all\"]');\n            const savedState = getSavedHubState();",
+    "        function setInitialCategory() {\n            const starredTab = document.querySelector('[data-category-filter=\"starred\"]');\n            const allTab = document.querySelector('[data-category-filter=\"all\"]');\n            if (!allTab) return;\n            const savedState = getSavedHubState();"
+  );
+  source = source.replace(
+    "            } else if (starredCards.length > 0) {\n                starredTab.classList.add('is-active');",
+    "            } else if (starredCards.length > 0 && starredTab) {\n                starredTab.classList.add('is-active');"
+  );
   source = source.replaceAll(oldAdvertisingPrivacyText, advertisingPrivacyText);
   source = source.replace(/\n\s*\/\/ Multilingual translation system\.[\s\S]*?(?=\n\s*<\/script>)/, '');
   source = source.replace(/\s*function getBrowserLanguage\(\) \{[\s\S]*?(?=\n\s*const cardsGrid =)/, '\n');
@@ -183,7 +258,7 @@ function prepareSharedSource(source, config, version) {
   source = source.replace(/\.form-status\.show,\s*#form-status\.show(?:,\s*\[data-form-status\]\.show)?\s*\{\s*display:\s*block;\s*\}/, '.form-status.show,\n        #form-status.show,\n        [data-form-status].show { display: block; }');
   source = source.replace(/\s*contactSentMessage\.textContent\s*=\s*contactSentMessage\.dataset\.successLabel\s*\|\|\s*'Sent';/g, '');
   source = source.replace("contactSentMessage.classList.add('show');", "contactSentMessage.textContent = contactSentMessage.dataset.successLabel || 'Sent';\n                    contactSentMessage.classList.add('show');");
-  source = source.replace(/generators\.js(?:\?v=[^"']*)?/g, `generators.js?v=${version.replace(/^v/, '')}`);
+  source = source.replace(/generators\.js(?:\?v=[^"']*)?/g, `generators.js?v=1.2.440'')}`);
   return source.replace(/v1\.2\.\d+/g, version);
 }
 
@@ -311,7 +386,7 @@ function finalizeToolDocument(source, config, code, locale) {
   guide.parentNode = footerContainer;
   footerContainer.childNodes.splice(insertionIndex, 0, guide);
 
-  return serialize(document).replace(/[ \t]+$/gm, '');
+  return repairMojibake(serialize(document)).replace(/[ \t]+$/gm, '');
 }
 
 function localizeCommon(source, config, code, locale) {
@@ -343,7 +418,7 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, locale.footer, 'footer description');
   output = output.replace(contactPrivacyText, escapeHtml(locale.privacyContact));
   output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
-  output = output.replace(/<p>(?:&copy;|©|Â©) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
+  output = output.replace(/<p>(?:&copy;|&copy;|Ã‚&copy;) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
   output = replaceCapturedText(output, /(<h2 id="infoPanelTitle"[^>]*>)[^<]*(<\/h2>)/, locale.about, 'About title');
   output = preserveFooterBrandInHtml(output);
   output = replaceRequired(output, /(<div id="aboutPanel"[^>]*>)[\s\S]*?(<\/div>\s*<div id="privacyPanel")/, (match, start, end) => `${start}${locale.aboutHtml}${end}`, 'About panel');
@@ -364,7 +439,7 @@ function localizeCommon(source, config, code, locale) {
   if (config.guideHref) output = output.replace(`href="${config.guideHref}"`, `href="${localizedGuidePath(config, code)}"`);
 
   if (code !== 'en') output = output.replaceAll('src="../', 'src="/').replaceAll('src="./', `src="/${config.slug}/`).replaceAll('href="./', `href="/${config.slug}/`).replaceAll('href="../favicon.svg"', 'href="/favicon.svg"');
-  return output.replace(/[ \t]+$/gm, '');
+  return repairMojibake(output).replace(/[ \t]+$/gm, '');
 }
 
 function localizeAuto(source, config, code, locale) {
@@ -385,13 +460,13 @@ function localizeAuto(source, config, code, locale) {
   output = applyTranslationMap(output, config.cardId, locale.translations || {});
   output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   output = preserveFooterBrandInHtml(output);
-  output = output.replace(/<span(?=[^>]*\bclass="[^"]*\blogo-sub-name\b)[^>]*>(?:<span class="logo-sub-letter">[\s\S]*?<\/span>)*<\/span>\s*<\/a>/, `${headerSubtitle(locale.title)}</a>`);
+  output = output.replace(/<span(?=[^>]*\bclass="[^"]*\blogo-sub-name\b)[^>]*>[\s\S]*?<\/span>\s*<\/a>/, `<span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span></a>`);
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
   output = replaceRequired(output, /window\.SFT_TOOL_PAGE = \{ cardId: "[^"]+", slug: "[^"]+", title: "[^"]+" \}/, `window.SFT_TOOL_PAGE = { cardId: "${config.cardId}", slug: "${config.slug}", title: ${JSON.stringify(locale.title)} }`, 'localized tool page config');
   output = replaceRequired(output, /<div class="language-menu relative shrink-0" data-sft-language-control>[\s\S]*?<\/div><\/div>/, languageControl(config, code), 'localized language control');
   if (config.guideHref) output = output.replace(`href="${config.guideHref}"`, `href="${localizedGuidePath(config, code)}"`);
   if (code !== 'en') output = output.replaceAll('src="../', 'src="/').replaceAll('src="./', `src="/${config.slug}/`).replaceAll('href="./', `href="/${config.slug}/`).replaceAll('href="../favicon.svg"', 'href="/favicon.svg"');
-  return output.replace(/[ \t]+$/gm, '');
+  return repairMojibake(output).replace(/[ \t]+$/gm, '');
 }
 
 function sitemapMarker(slug) {
@@ -414,7 +489,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.429', lastmod = '2026-07-06' } = options;
+  const { write = true, version = 'v1.2.442', lastmod = '2026-07-11' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { locales } from './hub-i18n.locales.mjs';
@@ -9,19 +9,19 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.429';
+const version = 'v1.2.442';
 const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
 const oldAdvertisingPrivacyText = 'If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.';
 const advertisingPrivacyText = 'Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.';
 const advertisingPrivacyTranslations = {
   en: advertisingPrivacyText,
-  ko: '광고 및 쿠키에 관한 내용은 전체 개인정보처리방침에 설명되어 있으며, 사이트에서 활성화된 경우 Google AdSense 또는 관련 광고 서비스에 대한 내용도 포함됩니다.',
-  ja: '広告と Cookie については、サイトで有効になっている場合の Google AdSense または関連する広告サービスを含め、完全なプライバシーポリシーで説明しています。',
-  'zh-CN': '有关广告和 Cookie 的说明请参阅完整的隐私政策，其中包括网站启用 Google AdSense 或相关广告服务时的相关内容。',
-  es: 'La Política de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si están habilitados en el sitio.',
-  de: 'Werbung und Cookies werden in der vollständigen Datenschutzerklärung erläutert, einschließlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
-  fr: "La Politique de confidentialité complète explique la publicité et les cookies, y compris Google AdSense ou les services publicitaires associés s'ils sont activés sur le site.",
-  'pt-BR': 'A Política de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviços de publicidade relacionados, caso estejam ativados no site.'
+  ko: 'ê´‘ê³  ë° ì¿ í‚¤ì— ê´€í•œ ë‚´ìš©ì€ ì „ì²´ ê°œì¸ì •ë³´ì²˜ë¦¬ë°©ì¹¨ì— ì„¤ëª…ë˜ì–´ ìžˆìœ¼ë©°, ì‚¬ì´íŠ¸ì—ì„œ í™œì„±í™”ëœ ê²½ìš° Google AdSense ë˜ëŠ” ê´€ë ¨ ê´‘ê³  ì„œë¹„ìŠ¤ì— ëŒ€í•œ ë‚´ìš©ë„ í¬í•¨ë©ë‹ˆë‹¤.',
+  ja: 'åºƒå‘Šã¨ Cookie ã«ã¤ã„ã¦ã¯ã€ã‚µã‚¤ãƒˆã§æœ‰åŠ¹ã«ãªã£ã¦ã„ã‚‹å ´åˆã® Google AdSense ã¾ãŸã¯é–¢é€£ã™ã‚‹åºƒå‘Šã‚µãƒ¼ãƒ“ã‚¹ã‚’å«ã‚ã€å®Œå…¨ãªãƒ—ãƒ©ã‚¤ãƒã‚·ãƒ¼ãƒãƒªã‚·ãƒ¼ã§èª¬æ˜Žã—ã¦ã„ã¾ã™ã€‚',
+  'zh-CN': 'æœ‰å…³å¹¿å‘Šå’Œ Cookie çš„è¯´æ˜Žè¯·å‚é˜…å®Œæ•´çš„éšç§æ”¿ç­–ï¼Œå…¶ä¸­åŒ…æ‹¬ç½‘ç«™å¯ç”¨ Google AdSense æˆ–ç›¸å…³å¹¿å‘ŠæœåŠ¡æ—¶çš„ç›¸å…³å†…å®¹ã€‚',
+  es: 'La PolÃ­tica de Privacidad completa explica la publicidad y las cookies, incluido Google AdSense o servicios publicitarios relacionados si estÃ¡n habilitados en el sitio.',
+  de: 'Werbung und Cookies werden in der vollstÃ¤ndigen DatenschutzerklÃ¤rung erlÃ¤utert, einschlieÃŸlich Google AdSense oder verwandter Werbedienste, sofern sie auf der Website aktiviert sind.',
+  fr: "La Politique de confidentialitÃ© complÃ¨te explique la publicitÃ© et les cookies, y compris Google AdSense ou les services publicitaires associÃ©s s'ils sont activÃ©s sur le site.",
+  'pt-BR': 'A PolÃ­tica de Privacidade completa explica publicidade e cookies, incluindo o Google AdSense ou serviÃ§os de publicidade relacionados, caso estejam ativados no site.'
 };
 const baseUrl = 'https://superfasttool.com';
 

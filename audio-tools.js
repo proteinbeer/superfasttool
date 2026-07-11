@@ -298,6 +298,22 @@ function initAudioTools() {
         selection.classList.remove('hidden');
         setText('audioTrimStartLabel', `${trimState.start.toFixed(2)}s`);
         setText('audioTrimEndLabel', `${trimState.end.toFixed(2)}s`);
+        syncAudioTrimPreview(trimState.dragging);
+    }
+
+    function syncAudioTrimPreview(seekToStart = false, reset = false) {
+        const player = getElement('audioTrimmerPlayer');
+        if (!player) return;
+        if (reset || !trimState.buffer) {
+            player.dataset.previewStart = '0';
+            player.dataset.previewEnd = '0';
+            return;
+        }
+        const start = clamp(trimState.start, 0, trimState.buffer.duration);
+        const end = clamp(trimState.end, start + 0.05, trimState.buffer.duration);
+        player.dataset.previewStart = String(start);
+        player.dataset.previewEnd = String(end);
+        if (seekToStart) player.currentTime = start;
     }
 
     function resetTrimUi() {
@@ -316,6 +332,7 @@ function initAudioTools() {
         }
         setText('audioTrimStartLabel', '0.00s');
         setText('audioTrimEndLabel', '0.00s');
+        syncAudioTrimPreview(false, true);
     }
 
     function waveformSecondsFromEvent(event) {
@@ -359,6 +376,7 @@ function initAudioTools() {
             player.src = URL.createObjectURL(file);
             player.classList.remove('hidden');
             waveform.classList.remove('hidden');
+            syncAudioTrimPreview(true);
             requestAnimationFrame(drawTrimWaveform);
         });
 
@@ -402,6 +420,13 @@ function initAudioTools() {
             trimState.dragging = false;
         };
 
+        player.addEventListener('play', () => syncAudioTrimPreview(true));
+        player.addEventListener('timeupdate', () => {
+            const start = Number(player.dataset.previewStart || 0);
+            const end = Number(player.dataset.previewEnd || 0);
+            if (!end || !Number.isFinite(player.currentTime)) return;
+            if (player.currentTime < start || player.currentTime >= end) player.currentTime = start;
+        });
         waveform.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', moveDrag);
         window.addEventListener('mouseup', endDrag);
