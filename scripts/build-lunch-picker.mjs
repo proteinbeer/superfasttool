@@ -5,7 +5,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const slug = 'lunch-picker';
 const title = 'Lunch Picker';
 const description = "Spin a lunch slot machine, customize the menu list, exclude unavailable choices, and let chance choose today's meal.";
-const version = 'v1.2.443';
+const version = 'v1.2.453';
 
 function replaceRequired(source, pattern, replacement, label) {
   pattern.lastIndex = 0;

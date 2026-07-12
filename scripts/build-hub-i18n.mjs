@@ -9,7 +9,7 @@ import { buildLocaleRouting } from './locale-routing-builder.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const englishPath = path.join(root, 'index.html');
-const version = 'v1.2.443';
+const version = 'v1.2.453';
 const contactPrivacyText = 'When you submit the Contact form, your name, email address, and message are sent to Formspree so the message can be delivered to us. Do not include passwords, payment details, payment information, government identifiers, medical records, or other sensitive information.';
 const oldAdvertisingPrivacyText = 'If advertising is added in the future, this policy will be updated to explain ad-related cookies and choices.';
 const advertisingPrivacyText = 'Advertising and cookies are explained in the full Privacy Policy, including Google AdSense or related advertising services if they are enabled on the site.';
@@ -216,7 +216,6 @@ function localize(source, code, locale) {
       .replace(/\s+data-success-label="[^"]*"/g, '');
     return `<div id="contactSentMessage" data-form-status data-success-label="${escapeHtml(sentLabel)}"${cleanAttributes}></div>`;
   });
-  output = output.replace(/(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, `$1${locale.footer}$2`);
   output = output.replace(contactPrivacyText, locale.privacyContact);
   output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   if (code !== 'en') {

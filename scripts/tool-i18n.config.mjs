@@ -187,6 +187,7 @@ const autoConfigs = Object.values(catalog.tools).map(tool => {
       removeStar: common.removeStar,
       title: translations[tool.title] || tool.title,
       meta: translations[tool.meta] || tool.meta,
+      contentHtml: tool.contentHtml,
       translations
     }];
   }));

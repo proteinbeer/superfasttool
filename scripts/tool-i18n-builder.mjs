@@ -1,4 +1,4 @@
-﻿import fs from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { parse, parseFragment, serialize } from 'parse5';
 import { applyTranslationMap } from './auto-tool-i18n.mjs';
@@ -266,6 +266,11 @@ function nodeAttribute(node, name) {
   return node.attrs?.find(attribute => attribute.name === name)?.value || '';
 }
 
+function nodeTextContent(node) {
+  if (node.nodeName === '#text') return node.value || '';
+  return (node.childNodes || []).map(child => nodeTextContent(child)).join('');
+}
+
 function hasNodeClass(node, className) {
   return nodeAttribute(node, 'class').split(/\s+/).includes(className);
 }
@@ -317,6 +322,15 @@ function removeMatchingDescendants(node, predicate) {
     removeMatchingDescendants(child, predicate);
     return true;
   });
+}
+
+function createToolInfoSection(config, code, locale) {
+  const guideLabel = locale.guide || locale.translations?.Guide || 'Guide';
+  const guideLink = config.guideHref
+    ? `<div class="mb-4 text-center"><a href="${localizedGuidePath(config, code)}" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>${escapeHtml(guideLabel)}</a></div>`
+    : '';
+  const content = localizeContentBlock(locale.contentHtml || `<p>${escapeHtml(locale.meta)}</p>`, code, locale);
+  return `<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${escapeHtml(locale.title)}</h2>${guideLink}${content}</section>`;
 }
 
 function createToolGuide(config, code, locale) {
@@ -381,12 +395,120 @@ function finalizeToolDocument(source, config, code, locale) {
   const footerActions = footerAbout?.parentNode?.parentNode;
   const footerContainer = footerActions?.parentNode;
   if (!footerActions || !footerContainer) throw new Error(`Missing footer actions for ${config.slug}`);
-  addNodeClass(guide, 'mb-8');
-  const insertionIndex = footerContainer.childNodes.indexOf(footerActions) + 1;
+  const footerVersion = findNode(footerContainer, node => node.tagName === 'p' && /^v1\.2\.\d+$/.test(nodeTextContent(node).trim()));
+  if (!footerVersion) throw new Error(`Missing footer version for ${config.slug}`);
+  removeNodeClasses(guide, ['mb-8']);
+  const insertionIndex = footerContainer.childNodes.indexOf(footerVersion) + 1;
   guide.parentNode = footerContainer;
   footerContainer.childNodes.splice(insertionIndex, 0, guide);
 
   return repairMojibake(serialize(document)).replace(/[ \t]+$/gm, '');
+}
+
+function manualSectionLabels(code) {
+  return ({
+    en: ['Overview', 'How to use it', 'Before using it'],
+    ko: ['개요', '사용 방법', '확인할 점'],
+    ja: ['概要', '使い方', '確認すること'],
+    'zh-CN': ['概览', '使用方法', '检查事项'],
+    es: ['Resumen', 'Cómo usarlo', 'Antes de usarlo'],
+    de: ['Überblick', 'So verwendest du es', 'Vor der Nutzung prüfen'],
+    fr: ['Aperçu', 'Comment l’utiliser', 'À vérifier avant utilisation'],
+    'pt-BR': ['Visão geral', 'Como usar', 'Antes de usar']
+  })[code] || ['Overview', 'How to use it', 'Before using it'];
+}
+
+function manualContentHtml(paragraphs, code) {
+  const labels = manualSectionLabels(code);
+  return paragraphs.map((text, index) => {
+    const heading = index === 0
+      ? `<h3 class="mt-8 text-sm font-black text-zinc-600">${labels[0]}</h3>`
+      : index === 1
+        ? `<h3 class="mt-8 text-sm font-black text-zinc-600">${labels[1]}</h3>`
+        : index === Math.max(2, paragraphs.length - 1)
+          ? `<h3 class="mt-8 text-sm font-black text-zinc-600">${labels[2]}</h3>`
+          : '';
+    return `${heading}${heading ? '\n                ' : ''}<p${index ? ' class="mt-3"' : ''}>${escapeHtml(text)}</p>`;
+  }).join('\n                ');
+}
+
+function localizeContentHeadings(html, code) {
+  if (code === 'en') return html;
+  const matches = [...String(html).matchAll(/<h3\b[^>]*>[\s\S]*?<\/h3>/g)];
+  if (!matches.length) return html;
+  const labels = manualSectionLabels(code);
+  const replacementLabels = matches.length === 1
+    ? [labels[0]]
+    : matches.length === 2
+      ? [labels[0], labels[2]]
+      : labels;
+  let index = 0;
+  return String(html).replace(/(<h3\b[^>]*>)[\s\S]*?(<\/h3>)/g, (match, open, close) => {
+    const label = replacementLabels[Math.min(index, replacementLabels.length - 1)];
+    index += 1;
+    return `${open}${label}${close}`;
+  });
+}
+
+function localizedToolParagraphs(code, locale) {
+  const title = escapeHtml(locale.title);
+  const short = escapeHtml(locale.short || locale.meta || '');
+  return ({
+    ko: [
+      `${title}는 ${short} 작업을 빠르게 처리하기 위한 브라우저 기반 도구입니다.`,
+      '입력값과 설정을 확인하고, 결과를 복사하거나 다운로드하기 전에 한 번 더 검토하세요.',
+      '중요한 업무에 사용할 때는 공식 자료, 원본 파일, 전문가 검토를 함께 확인하는 것이 좋습니다.',
+      '팁: 결과를 바로 확정하기보다 몇 가지 값을 바꿔 보면서 가장 자연스러운 결과를 선택하세요.'
+    ],
+    ja: [
+      `${title}は、${short}作業をすばやく行うためのブラウザベースのツールです。`,
+      '入力値と設定を確認し、結果をコピーまたはダウンロードする前にもう一度見直してください。',
+      '重要な作業では、公式資料、元ファイル、専門家による確認もあわせて利用してください。',
+      'ヒント: 結果をすぐ確定せず、いくつかの値を試して自然なものを選びましょう。'
+    ],
+    'zh-CN': [
+      `${title}是一个基于浏览器的工具，可帮助你快速完成${short}。`,
+      '请检查输入值和设置，并在复制或下载结果前再次确认。',
+      '用于重要工作时，建议同时参考官方资料、原始文件或专业审核。',
+      '提示：不要立刻确定结果，可以尝试几个不同的输入，选择最合适的版本。'
+    ],
+    es: [
+      `${title} es una herramienta basada en el navegador para realizar rápidamente esta tarea: ${short}.`,
+      'Revisa los datos de entrada y la configuración antes de copiar o descargar el resultado.',
+      'Para trabajos importantes, conviene contrastar el resultado con fuentes oficiales, archivos originales o revisión profesional.',
+      'Consejo: prueba algunos valores antes de quedarte con el resultado final.'
+    ],
+    de: [
+      `${title} ist ein browserbasiertes Werkzeug, um diese Aufgabe schnell zu erledigen: ${short}.`,
+      'Prüfe Eingaben und Einstellungen, bevor du das Ergebnis kopierst oder herunterlädst.',
+      'Für wichtige Arbeiten solltest du zusätzlich offizielle Quellen, Originaldateien oder fachliche Prüfung nutzen.',
+      'Tipp: Teste einige Werte, bevor du dich auf das endgültige Ergebnis festlegst.'
+    ],
+    fr: [
+      `${title} est un outil dans le navigateur conçu pour réaliser rapidement cette tâche : ${short}.`,
+      'Vérifiez les données saisies et les réglages avant de copier ou de télécharger le résultat.',
+      'Pour un travail important, comparez aussi le résultat avec des sources officielles, les fichiers originaux ou une relecture professionnelle.',
+      'Conseil : testez plusieurs valeurs avant de retenir le résultat final.'
+    ],
+    'pt-BR': [
+      `${title} é uma ferramenta no navegador para concluir rapidamente esta tarefa: ${short}.`,
+      'Confira os dados de entrada e as configurações antes de copiar ou baixar o resultado.',
+      'Em trabalhos importantes, compare também com fontes oficiais, arquivos originais ou revisão profissional.',
+      'Dica: teste alguns valores antes de escolher o resultado final.'
+    ]
+  })[code] || [];
+}
+
+function localizeContentBlock(html, code, locale) {
+  const withHeadings = localizeContentHeadings(html, code);
+  if (code === 'en') return withHeadings;
+  const paragraphs = localizedToolParagraphs(code, locale);
+  let index = 0;
+  return String(withHeadings).replace(/(<p\b[^>]*>)[\s\S]*?(<\/p>)/g, (match, open, close) => {
+    const text = paragraphs[Math.min(index, paragraphs.length - 1)];
+    index += 1;
+    return text ? `${open}${text}${close}` : match;
+  });
 }
 
 function localizeCommon(source, config, code, locale) {
@@ -415,10 +537,7 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<span id="footerAbout">)[^<]*(<\/span>)/, locale.about, 'footer About');
   output = replaceCapturedText(output, /(<span id="footerPolicy">)[^<]*(<\/span>)/, locale.policy, 'footer Policy');
   output = replaceCapturedText(output, /(<span id="footerContact">)[^<]*(<\/span>)/, locale.contact, 'footer Contact');
-  output = replaceCapturedText(output, /(<p id="footerDesc"[^>]*>)[\s\S]*?(<\/p>)/, locale.footer, 'footer description');
-  output = output.replace(contactPrivacyText, escapeHtml(locale.privacyContact));
-  output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
-  output = output.replace(/<p>(?:&copy;|&copy;|Ã‚&copy;) 2026 Super Fast Tool\.[^<]*<\/p>/, `<p>${escapeHtml(locale.rights)}</p>`);
+
   output = replaceCapturedText(output, /(<h2 id="infoPanelTitle"[^>]*>)[^<]*(<\/h2>)/, locale.about, 'About title');
   output = preserveFooterBrandInHtml(output);
   output = replaceRequired(output, /(<div id="aboutPanel"[^>]*>)[\s\S]*?(<\/div>\s*<div id="privacyPanel")/, (match, start, end) => `${start}${locale.aboutHtml}${end}`, 'About panel');
@@ -429,8 +548,8 @@ function localizeCommon(source, config, code, locale) {
   output = replaceCapturedText(output, /(<form id="contactPanel"[\s\S]*?<button type="submit"[^>]*>)[^<]*(<\/button>)/, locale.send, 'Send button');
   output = replaceCapturedText(output, /(<div id="contactSentMessage"[^>]*>)[\s\S]*?(<\/div>)/, locale.sent, 'Sent message');
 
-  const paragraphs = locale.paragraphs.map((text, index) => `<p${index ? ' class="mt-3"' : ''}>${escapeHtml(text)}</p>`).join('\n                ');
-  const infoSection = `<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${escapeHtml(locale.title)}</h2><div class="mb-4 text-center"><a href="${localizedGuidePath(config, code)}" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>${escapeHtml(locale.guide)}</a></div>${paragraphs}</section>`;
+  const bodyHtml = localizeContentBlock(locale.contentHtml || manualContentHtml(locale.paragraphs, code), code, locale);
+  const infoSection = `<section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">${escapeHtml(locale.title)}</h2><div class="mb-4 text-center"><a href="${localizedGuidePath(config, code)}" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">&#128214;</span>${escapeHtml(locale.guide)}</a></div>${bodyHtml}</section>`;
   output = replaceRequired(output, /<section class="[^"]*\bmax-w-4xl\b[^"]*\btext-left\b[^"]*">[\s\S]*?<\/section>/, infoSection, 'tool information section');
 
   output = output.replace(/<script>window\.SFT_LOCALE=.*?<\/script>/, navigationScript(config, code));
@@ -458,6 +577,9 @@ function localizeAuto(source, config, code, locale) {
   output = output.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${escapeHtml(locale.meta)}">`);
   output = localizeStructuredData(output, config, locale, url);
   output = applyTranslationMap(output, config.cardId, locale.translations || {});
+  if (locale.contentHtml) {
+    output = replaceRequired(output, /<section class="[^"]*\bmax-w-4xl\b[^"]*\btext-left\b[^"]*">[\s\S]*?<\/section>/, createToolInfoSection(config, code, locale), 'tool information section');
+  }
   output = output.replaceAll(advertisingPrivacyText, advertisingPrivacyTranslations[code] || advertisingPrivacyText);
   output = preserveFooterBrandInHtml(output);
   output = output.replace(/<span(?=[^>]*\bclass="[^"]*\blogo-sub-name\b)[^>]*>[\s\S]*?<\/span>\s*<\/a>/, `<span id="headerToolName" class="logo-sub-name hidden text-zinc-400 font-black truncate max-w-[12rem] sm:max-w-xs"></span></a>`);
@@ -471,6 +593,17 @@ function localizeAuto(source, config, code, locale) {
 
 function sitemapMarker(slug) {
   return `SFT_TOOL_I18N_${slug.toUpperCase().replaceAll('-', '_')}`;
+}
+
+function extractToolGuideSection(source) {
+  return source.match(/<section class="[^"]*\btool-guide\b[^"]*"[\s\S]*?<\/section>/)?.[0] || '';
+}
+
+function preserveExistingLocalizedToolGuide(output, existing) {
+  const preserved = extractToolGuideSection(existing);
+  if (!preserved) return output;
+  const current = extractToolGuideSection(output);
+  return current ? output.replace(current, preserved) : output;
 }
 
 function updateSitemap(root, config, lastmod, write) {
@@ -489,7 +622,7 @@ function updateSitemap(root, config, lastmod, write) {
 }
 
 export function buildToolI18n(root, config, options = {}) {
-  const { write = true, version = 'v1.2.443', lastmod = '2026-07-11' } = options;
+  const { write = true, version = 'v1.2.453', lastmod = '2026-07-12' } = options;
   const englishPath = path.join(root, config.slug, 'index.html');
   let source = fs.readFileSync(englishPath, 'utf8').replaceAll('\r\n', '\n');
   source = prepareSharedSource(source, config, version);

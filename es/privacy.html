@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="google-adsense-account" content="ca-pub-7394313826787209">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de privacidad - Super Fast Tool</title>
+    <meta name="description" content="Política de privacidad de Super Fast Tool sobre procesamiento local, formularios de contacto, cookies, publicidad y servicios de terceros.">
+    <link rel="canonical" href="https://superfasttool.com/es/privacy.html">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <style>
+        * { box-sizing: border-box; }
+        html { color-scheme: light; scrollbar-gutter: stable; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: #27272a;
+            background-color: #f8fafc;
+            background-image:
+                linear-gradient(rgba(161, 161, 170, 0.13) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(161, 161, 170, 0.13) 1px, transparent 1px);
+            background-size: 32px 32px;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        body.page-fade-out { pointer-events: none; }
+        .page-fade-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            background: #f8fafc;
+            opacity: 0;
+            transition: opacity 0.04s ease;
+        }
+        body.app-loading .page-fade-layer,
+        body.page-fade-out .page-fade-layer,
+        body.history-fade-ready .page-fade-layer { opacity: 1; }
+        body.history-fade-revealing .page-fade-layer { transition-duration: 0.04s; }
+        a { color: inherit; }
+        .site-header {
+            border-bottom: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+        }
+        .header-inner, .page-inner, .footer-inner { width: min(100% - 32px, 960px); margin: 0 auto; }
+        .header-inner { min-height: 68px; display: flex; align-items: center; gap: 16px; }
+        .brand { display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; text-decoration: none; }
+        .brand-bolt { font-size: 22px; }
+        .tool-back-home { display: flex; justify-content: center; margin-top: 32px; }
+        .tool-back-home a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            color: #3f3f46;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: border-color 0.16s ease;
+        }
+        .tool-back-home a:hover { border-color: #a1a1aa; }
+        main { padding: 54px 0 64px; }
+        .policy-shell { overflow: hidden; border: 1px solid #e5e7eb; border-radius: 8px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 18px 45px rgba(24, 24, 27, 0.08); }
+        .policy-heading { padding: 32px; border-bottom: 1px solid #e5e7eb; }
+        .policy-icon { display: flex; width: 44px; height: 44px; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 8px; background: #f4f4f5; font-size: 22px; }
+        h1 { margin: 0; color: #18181b; font-size: clamp(28px, 6vw, 42px); line-height: 1.08; }
+        .updated { margin: 10px 0 0; color: #a1a1aa; font-size: 12px; font-weight: 700; }
+        .policy-content { padding: 32px; color: #52525b; font-size: 15px; line-height: 1.75; }
+        .policy-content section + section { margin-top: 30px; padding-top: 30px; border-top: 1px solid #f0f0f1; }
+        h2 { margin: 0 0 10px; color: #27272a; font-size: 18px; }
+        p { margin: 0; }
+        p + p { margin-top: 12px; }
+        ul { margin: 12px 0 0; padding-left: 20px; }
+        li + li { margin-top: 7px; }
+        .text-link { color: #ea580c; font-weight: 700; }
+        .footer-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            color: #52525b;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+        }
+        .footer-action:hover { border-color: #a1a1aa; transform: translateY(-1px); }
+        .contact-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            visibility: hidden;
+            background: rgba(24, 24, 27, 0.28);
+            opacity: 0;
+            transition: opacity 0.14s ease, visibility 0.14s ease;
+        }
+        .contact-modal {
+            position: fixed;
+            z-index: 81;
+            visibility: hidden;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #fff;
+            opacity: 0;
+            font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.14s ease, box-shadow 0.2s ease;
+        }
+        body.contact-open { overflow: hidden; }
+        body.contact-open .contact-backdrop { visibility: visible; opacity: 1; }
+        .contact-modal.is-open { box-shadow: 0 24px 70px rgba(24, 24, 27, 0.22); opacity: 1; }
+        .contact-modal-content { height: 100%; overflow-y: auto; padding: 24px; opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.18s ease; }
+        .contact-modal.is-open .contact-modal-content { opacity: 1; transform: translateY(0); }
+        .contact-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f1; }
+        .contact-modal-icon { display: flex; width: 40px; height: 40px; align-items: center; justify-content: center; margin-bottom: 10px; border-radius: 8px; background: #f4f4f5; font-size: 20px; }
+        .contact-modal h2 { margin: 0; color: #18181b; font-size: 20px; font-weight: 900; line-height: 28px; }
+        #contactCloseButton {
+            position: relative;
+            width: 2rem;
+            height: 2rem;
+            flex: 0 0 2rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f4f5;
+            border: 1px solid #e4e4e7;
+            color: #71717a;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.16s ease, color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+            font-size: 0;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+        }
+        #contactCloseButton::before,
+        #contactCloseButton::after {
+            content: "";
+            position: absolute;
+            width: 0.75rem;
+            height: 2px;
+            border-radius: 999px;
+            background: currentColor;
+        }
+        #contactCloseButton::before { transform: rotate(45deg); }
+        #contactCloseButton::after { transform: rotate(-45deg); }
+        #contactCloseButton:hover {
+            background: #18181b;
+            color: #fff;
+            transform: scale(1.04);
+            box-shadow: 0 3px 8px rgba(15, 23, 42, 0.18);
+        }
+        .contact-form { display: block; }
+        .contact-form > * + * { margin-top: 12px; }
+        .contact-form p { color: #52525b; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 24px; }
+        .contact-form input, .contact-form textarea { display: block; width: 100%; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fafafa; color: #27272a; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 20px; outline: none; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: #a1a1aa; }
+        .contact-form textarea { min-height: 96px; resize: none; }
+        .contact-submit { display: block; width: 100%; padding: 8px 16px; border: 0; border-radius: 12px; background: #18181b; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 20px; cursor: pointer; transition: background-color 0.16s ease; }
+        .contact-submit:hover { background: #3f3f46; }
+        .contact-form.is-sending input, .contact-form.is-sending textarea, .contact-form.is-sending button { cursor: not-allowed; opacity: 0.5; }
+        .form-status,
+        #form-status,
+        [data-form-status] { display: none; }
+        .form-status.show,
+        #form-status.show,
+        [data-form-status].show { display: block; }
+        .contact-toast { position: absolute; top: 18px; left: 50%; padding: 5px 12px; border: 1px solid #a7f3d0; border-radius: 999px; background: #ecfdf5; color: #047857; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 16px; opacity: 0; pointer-events: none; transform: translate(-50%, -7px); transition: opacity 0.16s ease, transform 0.18s ease; }
+        .contact-toast.show { opacity: 1; transform: translate(-50%, 0); }
+        footer { border-top: 1px solid #e5e7eb; background: #fff; color: #a1a1aa; text-align: center; }
+        .footer-inner { padding: 34px 0; font-size: 12px; }
+        .version { margin-top: 7px; color: #d4d4d8; font-size: 10px; }
+        @media (max-width: 640px) {
+            .brand { font-size: 17px; }
+            main { padding: 28px 0 40px; }
+            .policy-heading, .policy-content { padding: 22px; }
+        }
+    </style>
+<style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
+</head>
+<body class="page-transitions-disabled app-loading">
+    <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="/es/"><span class="brand-bolt" aria-hidden="true">&#9889;</span><span>Super Fast Tool</span></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-inner">
+            <article class="policy-shell">
+                <header class="policy-heading">
+                    <div class="policy-icon" aria-hidden="true">&#128274;</div>
+                    <h1>Política de privacidad</h1>
+                    <p class="updated">Última actualización: 22 de junio de 2026</p>
+                </header>
+
+                <div class="policy-content">
+                    <section>
+                        <h2>Resumen</h2>
+                        <p>Super Fast Tool ofrece calculadoras, conversores, generadores, utilidades multimedia y pequeños juegos en el navegador. No se requiere cuenta ni registro, y no recopilamos intencionalmente los valores introducidos en las herramientas.</p>
+                    </section>
+
+                    <section>
+                        <h2>Procesamiento local</h2>
+                        <p>La mayoría de cálculos y operaciones de archivo se ejecutan localmente en el navegador. Algunas funciones, como contacto, alojamiento, publicidad, analítica, traducción o terceros, pueden procesar información técnica limitada o enviada.</p>
+                    </section>
+
+                    <section>
+                        <h2>Formulario de contacto</h2>
+                        <p>Al enviar el formulario, tu nombre, correo electrónico y mensaje se envían a Formspree. No incluyas contraseñas, datos de pago, identificadores oficiales, registros médicos u otra información sensible.</p>
+                    </section>
+
+                    <section>
+                        <h2>Cookies, publicidad y terceros</h2>
+                        <p>El sitio puede usar servicios de terceros para alojamiento, seguridad, publicidad, analítica, traducción u otras funciones. Si Google AdSense está habilitado, pueden usarse cookies o tecnologías similares.</p>
+                    </section>
+
+                    <section>
+                        <h2>Almacenamiento local</h2>
+                        <p>Favoritos, algunas preferencias y progreso de juegos pueden guardarse en el almacenamiento local del navegador.</p>
+                    </section>
+
+                    <section>
+                        <h2>Actualizaciones</h2>
+                        <p>Esta política puede actualizarse cuando se añadan herramientas, publicidad, analítica o funciones de alojamiento.</p>
+                    </section>
+
+                    <section>
+                        <h2>Contacto</h2>
+                        <p>Las preguntas sobre esta política pueden enviarse mediante el formulario de contacto de Super Fast Tool.</p>
+                        <button id="policyContactButton" class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer" type="button" data-info-panel="contactPanel"><span aria-hidden="true">&#9993;&#65039;</span><span id="footerContact">Contacto</span></button>
+                    </section>
+                </div>
+            </article>
+            <div id="toolBackHome" class="tool-back-home">
+                <a href="/es/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
+                    <span aria-hidden="true">&#11013;&#65039;</span>
+                    Atrás</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
+            <p class="version">v1.2.453</p>
+        </div>
+    </footer>
+
+    <div id="contactBackdrop" class="contact-backdrop" aria-hidden="true"></div>
+    <section id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
+        <div id="contactToast" class="form-status contact-toast" data-form-status data-success-label="Sent" role="status"></div>
+        <div class="contact-modal-content">
+            <header class="contact-modal-header">
+                <div>
+                    <div class="contact-modal-icon" aria-hidden="true">&#9993;&#65039;</div>
+                    <h2 id="contactModalTitle">Contacto</h2>
+                </div>
+                <button id="contactCloseButton" class="text-zinc-400 hover:text-zinc-600 font-bold text-base cursor-pointer p-1 focus:outline-none" type="button" aria-label="Close contact form">&times;</button>
+            </header>
+            <form id="policyContactForm" class="contact-form info-panel-section info-panel-scroll space-y-3" action="https://formspree.io/f/mjggknek" method="POST">
+                <p class="text-sm leading-6 text-zinc-600">Send feedback, bug reports, or calculator ideas.</p>
+                <input name="name" type="text" placeholder="Name" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400">
+                <input name="email" type="email" placeholder="Email" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400" required>
+                <textarea name="message" rows="4" placeholder="Message" class="w-full bg-zinc-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-zinc-400 resize-none" required></textarea>
+                <button type="submit" class="contact-submit w-full bg-zinc-900 text-white rounded-xl px-4 py-2 text-sm font-bold cursor-pointer hover:bg-zinc-700">Contacto</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const policyContactButton = document.getElementById('policyContactButton');
+        const contactBackdrop = document.getElementById('contactBackdrop');
+        const contactModal = document.getElementById('contactModal');
+        const contactCloseButton = document.getElementById('contactCloseButton');
+        const policyContactForm = document.getElementById('policyContactForm');
+        const contactToast = document.getElementById('contactToast');
+        const toolBackHome = document.getElementById('toolBackHome');
+        let contactAnimationTimer = 0;
+
+        function preparePageForHistoryRestore() {
+            document.body.classList.remove('page-fade-out', 'history-fade-revealing');
+            document.body.classList.add('history-fade-ready');
+        }
+
+        function revealPageAfterHistoryRestore(event) {
+            document.body.classList.remove('page-fade-out');
+            const navigationEntry = performance.getEntriesByType('navigation')[0];
+            const fadeWasPrepared = document.body.classList.contains('history-fade-ready');
+            const isHistoryNavigation = event.persisted
+                || navigationEntry?.type === 'back_forward'
+                || fadeWasPrepared;
+
+            if (!isHistoryNavigation || !fadeWasPrepared) {
+                document.body.classList.remove('history-fade-ready', 'history-fade-revealing');
+                return;
+            }
+
+            document.body.classList.add('history-fade-revealing');
+            const fadeLayer = document.getElementById('pageFadeLayer');
+            if (fadeLayer) void fadeLayer.offsetWidth;
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.body.classList.remove('history-fade-ready');
+                    setTimeout(() => document.body.classList.remove('history-fade-revealing'), 80);
+                });
+            });
+        }
+
+        function returnToHub() {
+            document.body.classList.add('page-fade-out');
+            window.location.assign('/');
+        }
+
+        window.addEventListener('pagehide', preparePageForHistoryRestore);
+        window.addEventListener('pageshow', revealPageAfterHistoryRestore);
+        toolBackHome.querySelector('a').addEventListener('click', event => {
+            event.preventDefault();
+            returnToHub();
+        });
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => document.body.classList.remove('app-loading'));
+        });
+
+        function getContactTargetBounds() {
+            const width = Math.min(520, window.innerWidth - 32);
+            const height = Math.min(452, window.innerHeight - 32);
+            return {
+                width,
+                height,
+                left: (window.innerWidth - width) / 2,
+                top: Math.max(16, (window.innerHeight - height) / 2)
+            };
+        }
+
+        function openContactModal() {
+            clearTimeout(contactAnimationTimer);
+            const source = policyContactButton.getBoundingClientRect();
+            const target = getContactTargetBounds();
+
+            document.body.classList.add('contact-open');
+            contactModal.classList.remove('is-open');
+            contactModal.setAttribute('aria-hidden', 'false');
+            contactModal.style.visibility = 'visible';
+            contactModal.style.transition = 'none';
+            contactModal.style.top = `${source.top}px`;
+            contactModal.style.left = `${source.left}px`;
+            contactModal.style.width = `${source.width}px`;
+            contactModal.style.height = `${source.height}px`;
+            policyContactButton.style.visibility = 'hidden';
+            void contactModal.offsetWidth;
+            contactModal.style.transition = '';
+
+            requestAnimationFrame(() => {
+                contactModal.style.top = `${target.top}px`;
+                contactModal.style.left = `${target.left}px`;
+                contactModal.style.width = `${target.width}px`;
+                contactModal.style.height = `${target.height}px`;
+                contactModal.classList.add('is-open');
+            });
+
+            contactAnimationTimer = setTimeout(() => {
+                policyContactForm.querySelector('input')?.focus();
+            }, 210);
+        }
+
+        function closeContactModal() {
+            if (!document.body.classList.contains('contact-open')) return;
+            clearTimeout(contactAnimationTimer);
+            const source = policyContactButton.getBoundingClientRect();
+
+            contactModal.classList.remove('is-open');
+            contactModal.style.top = `${source.top}px`;
+            contactModal.style.left = `${source.left}px`;
+            contactModal.style.width = `${source.width}px`;
+            contactModal.style.height = `${source.height}px`;
+            document.body.classList.remove('contact-open');
+
+            contactAnimationTimer = setTimeout(() => {
+                contactModal.style.visibility = 'hidden';
+                contactModal.style.top = '';
+                contactModal.style.left = '';
+                contactModal.style.width = '';
+                contactModal.style.height = '';
+                contactModal.setAttribute('aria-hidden', 'true');
+                policyContactButton.style.visibility = '';
+                policyContactButton.focus();
+            }, 210);
+        }
+
+        policyContactButton.addEventListener('click', openContactModal);
+        contactCloseButton.addEventListener('click', closeContactModal);
+        contactBackdrop.addEventListener('click', closeContactModal);
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && document.body.classList.contains('contact-open')) {
+                closeContactModal();
+            }
+        });
+
+        policyContactForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            if (policyContactForm.classList.contains('is-sending')) return;
+
+            const controls = Array.from(policyContactForm.elements);
+            contactToast.classList.remove('show');
+            contactToast.textContent = '';
+            policyContactForm.classList.add('is-sending');
+            controls.forEach(control => { control.disabled = true; });
+
+            try {
+                const response = await fetch(policyContactForm.action, {
+                    method: 'POST',
+                    body: new FormData(policyContactForm),
+                    headers: { Accept: 'application/json' }
+                });
+                if (response.ok) {
+                    policyContactForm.reset();
+                    contactToast.textContent = contactToast.dataset.successLabel || 'Sent';
+                    contactToast.classList.add('show');
+                    setTimeout(() => {
+                        contactToast.classList.remove('show');
+                        contactToast.textContent = '';
+                    }, 1700);
+                }
+            } finally {
+                policyContactForm.classList.remove('is-sending');
+                controls.forEach(control => { control.disabled = false; });
+            }
+        });
+    </script>
+</body>
+</html>
