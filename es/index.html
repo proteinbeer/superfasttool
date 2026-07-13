@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -97,7 +97,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .card-page-in { animation: cardPageIn 0.18s ease-out both; }
+        .card-page-in { animation: none !important; }
         .lunch-slot-stage { position: relative; isolation: isolate; }
         .lunch-slot-machine { overflow: hidden; border: 1px solid #fed7aa; border-radius: 12px; background: #fff7ed; box-shadow: inset 0 0 0 3px #ffedd5; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
         .lunch-slot-row { display: flex; min-height: 50px; align-items: center; justify-content: center; gap: 10px; padding: 7px 12px; color: #a1a1aa; font-size: 12px; font-weight: 800; text-align: center; transition: transform 0.08s ease, color 0.18s ease, background-color 0.18s ease, min-height 0.42s cubic-bezier(.2,.8,.2,1), font-size 0.42s cubic-bezier(.2,.8,.2,1), gap 0.42s cubic-bezier(.2,.8,.2,1); }
@@ -165,7 +165,7 @@
         #cardsGrid.is-pinning > .expand-transition,
         #cardsGrid.is-pinning > .temp-card { transition: none !important; }
         #paginationControls { min-height: 2rem; }
-        #paginationControls.pagination-page-in { animation: cardPageIn 0.18s ease-out both; }
+        #paginationControls.pagination-page-in { animation: none !important; }
 
         /* Toggle switch animation */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
@@ -1000,7 +1000,7 @@
     </style>
 <style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
 </head>
-<body class="page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
+<body class="app-loading page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative">
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
     <div id="pageBackdrop" class="page-backdrop" aria-hidden="true"></div>
 
@@ -2551,7 +2551,7 @@
                 </a>
             </div>
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.455</p>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.456</p>
             <section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400">
                 <h2 class="mb-4 text-center text-sm font-black text-zinc-500">Términos del servicio</h2>
                 <p>Super Fast Tool is provided as a free online collection of calculators, converters, generators, image tools, audio tools, and simple browser-based utilities. By using this site, you agree to use each tool responsibly and only for lawful, personal, educational, creative, or professional purposes. The tools are designed to give quick results and convenient formatting help, but they are not a substitute for professional financial, legal, medical, tax, academic, engineering, or investment advice. You are responsible for reviewing any result before relying on it, publishing it, downloading it, or using it in another project.</p>
@@ -2647,7 +2647,7 @@
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
         const paginationControls = document.getElementById('paginationControls');
-        const footerActions = document.querySelectorAll('.footer-action');
+        const footerActions = document.querySelectorAll('.footer-action[data-info-panel]');
         const pageBackdrop = document.getElementById('pageBackdrop');
         const infoPanel = document.getElementById('infoPanel');
         const infoPanelIcon = document.getElementById('infoPanelIcon');
@@ -2663,6 +2663,14 @@
         const headerToolName = document.getElementById('headerToolName');
         const toolPageConfig = window.SFT_TOOL_PAGE || null;
         const logoCycleAnimationMs = 4200;
+        const skipHubCardIntroStorageKey = 'sft:skipHubCardIntro';
+        let skipNextHubCardIntro = false;
+        try {
+            skipNextHubCardIntro = sessionStorage.getItem(skipHubCardIntroStorageKey) === '1';
+            if (skipNextHubCardIntro) sessionStorage.removeItem(skipHubCardIntroStorageKey);
+        } catch (error) {
+            skipNextHubCardIntro = false;
+        }
         let logoMainWaveEndSeconds = 0;
 
         infoPanelSections.forEach(section => {
@@ -2735,7 +2743,26 @@
             }
         }
 
+        function resetTransientOverlayState() {
+            pageBackdrop?.classList.remove('is-visible');
+            document.documentElement.classList.remove('info-panel-open');
+            document.body.classList.remove('info-panel-open');
+            if (infoPanel) {
+                infoPanel.classList.add('hidden');
+                infoPanel.classList.remove('is-open', 'active-panel');
+                infoPanel.removeAttribute('style');
+            }
+            infoPanelSections?.forEach(section => {
+                section.style.maxHeight = '';
+                section.style.display = section.id === 'aboutPanel' ? '' : 'none';
+                section.classList.toggle('hidden', section.id !== 'aboutPanel');
+            });
+            activeInfoPanel = null;
+            activeInfoSourceButton = null;
+            footerActions?.forEach(action => { action.style.visibility = ''; });
+        }
         function revealPageAfterHistoryRestore(event) {
+            resetTransientOverlayState();
             document.body.classList.remove('page-fade-out');
             const navigationEntry = performance.getEntriesByType('navigation')[0];
             const fadeWasPrepared = document.body.classList.contains('history-fade-ready');
@@ -3426,7 +3453,7 @@
             renderPagination(totalPages);
 
             requestAnimationFrame(() => {
-                const shouldAnimateCards = !document.body.classList.contains('app-loading');
+                const shouldAnimateCards = !skipNextHubCardIntro && !document.body.classList.contains('app-loading');
                 document.body.classList.remove('app-loading');
                 if (shouldAnimateCards) {
                     currentCards.forEach((card, index) => {
@@ -3534,7 +3561,7 @@
                 addPageButton(item);
             });
             addPageButton(Math.min(totalPages, currentPage + 1), 'next', currentPage === totalPages);
-            if (!document.body.classList.contains('app-loading')) {
+            if (!skipNextHubCardIntro && !document.body.classList.contains('app-loading')) {
                 requestAnimationFrame(() => {
                     paginationControls.classList.add('pagination-page-in');
                 });

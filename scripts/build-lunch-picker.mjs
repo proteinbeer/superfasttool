@@ -1,11 +1,11 @@
-﻿import fs from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
 const slug = 'lunch-picker';
 const title = 'Lunch Picker';
 const description = "Spin a lunch slot machine, customize the menu list, exclude unavailable choices, and let chance choose today's meal.";
-const version = 'v1.2.455';
+const version = 'v1.2.456';
 
 function replaceRequired(source, pattern, replacement, label) {
   pattern.lastIndex = 0;

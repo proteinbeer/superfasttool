@@ -279,7 +279,7 @@
                 </div>
             </article>
             <div id="toolBackHome" class="tool-back-home">
-                <a href="/" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
+                <a href="/" data-skip-hub-card-intro class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-700 shadow-sm hover:border-zinc-400">
                     <span aria-hidden="true">&#11013;&#65039;</span>
                     Back
                 </a>
@@ -290,7 +290,7 @@
     <footer>
         <div class="footer-inner">
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p class="version">v1.2.455</p>
+            <p class="version">v1.2.456</p>
         </div>
     </footer>
 
@@ -476,5 +476,11 @@
             }
         });
     </script>
-</body>
+    <script>
+        document.querySelectorAll('[data-skip-hub-card-intro]').forEach(link => {
+            link.addEventListener('click', () => {
+                try { sessionStorage.setItem('sft:skipHubCardIntro', '1'); } catch (error) {}
+            });
+        });
+    </script></body>
 </html>

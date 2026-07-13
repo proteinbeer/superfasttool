@@ -1,4 +1,6 @@
-<html lang="ja"><head></head><body class="tool-page page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative tool-page-ready">﻿
+<!DOCTYPE html>
+<html lang="ja">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ランチ抽選 | Super Fast Tool</title>
@@ -59,7 +61,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .card-page-in { animation: cardPageIn 0.18s ease-out both; }
+        .card-page-in { animation: none !important; }
         .lunch-slot-stage { position: relative; isolation: isolate; }
         .lunch-slot-machine { overflow: hidden; border: 1px solid #fed7aa; border-radius: 12px; background: #fff7ed; box-shadow: inset 0 0 0 3px #ffedd5; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
         .lunch-slot-row { display: flex; min-height: 50px; align-items: center; justify-content: center; gap: 10px; padding: 7px 12px; color: #a1a1aa; font-size: 12px; font-weight: 800; text-align: center; transition: transform 0.08s ease, color 0.18s ease, background-color 0.18s ease, min-height 0.42s cubic-bezier(.2,.8,.2,1), font-size 0.42s cubic-bezier(.2,.8,.2,1), gap 0.42s cubic-bezier(.2,.8,.2,1); }
@@ -127,7 +129,7 @@
         #cardsGrid.is-pinning > .expand-transition,
         #cardsGrid.is-pinning > .temp-card { transition: none !important; }
         #paginationControls { min-height: 2rem; }
-        #paginationControls.pagination-page-in { animation: cardPageIn 0.18s ease-out both; }
+        #paginationControls.pagination-page-in { animation: none !important; }
 
         /* Toggle switch animation */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
@@ -962,6 +964,8 @@
     </style>
 <style id="sft-page-transitions-off">.page-fade-layer{display:none!important}body.page-fade-out{pointer-events:auto!important}</style>
 <style id="sft-tool-critical-open">body.tool-page #cardsGrid > .expandable-card:not(#lunchPickerCard),body.tool-page #cardsGrid > .temp-card,body.tool-page #cardsGrid > .card-placeholder{display:none!important}body.tool-page #cardsGrid{visibility:visible!important;min-height:0}</style>
+</head>
+<body class="tool-page page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative tool-page-ready">
 
 
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
@@ -1024,9 +1028,9 @@
                 <a href="/contact/" class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer hover:border-zinc-400">
                     <span aria-hidden="true">✉</span>
                     <span id="footerContact">連絡先</span>
-                </button>
+                </a>
             </div><p>© 2026 超高速ツール。無断転載を禁じます。</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.455</p><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">ランチ抽選</h2><div class="mb-4 text-center"><a href="/ja/guides/lunch-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>ガイド</a></div><h3 class="mt-8 text-sm font-black text-zinc-600">概要</h3>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.456</p><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">ランチ抽選</h2><div class="mb-4 text-center"><a href="/ja/guides/lunch-picker/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>ガイド</a></div><h3 class="mt-8 text-sm font-black text-zinc-600">概要</h3>
                 <p>ランチ抽選は、ランチスロットを回し、メニューを編集し、利用できない候補を除外して、今日の食事をランダムに選びます。作業をすばやく行うためのブラウザベースのツールです。</p>
                 <p class="mt-3">入力値と設定を確認し、結果をコピーまたはダウンロードする前にもう一度見直してください。</p>
                 <p class="mt-3">重要な作業では、公式資料、元ファイル、専門家による確認もあわせて利用してください。</p>
@@ -1096,7 +1100,7 @@
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
         const paginationControls = document.getElementById('paginationControls');
-        const footerActions = document.querySelectorAll('.footer-action');
+        const footerActions = document.querySelectorAll('.footer-action[data-info-panel]');
         const pageBackdrop = document.getElementById('pageBackdrop');
         const infoPanel = document.getElementById('infoPanel');
         const infoPanelIcon = document.getElementById('infoPanelIcon');
@@ -1112,6 +1116,14 @@
         const headerToolName = document.getElementById('headerToolName');
         const toolPageConfig = window.SFT_TOOL_PAGE || null;
         const logoCycleAnimationMs = 4200;
+        const skipHubCardIntroStorageKey = 'sft:skipHubCardIntro';
+        let skipNextHubCardIntro = false;
+        try {
+            skipNextHubCardIntro = sessionStorage.getItem(skipHubCardIntroStorageKey) === '1';
+            if (skipNextHubCardIntro) sessionStorage.removeItem(skipHubCardIntroStorageKey);
+        } catch (error) {
+            skipNextHubCardIntro = false;
+        }
         let logoMainWaveEndSeconds = 0;
 
         infoPanelSections.forEach(section => {
@@ -1184,7 +1196,26 @@
             }
         }
 
+        function resetTransientOverlayState() {
+            pageBackdrop?.classList.remove('is-visible');
+            document.documentElement.classList.remove('info-panel-open');
+            document.body.classList.remove('info-panel-open');
+            if (infoPanel) {
+                infoPanel.classList.add('hidden');
+                infoPanel.classList.remove('is-open', 'active-panel');
+                infoPanel.removeAttribute('style');
+            }
+            infoPanelSections?.forEach(section => {
+                section.style.maxHeight = '';
+                section.style.display = section.id === 'aboutPanel' ? '' : 'none';
+                section.classList.toggle('hidden', section.id !== 'aboutPanel');
+            });
+            activeInfoPanel = null;
+            activeInfoSourceButton = null;
+            footerActions?.forEach(action => { action.style.visibility = ''; });
+        }
         function revealPageAfterHistoryRestore(event) {
+            resetTransientOverlayState();
             document.body.classList.remove('page-fade-out');
             const navigationEntry = performance.getEntriesByType('navigation')[0];
             const fadeWasPrepared = document.body.classList.contains('history-fade-ready');
@@ -1875,7 +1906,7 @@
             renderPagination(totalPages);
 
             requestAnimationFrame(() => {
-                const shouldAnimateCards = !document.body.classList.contains('app-loading');
+                const shouldAnimateCards = !skipNextHubCardIntro && !document.body.classList.contains('app-loading');
                 document.body.classList.remove('app-loading');
                 if (shouldAnimateCards) {
                     currentCards.forEach((card, index) => {
@@ -1983,7 +2014,7 @@
                 addPageButton(item);
             });
             addPageButton(Math.min(totalPages, currentPage + 1), 'next', currentPage === totalPages);
-            if (!document.body.classList.contains('app-loading')) {
+            if (!skipNextHubCardIntro && !document.body.classList.contains('app-loading')) {
                 requestAnimationFrame(() => {
                     paginationControls.classList.add('pagination-page-in');
                 });

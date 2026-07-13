@@ -1,4 +1,6 @@
-<html lang="fr"><head></head><body class="tool-page page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative tool-page-ready">﻿
+<!DOCTYPE html>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compresseur d'images | Super Fast Tool</title>
@@ -58,7 +60,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .card-page-in { animation: cardPageIn 0.18s ease-out both; }
+        .card-page-in { animation: none !important; }
         body.page-fade-out {
             pointer-events: none;
         }
@@ -106,7 +108,7 @@
         #cardsGrid.is-pinning > .expand-transition,
         #cardsGrid.is-pinning > .temp-card { transition: none !important; }
         #paginationControls { min-height: 2rem; }
-        #paginationControls.pagination-page-in { animation: cardPageIn 0.18s ease-out both; }
+        #paginationControls.pagination-page-in { animation: none !important; }
 
         /* Toggle switch animation */
         .toggle-bg { transition: background-color 0.2s ease, opacity 0.2s ease; }
@@ -626,6 +628,8 @@ body.tool-page #cardsGrid > .temp-card,
 body.tool-page #cardsGrid > .card-placeholder { display: none !important; }
 body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
 </style>
+</head>
+<body class="tool-page page-transitions-disabled bg-tech-grid text-zinc-900 min-h-screen font-sans flex flex-col relative tool-page-ready">
 
 
     <div id="pageFadeLayer" class="page-fade-layer" aria-hidden="true"></div>
@@ -682,9 +686,9 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 <a href="/contact/" class="footer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white text-zinc-600 font-bold cursor-pointer hover:border-zinc-400">
                     <span aria-hidden="true">✉</span>
                     <span id="footerContact">Contacter</span>
-                </button>
+                </a>
             </div><p>© 2026 Super Fast Tool. Tous droits réservés.</p>
-            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.455</p><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Compresseur d'images</h2><div class="mb-4 text-center"><a href="/fr/guides/image-compressor/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>Guide</a></div><h3 class="mt-8 text-sm font-black text-zinc-600">Aperçu</h3>
+            <p class="mt-2 text-[10px] text-zinc-300 tracking-wider">v1.2.456</p><section class="mx-auto mt-8 max-w-4xl text-left text-xs leading-6 text-zinc-400 tool-guide"><h2 class="mb-4 text-center text-sm font-black text-zinc-500">Compresseur d'images</h2><div class="mb-4 text-center"><a href="/fr/guides/image-compressor/" class="tool-guide-link inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:border-zinc-700 hover:bg-zinc-700"><span aria-hidden="true">📖</span>Guide</a></div><h3 class="mt-8 text-sm font-black text-zinc-600">Aperçu</h3>
                 <p>Compresseur d'images est un outil dans le navigateur conçu pour réaliser rapidement cette tâche : Compressez une image dans un fichier JPG plus petit. Utilisez cet outil en ligne gratuit instantanément dans votre navigateur..</p>
                 <p class="mt-3">Vérifiez les données saisies et les réglages avant de copier ou de télécharger le résultat.</p>
                 <p class="mt-3">Pour un travail important, comparez aussi le résultat avec des sources officielles, les fichiers originaux ou une relecture professionnelle.</p>
@@ -751,7 +755,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         const expandableCards = document.querySelectorAll('.expandable-card');
         const categoryTabs = document.querySelectorAll('.category-tab');
         const paginationControls = document.getElementById('paginationControls');
-        const footerActions = document.querySelectorAll('.footer-action');
+        const footerActions = document.querySelectorAll('.footer-action[data-info-panel]');
         const pageBackdrop = document.getElementById('pageBackdrop');
         const infoPanel = document.getElementById('infoPanel');
         const infoPanelIcon = document.getElementById('infoPanelIcon');
@@ -767,6 +771,14 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
         const headerToolName = document.getElementById('headerToolName');
         const toolPageConfig = window.SFT_TOOL_PAGE || null;
         const logoCycleAnimationMs = 4200;
+        const skipHubCardIntroStorageKey = 'sft:skipHubCardIntro';
+        let skipNextHubCardIntro = false;
+        try {
+            skipNextHubCardIntro = sessionStorage.getItem(skipHubCardIntroStorageKey) === '1';
+            if (skipNextHubCardIntro) sessionStorage.removeItem(skipHubCardIntroStorageKey);
+        } catch (error) {
+            skipNextHubCardIntro = false;
+        }
         let logoMainWaveEndSeconds = 0;
 
         infoPanelSections.forEach(section => {
@@ -838,7 +850,26 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             }
         }
 
+        function resetTransientOverlayState() {
+            pageBackdrop?.classList.remove('is-visible');
+            document.documentElement.classList.remove('info-panel-open');
+            document.body.classList.remove('info-panel-open');
+            if (infoPanel) {
+                infoPanel.classList.add('hidden');
+                infoPanel.classList.remove('is-open', 'active-panel');
+                infoPanel.removeAttribute('style');
+            }
+            infoPanelSections?.forEach(section => {
+                section.style.maxHeight = '';
+                section.style.display = section.id === 'aboutPanel' ? '' : 'none';
+                section.classList.toggle('hidden', section.id !== 'aboutPanel');
+            });
+            activeInfoPanel = null;
+            activeInfoSourceButton = null;
+            footerActions?.forEach(action => { action.style.visibility = ''; });
+        }
         function revealPageAfterHistoryRestore(event) {
+            resetTransientOverlayState();
             document.body.classList.remove('page-fade-out');
             const navigationEntry = performance.getEntriesByType('navigation')[0];
             const fadeWasPrepared = document.body.classList.contains('history-fade-ready');
@@ -1530,7 +1561,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
             renderPagination(totalPages);
 
             requestAnimationFrame(() => {
-                const shouldAnimateCards = !document.body.classList.contains('app-loading');
+                const shouldAnimateCards = !skipNextHubCardIntro && !document.body.classList.contains('app-loading');
                 document.body.classList.remove('app-loading');
                 if (shouldAnimateCards) {
                     currentCards.forEach((card, index) => {
@@ -1638,7 +1669,7 @@ body.tool-page #cardsGrid { visibility: visible !important; min-height: 0; }
                 addPageButton(item);
             });
             addPageButton(Math.min(totalPages, currentPage + 1), 'next', currentPage === totalPages);
-            if (!document.body.classList.contains('app-loading')) {
+            if (!skipNextHubCardIntro && !document.body.classList.contains('app-loading')) {
                 requestAnimationFrame(() => {
                     paginationControls.classList.add('pagination-page-in');
                 });

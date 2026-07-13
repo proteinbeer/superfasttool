@@ -256,7 +256,7 @@
     <footer>
         <div class="footer-inner">
             <p>&copy; 2026 Super Fast Tool. All rights reserved.</p>
-            <p class="version">v1.2.455</p>
+            <p class="version">v1.2.456</p>
         </div>
     </footer>
 
@@ -442,5 +442,11 @@
             }
         });
     </script>
-</body>
+    <script>
+        document.querySelectorAll('[data-skip-hub-card-intro]').forEach(link => {
+            link.addEventListener('click', () => {
+                try { sessionStorage.setItem('sft:skipHubCardIntro', '1'); } catch (error) {}
+            });
+        });
+    </script></body>
 </html>
