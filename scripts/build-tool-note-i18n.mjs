@@ -6,7 +6,7 @@ import { parse, serialize } from 'parse5';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const baseUrl = 'https://superfasttool.com';
-const version = 'v1.2.453';
+const version = 'v1.2.455';
 const catalogPath = path.join(here, 'tool-note-i18n.catalog.json');
 if (!fs.existsSync(catalogPath)) throw new Error('Missing tool-note-i18n.catalog.json');
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
