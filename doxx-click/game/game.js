@@ -1,4 +1,4 @@
-function initDoxxClickGame() {
+﻿function initDoxxClickGame() {
     const canvas = document.getElementById('doxxClickCanvas');
     const startButton = document.getElementById('doxxClickStart');
     const muteButton = document.getElementById('doxxClickMute');
@@ -25,22 +25,22 @@ function initDoxxClickGame() {
 
     const language = platform?.language === 'ru' ? 'ru' : 'en';
     const labels = language === 'ru' ? {
-        play: 'Играть',
-        openTitleMenu: 'Открыть меню',
-        closeTitleMenu: 'Закрыть меню',
-        stageSelection: 'Выбор уровня',
-        mute: 'Выключить звук',
-        unmute: 'Включить звук',
-        information: 'Информация об игре',
-        developerLogo: 'Логотип разработчика Proteinbeer',
-        gameCanvas: "Игра Dox'x Click",
-        moveLeft: 'Двигаться влево',
-        moveRight: 'Двигаться вправо',
-        jump: 'Прыжок',
-        pause: 'Приостановить игру',
-        returnToTitle: 'Вернуться на главный экран',
-        stage: number => `Уровень ${number}`,
-        stageLocked: number => `Уровень ${number} заблокирован`
+        play: 'Ð˜Ð³Ñ€Ð°Ñ‚ÑŒ',
+        openTitleMenu: 'ÐžÑ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¼ÐµÐ½ÑŽ',
+        closeTitleMenu: 'Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¼ÐµÐ½ÑŽ',
+        stageSelection: 'Ð’Ñ‹Ð±Ð¾Ñ€ ÑƒÑ€Ð¾Ð²Ð½Ñ',
+        mute: 'Ð’Ñ‹ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒ Ð·Ð²ÑƒÐº',
+        unmute: 'Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒ Ð·Ð²ÑƒÐº',
+        information: 'Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ Ð¾Ð± Ð¸Ð³Ñ€Ðµ',
+        developerLogo: 'Ð›Ð¾Ð³Ð¾Ñ‚Ð¸Ð¿ Ñ€Ð°Ð·Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸ÐºÐ° Proteinbeer',
+        gameCanvas: "Ð˜Ð³Ñ€Ð° Dox'x Click",
+        moveLeft: 'Ð”Ð²Ð¸Ð³Ð°Ñ‚ÑŒÑÑ Ð²Ð»ÐµÐ²Ð¾',
+        moveRight: 'Ð”Ð²Ð¸Ð³Ð°Ñ‚ÑŒÑÑ Ð²Ð¿Ñ€Ð°Ð²Ð¾',
+        jump: 'ÐŸÑ€Ñ‹Ð¶Ð¾Ðº',
+        pause: 'ÐŸÑ€Ð¸Ð¾ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð¸Ð³Ñ€Ñƒ',
+        returnToTitle: 'Ð’ÐµÑ€Ð½ÑƒÑ‚ÑŒÑÑ Ð½Ð° Ð³Ð»Ð°Ð²Ð½Ñ‹Ð¹ ÑÐºÑ€Ð°Ð½',
+        stage: number => `Ð£Ñ€Ð¾Ð²ÐµÐ½ÑŒ ${number}`,
+        stageLocked: number => `Ð£Ñ€Ð¾Ð²ÐµÐ½ÑŒ ${number} Ð·Ð°Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ð½`
     } : {
         play: 'Play',
         openTitleMenu: 'Open title menu',
@@ -85,9 +85,14 @@ function initDoxxClickGame() {
     };
     document.addEventListener('pointerup', releasePressedButton, true);
     document.addEventListener('pointercancel', releasePressedButton, true);
-    document.addEventListener('contextmenu', event => {
-        if (event.target.closest('button')) event.preventDefault();
-    }, true);
+    const preventBrowserGameChrome = event => {
+        const target = event.target;
+        if (target?.closest?.('input, textarea, [contenteditable="true"], [data-allow-selection]')) return;
+        event.preventDefault();
+    };
+    document.addEventListener('contextmenu', preventBrowserGameChrome, true);
+    document.addEventListener('selectstart', preventBrowserGameChrome, true);
+    document.addEventListener('dragstart', preventBrowserGameChrome, true);
 
     let infoTransitioning = false;
     let infoTransientAnimations = [];
@@ -208,7 +213,16 @@ function initDoxxClickGame() {
 
     const ctx = canvas.getContext('2d');
     const maxStage = 100;
+    const testModeValue = new URLSearchParams(window.location.search).get('test');
+    const testMode = ['1', 'true', 'on', 'yes'].includes((testModeValue || '').toLowerCase());
     const mobileControls = document.querySelector('#doxxClickGameWrap [data-doxx-click-control]')?.parentElement;
+    const jumpControlButton = document.querySelector('[data-doxx-click-control="jump"]');
+    const canStageJump = () => currentStage >= 2;
+    const stageJumpCapacity = () => currentStage >= 3 ? 2 : currentStage >= 2 ? 1 : 0;
+    const updateStageControlVisibility = () => {
+        jumpControlButton?.classList.toggle('hidden', !canStageJump());
+        if (!canStageJump()) keys.jump = false;
+    };
     const setMobileControlsDisabled = disabled => {
         mobileControls?.querySelectorAll('[data-doxx-click-control]').forEach(button => {
             button.disabled = disabled;
@@ -316,6 +330,8 @@ function initDoxxClickGame() {
     let control = 'waiting';
     let controlUntil = 0;
     let possessionFill = 0;
+    let entityWarningUntil = 0;
+    let deathCause = '';
     let cameraX = 0;
     let stageCameraAnchor = 0.34;
     let lastTime = 0;
@@ -482,6 +498,29 @@ function initDoxxClickGame() {
 
     function getStageDefinition(stage) {
         worldWidth = baseWorldWidth + (stage - 1) * stageDistanceStep;
+        if (stage <= 3) {
+            worldWidth = baseWorldWidth;
+            const tutorialPlatforms = [
+                { x: 0, y: floorY, w: worldWidth, h: 120 }
+            ];
+            let tutorialExit = { x: worldWidth - 144, y: floorY - 72, w: 72, h: 72, direction: 'right' };
+            if (stage === 2) {
+                tutorialPlatforms.push({ x: worldWidth - 300, y: floorY - 68, w: 210, h: 18 });
+                tutorialExit = { x: worldWidth - 242, y: floorY - 140, w: 72, h: 72, direction: 'upper-right' };
+            } else if (stage === 3) {
+                tutorialPlatforms.push(
+                    { x: worldWidth - 610, y: floorY - 86, w: 155, h: 18 },
+                    { x: worldWidth - 320, y: floorY - 168, w: 210, h: 18 }
+                );
+                tutorialExit = { x: worldWidth - 252, y: floorY - 240, w: 72, h: 72, direction: 'upper-right' };
+            }
+            return {
+                platforms: tutorialPlatforms,
+                spikes: [],
+                spawn: { x: 90, y: floorY - player.h },
+                exit: tutorialExit
+            };
+        }
         const templateIndex = (stage - 1) % 10;
         const reverse = [2, 5, 7, 9].includes(templateIndex);
         const tiledPlatforms = tileStageRects(basePlatforms);
@@ -502,7 +541,7 @@ function initDoxxClickGame() {
         ];
         const selected = definitions[templateIndex];
         const startsOnRight = selected.spawn[0] > baseWorldWidth * 0.5;
-        const spawn = { x: startsOnRight ? worldWidth - 162 : 90, y: selected.spawn[1] };
+        const spawn = { x: startsOnRight ? worldWidth - 162 : 90, y: floorY - player.h };
         const exit = spawn.x < worldWidth * 0.5
             ? { x: worldWidth - 144, y: floorY - 72, w: 72, h: 72, direction: 'right' }
             : { x: 72, y: floorY - 72, w: 72, h: 72, direction: 'left' };
@@ -514,26 +553,86 @@ function initDoxxClickGame() {
             const [x, y, w, h] = selected.extra;
             stagePlatforms.push({ x, y, w, h });
         }
+        if (stage === 32) {
+            for (let index = stagePlatforms.length - 1; index >= 0; index -= 1) {
+                const platform = stagePlatforms[index];
+                if (platform.y < floorY && platform.x >= 360 && platform.x <= 1160) stagePlatforms.splice(index, 1);
+            }
+            stagePlatforms.push(
+                { x: 520, y: 314, w: 178, h: 18 },
+                { x: 890, y: 252, w: 132, h: 18 },
+                { x: 1188, y: 340, w: 154, h: 18 }
+            );
+        }
+        if ([71, 72, 81, 82].includes(stage)) {
+            for (let index = stagePlatforms.length - 1; index >= 0; index -= 1) {
+                const platform = stagePlatforms[index];
+                if (platform.y < floorY && platform.x >= 360 && platform.x <= 1320) stagePlatforms.splice(index, 1);
+            }
+            const variantPlatforms = {
+                71: [
+                    { x: 448, y: 350, w: 116, h: 18 },
+                    { x: 748, y: 286, w: 172, h: 18 },
+                    { x: 1104, y: 322, w: 136, h: 18 }
+                ],
+                72: [
+                    { x: 612, y: 258, w: 142, h: 18 },
+                    { x: 922, y: 344, w: 194, h: 18 },
+                    { x: 1260, y: 284, w: 152, h: 18 }
+                ],
+                81: [
+                    { x: 430, y: 300, w: 154, h: 18 },
+                    { x: 812, y: 350, w: 124, h: 18 },
+                    { x: 1158, y: 252, w: 184, h: 18 }
+                ],
+                82: [
+                    { x: 560, y: 340, w: 122, h: 18 },
+                    { x: 842, y: 280, w: 134, h: 18 },
+                    { x: 1120, y: 326, w: 212, h: 18 }
+                ]
+            };
+            stagePlatforms.push(...variantPlatforms[stage]);
+        }
+        const safePlatforms = stagePlatforms.filter(platform => {
+            if (platform.y >= floorY) return true;
+            const closeToSpawnX = platform.x + platform.w > spawn.x - 280
+                && platform.x < spawn.x + player.w + 280;
+            const closeToSpawnY = platform.y > spawn.y - 230 && platform.y < floorY;
+            return !(closeToSpawnX && closeToSpawnY);
+        });
         return {
-            platforms: stagePlatforms,
-            spikes: stageSpikes.filter(spike => {
+            platforms: safePlatforms,
+            spikes: stageSpikes.filter((spike, index) => {
                 const outsideSpawn = spike.x + spike.w < spawn.x - spawnSafeRadius
                     || spike.x > spawn.x + player.w + spawnSafeRadius;
                 const outsideExit = spike.x + spike.w < exit.x - exitSafeRadius
                     || spike.x > exit.x + exit.w + exitSafeRadius;
-                return outsideSpawn && outsideExit;
+                return outsideSpawn && outsideExit && (stage > 5 || index % 2 === 0);
             }),
             spawn,
             exit
         };
     }
-
     function createStageMonsters(stage, spawn, exit) {
-        const distanceMonsters = stage <= 1 ? 0 : Math.ceil((worldWidth - baseWorldWidth) / 650);
+        if (stage <= 3) {
+            walkingMonsters = [];
+            flyingMonsters = [];
+            return;
+        }
+        const distanceMonsters = Math.ceil((worldWidth - baseWorldWidth) / 760);
         const difficultyMonsters = Math.ceil(Math.max(0, stage - 1) * 15 / (maxStage - 1));
-        const required = stage <= 1 ? 0 : Math.min(140, distanceMonsters + difficultyMonsters);
-        const difficultyStage = stage * 0.5;
+        const earlyCap = Math.max(1, Math.ceil((stage - 3) / 2));
+        const required = stage <= 5 ? earlyCap : Math.min(140, distanceMonsters + difficultyMonsters);
+        const difficultyStage = stage <= 10 ? stage * 0.35 : stage * 0.5;
         const floorPlatforms = platforms.filter(platform => platform.y === floorY && platform.w >= 120);
+        const stageRangeScale = 1 + Math.max(0, stage - 1) / Math.max(1, maxStage - 1);
+        const monsterCenterX = monster => monster.x + monster.w * 0.5;
+        const nearSpawnLimit = spawnSafeRadius + 420;
+        const allMonsters = () => [...walkingMonsters, ...flyingMonsters];
+        const closeToSpawnCount = () => allMonsters().filter(monster => Math.abs(monsterCenterX(monster) - (spawn.x + player.w * 0.5)) < nearSpawnLimit).length;
+        const crowdCountNear = x => allMonsters().filter(monster => Math.abs(monsterCenterX(monster) - x) < 78).length;
+        const canAddMonsterAt = x => crowdCountNear(x) < 2
+            && (Math.abs(x - (spawn.x + player.w * 0.5)) >= nearSpawnLimit || closeToSpawnCount() < 1);
         walkingMonsters = [];
         flyingMonsters = [];
         let candidate = 0;
@@ -542,10 +641,10 @@ function initDoxxClickGame() {
             const flying = candidate % 2 === 1;
             if (flying) {
                 const x = 150 + (hash % (worldWidth - 300));
-                const rangeX = 38 + (hash % 48);
+                const rangeX = Math.round((38 + (hash % 48)) * stageRangeScale);
                 const flightNearExit = x + rangeX + 24 > exit.x - exitSafeRadius
                     && x - rangeX < exit.x + exit.w + exitSafeRadius;
-                if (Math.abs(x - spawn.x) > spawnSafeRadius + rangeX && !flightNearExit) {
+                if (Math.abs(x - spawn.x) > spawnSafeRadius + rangeX && !flightNearExit && canAddMonsterAt(x + 12)) {
                     flyingMonsters.push({
                         x, baseX: x, y: 170 + (hash % 145), baseY: 170 + (hash % 145), w: 24, h: 24,
                         rangeX, speed: 0.9 + difficultyStage * 0.026 + (candidate % 5) * 0.07,
@@ -563,7 +662,7 @@ function initDoxxClickGame() {
                 );
                 const patrolNearExit = maxX + 24 > exit.x - exitSafeRadius
                     && minX < exit.x + exit.w + exitSafeRadius;
-                if (!patrolHitsSpike && !patrolNearExit && Math.abs(x - spawn.x) > spawnSafeRadius + 38) {
+                if (!patrolHitsSpike && !patrolNearExit && Math.abs(x - spawn.x) > spawnSafeRadius + 38 && canAddMonsterAt(x + 12)) {
                     walkingMonsters.push({
                         x, startX: x, minX, maxX, y: floorY - 24,
                         w: 24, h: 24, speed: 56 + difficultyStage * 1.8 + (candidate % 6) * 3.5, direction: 1
@@ -590,6 +689,7 @@ function initDoxxClickGame() {
         stageTransitionStarted = 0;
         resetMonsters();
         resetPlayer();
+        updateStageControlVisibility();
         cameraX = Math.max(0, Math.min(worldWidth - canvas.width, checkpoint.x - canvas.width * stageCameraAnchor));
     }
 
@@ -623,22 +723,26 @@ function initDoxxClickGame() {
     function renderStageMenu() {
         if (!stageGrid) return;
         stageGrid.replaceChildren();
-        const highestPlayable = Math.min(maxStage, unlockedStage);
+        const progressStage = Math.max(1, Math.min(maxStage, unlockedStage));
+        const highestPlayable = testMode ? maxStage : progressStage;
         for (let stage = 1; stage <= maxStage; stage += 1) {
             const button = document.createElement('button');
             const unlocked = stage <= highestPlayable;
+            const cleared = stage < progressStage;
+            const current = stage === progressStage;
             button.type = 'button';
-            button.textContent = stage === maxStage ? '\uFFFD' : String(stage).padStart(2, '0');
+            button.textContent = stage === maxStage ? '\u29D6' : String(stage);
             button.disabled = !unlocked;
             button.className = unlocked
                 ? 'rounded-md border border-fuchsia-950 bg-zinc-900 px-1 py-2 text-[11px] font-black text-fuchsia-300 hover:border-fuchsia-500 hover:bg-fuchsia-950'
                 : 'cursor-not-allowed rounded-md border border-zinc-900 bg-zinc-950 px-1 py-2 text-[11px] font-black text-zinc-800';
+            if (cleared) button.classList.add('is-cleared');
+            if (current) button.classList.add('is-current');
             button.setAttribute('aria-label', unlocked ? labels.stage(stage) : labels.stageLocked(stage));
             if (unlocked) button.addEventListener('click', () => runGlitchTransition(() => startGame(stage)));
             stageGrid.append(button);
         }
     }
-
     function showStageMenu(withGlitch = false) {
         platform?.gameplayStop();
         musicScene = 'silent';
@@ -836,7 +940,7 @@ function initDoxxClickGame() {
         player.vx = 0;
         player.vy = 0;
         facingDirection = 1;
-        player.jumpsLeft = 2;
+        player.jumpsLeft = stageJumpCapacity();
         spinAngle = 0;
         spinTime = 0;
         keys.left = false;
@@ -851,6 +955,8 @@ function initDoxxClickGame() {
         control = 'waiting';
         controlUntil = 0;
         possessionFill = 0;
+        entityWarningUntil = 0;
+        deathCause = '';
         status.textContent = brokenText.waiting;
         timerBox?.classList.remove('is-low-time');
         if (timerBar) {
@@ -871,6 +977,7 @@ function initDoxxClickGame() {
     }
 
     function beginEntityControl(now) {
+        entityWarningUntil = 0;
         control = 'entity';
         possessionFill = 1;
         controlUntil = now + 3000;
@@ -879,6 +986,7 @@ function initDoxxClickGame() {
     }
 
     function updateControl(now) {
+        if (control === 'player' && controlUntil - now <= 850 && now < controlUntil) entityWarningUntil = Math.max(entityWarningUntil, controlUntil);
         if (control === 'player' && now >= controlUntil) beginEntityControl(now);
         if (control === 'entity' && now >= controlUntil) {
             control = 'waiting';
@@ -890,6 +998,7 @@ function initDoxxClickGame() {
         const duration = control === 'player' ? 5000 : control === 'entity' ? 3000 : 1;
         const ratio = controlUntil ? Math.max(0, Math.min(1, (controlUntil - now) / duration)) : 0;
         possessionFill = control === 'entity' ? 1 : control === 'player' ? 1 - ratio : 0;
+        if (control !== 'player' || now >= entityWarningUntil) entityWarningUntil = 0;
         if (timerBar) {
             timerBar.style.width = `${ratio * 100}%`;
             timerBar.style.backgroundColor = '#f0abfc';
@@ -899,13 +1008,18 @@ function initDoxxClickGame() {
     }
 
     function entityInput() {
+        const now = performance.now();
+        const segment = Math.max(180, 520 - currentStage * 2.4);
+        const tick = Math.floor(now / segment);
+        const noise = Math.sin(tick * 12.9898 + currentStage * 78.233) * 43758.5453;
+        const value = noise - Math.floor(noise);
+        const panic = Math.sin(now * (0.012 + currentStage * 0.00024)) > 0.68;
         return {
-            left: false,
-            right: true,
+            left: value < (panic ? 0.62 : 0.48),
+            right: value >= (panic ? 0.38 : 0.52),
             jump: false
         };
     }
-
     function emitJumpSparks() {
         for (let index = 0; index < 7; index += 1) {
             const life = 0.28 + Math.random() * 0.24;
@@ -993,8 +1107,9 @@ function initDoxxClickGame() {
         }
     }
 
-    function beginDeathAnimation() {
+    function beginDeathAnimation(cause = 'void') {
         if (deathAnimation) return;
+        deathCause = cause;
         platform?.gameplayStop();
         recordDeath();
         deathInterstitialDue = deaths % 4 === 0;
@@ -1132,9 +1247,10 @@ function initDoxxClickGame() {
         updateMonsters(dt, now);
         if (control === 'waiting' && (keys.left || keys.right || keys.jump)) beginPlayerControl(now);
         const input = control === 'player' ? keys : control === 'entity' ? entityInput() : { left: false, right: false, jump: false };
-        if (control === 'entity') input.jump = keys.jump;
-        const acceleration = control === 'entity' ? 1485 : 760;
-        const maxSpeed = control === 'entity' ? 368 : 220;
+        if (control === 'entity') input.jump = canStageJump() && keys.jump;
+        const entityPowerScale = 0.3 + 0.7 * Math.max(0, currentStage - 1) / Math.max(1, maxStage - 1);
+        const acceleration = control === 'entity' ? 1485 * entityPowerScale : 760;
+        const maxSpeed = control === 'entity' ? 368 * entityPowerScale : 220;
         if (input.left) player.vx -= acceleration * dt;
         if (input.right) player.vx += acceleration * dt;
         if (control === 'entity' && keys.left) player.vx -= 2280 * dt;
@@ -1143,7 +1259,7 @@ function initDoxxClickGame() {
         if (player.vx < -12) facingDirection = -1;
         else if (player.vx > 12) facingDirection = 1;
         const startedGrounded = player.grounded;
-        if (input.jump && player.jumpsLeft > 0) {
+        if (canStageJump() && input.jump && player.jumpsLeft > 0) {
             const isDoubleJump = player.jumpsLeft === 1;
             player.vy = -430;
             player.grounded = false;
@@ -1174,17 +1290,18 @@ function initDoxxClickGame() {
                 player.y = platform.y - player.h;
                 player.vy = 0;
                 player.grounded = true;
-                player.jumpsLeft = 2;
+                player.jumpsLeft = stageJumpCapacity();
             }
         }
         resumeSupportPlatform = null;
-        if (startedGrounded && !player.grounded) player.jumpsLeft = Math.min(player.jumpsLeft, 1);
+        if (startedGrounded && !player.grounded) player.jumpsLeft = Math.min(player.jumpsLeft, currentStage >= 3 ? 1 : 0);
         const hitSpike = spikes.some(spike => player.x + player.w > spike.x && player.x < spike.x + spike.w && player.y + player.h > spike.y);
         const hitMonster = walkingMonsters.some(overlapsPlayer) || flyingMonsters.some(overlapsPlayer);
         if (player.y > canvas.height - player.h || hitSpike || hitMonster) {
-            beginDeathAnimation();
+            beginDeathAnimation(hitMonster ? 'corrupted' : hitSpike ? 'spikes' : 'void');
             return;
         }
+        deathCause = '';
         const enteredExit = player.x + player.w > exitPortal.x
             && player.x < exitPortal.x + exitPortal.w
             && player.y + player.h > exitPortal.y
@@ -1262,9 +1379,18 @@ function initDoxxClickGame() {
         ctx.lineTo(eyeX - eyeW * 0.58, eyeY + eyeH + 13);
         ctx.closePath();
         ctx.fill();
-        ctx.shadowColor = possessed ? '#7f1d1d' : '#881337';
+        const eyeStageColor = currentStage <= 40
+            ? { fill: 'rgba(226,216,220,.84)', glow: '#881337' }
+            : currentStage <= 60
+                ? { fill: 'rgba(250,204,21,.86)', glow: '#a16207' }
+                : currentStage <= 80
+                    ? { fill: 'rgba(249,115,22,.86)', glow: '#c2410c' }
+                    : currentStage <= 90
+                        ? { fill: 'rgba(239,68,68,.88)', glow: '#dc2626' }
+                        : { fill: 'rgba(255,18,18,.97)', glow: '#ff1f1f' };
+        ctx.shadowColor = possessed ? '#7f1d1d' : eyeStageColor.glow;
         ctx.shadowBlur = 14;
-        ctx.fillStyle = possessed ? 'rgba(218,188,194,.82)' : 'rgba(226,216,220,.84)';
+        ctx.fillStyle = eyeStageColor.fill;
         ctx.beginPath();
         ctx.moveTo(eyeX - eyeW, eyeY);
         ctx.lineTo(eyeX - eyeW * 0.55, eyeY - eyeH);
@@ -1276,12 +1402,18 @@ function initDoxxClickGame() {
         ctx.fill();
         ctx.shadowBlur = 0;
         const playerScreenX = player.x - cameraX;
-        const pupilX = eyeX + Math.max(-28, Math.min(28, (playerScreenX - centerX) * 0.075));
-        const pupilY = eyeY + Math.max(-7, Math.min(9, (player.y - floorY * 0.5) * 0.025));
+        const jitterX = possessed ? Math.sin(now * 0.12) * 5 + Math.sin(now * 0.047) * 3 : 0;
+        const jitterY = possessed ? Math.cos(now * 0.105) * 4 + Math.sin(now * 0.071) * 2 : 0;
+        const pupilX = eyeX + Math.max(-28, Math.min(28, (playerScreenX - centerX) * 0.075)) + jitterX;
+        const pupilY = eyeY + Math.max(-7, Math.min(9, (player.y - floorY * 0.5) * 0.025)) + jitterY;
         ctx.fillStyle = '#09050d';
         ctx.beginPath();
-        ctx.arc(pupilX, pupilY, Math.round(eyeH * 0.72), 0, Math.PI * 2);
+        ctx.arc(pupilX, pupilY, Math.round(eyeH * (possessed ? 0.78 : 0.72)), 0, Math.PI * 2);
         ctx.fill();
+        if (possessed) {
+            ctx.fillStyle = '#f0abfc';
+            ctx.fillRect(pupilX - 3 + Math.sin(now * 0.19) * 2, pupilY - 3 + Math.cos(now * 0.17) * 2, 6, 6);
+        }
         ctx.restore();
 
         const pulse = 0.1 + Math.sin(now * 0.0015) * 0.02;
@@ -1462,6 +1594,7 @@ function initDoxxClickGame() {
         ctx.fillRect(exitPortal.x + 44 - portalPixel * 6, exitPortal.y + 44, 4, 4);
         ctx.restore();
         drawDeathLightning();
+        drawStageGuidance(now);
         ctx.save();
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
@@ -1515,14 +1648,30 @@ function initDoxxClickGame() {
             ctx.translate(-(boltX + player.w * 0.5), -(boltY + player.h * 0.5));
         }
         ctx.save();
-        ctx.shadowColor = deathAnimation ? '#fde047' : jumpGlow > 0 ? '#fff7a3' : '#facc15';
-        ctx.shadowBlur = deathAnimation ? 24 : 8 + jumpGlowStrength * 18;
+        const corruptionHeight = possessionFill > 0 ? Math.max(1, Math.round(player.h * possessionFill)) : 0;
+        if (corruptionHeight > 0 && !deathAnimation) {
+            const warningBright = possessionFill >= 2 / 3 && Math.floor(now / 55) % 2 === 0;
+            const glowPulse = 0.65 + Math.sin(now * 0.026) * 0.18;
+            ctx.save();
+            ctx.shadowColor = '#d946ef';
+            ctx.shadowBlur = 5 + possessionFill * 8 + (warningBright ? 4 : 0);
+            ctx.fillStyle = warningBright
+                ? `rgba(192,132,252,${0.40 + possessionFill * 0.38 + glowPulse * 0.08})`
+                : `rgba(88,28,135,${0.44 + possessionFill * 0.30 + glowPulse * 0.04})`;
+            ctx.fillRect(boltX, boltY + player.h - corruptionHeight, player.w, corruptionHeight);
+            ctx.restore();
+        }
+        const yellowGlowStrength = Math.max(0, 1 - possessionFill * 2.6);
+        ctx.shadowColor = deathAnimation ? '#fde047' : jumpGlow > 0 ? '#fff7a3' : `rgba(250,204,21,${0.18 * yellowGlowStrength})`;
+        ctx.shadowBlur = deathAnimation ? 24 : jumpGlow > 0 ? 8 + jumpGlowStrength * 18 : 2 + yellowGlowStrength * 5;
         if (deathAnimation) ctx.globalAlpha = deathAnimation.struck ? 0 : 0.62 + Math.random() * 0.38;
         ctx.fillStyle = '#facc15';
         ctx.fillRect(boltX, boltY, player.w, player.h);
-        if (possessionFill > 0) {
-            const corruptionHeight = Math.max(1, Math.round(player.h * possessionFill));
-            ctx.fillStyle = '#a855f7';
+        if (corruptionHeight > 0) {
+            ctx.shadowColor = '#d946ef';
+            ctx.shadowBlur = control === 'entity' ? 10 : 4 + possessionFill * 5;
+            const warningBright = possessionFill >= 2 / 3 && Math.floor(now / 55) % 2 === 0;
+            ctx.fillStyle = warningBright ? '#c084fc' : '#6d28d9';
             ctx.fillRect(boltX, boltY + player.h - corruptionHeight, player.w, corruptionHeight);
         }
         ctx.shadowBlur = 0;
@@ -1540,19 +1689,208 @@ function initDoxxClickGame() {
         ctx.restore();
         ctx.restore();
         if (control === 'entity') {
-            ctx.strokeStyle = 'rgba(239,68,68,.35)';
-            ctx.lineWidth = 2;
+            const centerX = Math.round(canvas.width * 0.5);
+            const eyeX = centerX;
+            const eyeY = Math.round(canvas.height * 0.18);
+            const playerScreenX = player.x - cameraX;
+            const jitterX = Math.sin(now * 0.12) * 5 + Math.sin(now * 0.047) * 3;
+            const jitterY = Math.cos(now * 0.105) * 4 + Math.sin(now * 0.071) * 2;
+            const pupilX = eyeX + Math.max(-28, Math.min(28, (playerScreenX - centerX) * 0.075)) + jitterX;
+            const pupilY = eyeY + Math.max(-7, Math.min(9, (player.y - floorY * 0.5) * 0.025)) + jitterY;
+            const startX = cameraX + pupilX;
+            const startY = pupilY;
+            const endX = player.x + player.w * 0.5;
+            const endY = player.y + player.h * 0.45;
+            ctx.save();
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowColor = '#d946ef';
+            ctx.shadowBlur = 16;
             ctx.beginPath();
-            ctx.moveTo(player.x + 12, player.y);
-            ctx.lineTo(player.x + 12 + Math.sin(now * 0.02) * 30, player.y - 90);
+            ctx.moveTo(startX, startY);
+            for (let index = 1; index <= 9; index += 1) {
+                const ratio = index / 10;
+                const baseX = startX + (endX - startX) * ratio;
+                const baseY = startY + (endY - startY) * ratio;
+                const bend = Math.sin(now * 0.08 + index * 2.3) * 18 + (index % 2 === 0 ? 10 : -10);
+                ctx.lineTo(baseX + bend, baseY + Math.cos(now * 0.06 + index) * 8);
+            }
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = 'rgba(168,85,247,.42)';
+            ctx.lineWidth = 9;
             ctx.stroke();
+            ctx.shadowBlur = 12;
+            ctx.strokeStyle = 'rgba(240,171,252,.98)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.restore();
         }
         ctx.restore();
         ctx.fillStyle = '#e879f9';
         ctx.font = 'bold 18px monospace';
         ctx.fillText(`\u2371\u0338 ${currentStage} // \u29D6 ${deaths}`, 16, 30);
+        if (testMode) {
+            ctx.save();
+            ctx.shadowColor = '#22d3ee';
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = '#22d3ee';
+            ctx.font = '900 30px monospace';
+            ctx.fillText('TEST MODE', 16, 66);
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(103,232,249,.86)';
+            ctx.font = '800 12px monospace';
+            ctx.fillText('A/D stage skip // all stages unlocked', 18, 86);
+            ctx.restore();
+        }
     }
 
+    function drawStageGuidance(now) {
+        const hints = [];
+        if (currentStage === 1 && control !== 'entity') {
+            hints.push('possession');
+        } else if (currentStage === 2 && control !== 'entity') {
+            hints.push('jump');
+        } else if (currentStage === 3 && control !== 'entity') {
+            hints.push('doubleJump');
+        }
+        if (!hints.length) return;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        hints.forEach((hint, index) => {
+            const pulse = 0.72 + Math.sin(now * 0.009 + index) * 0.18;
+            const y = canvas.height * 0.18 + index * 28;
+            const x = canvas.width * 0.5;
+            ctx.fillStyle = `rgba(5, 1, 8, ${0.62 + pulse * 0.18})`;
+            ctx.fillRect(x - 118, y - 15, 236, 30);
+            ctx.strokeStyle = hint === 'resist' ? `rgba(240, 171, 252, ${pulse})` : 'rgba(217, 70, 239, 0.45)';
+            ctx.strokeRect(x - 118, y - 15, 236, 30);
+            if (hint === 'possession') {
+                const cubeY = y - 8;
+                const cubeSize = 16;
+                const cubeXs = [x - 92, x - 64, x - 36, x - 8];
+                cubeXs.forEach((cubeX, cubeIndex) => {
+                    ctx.fillStyle = '#facc15';
+                    ctx.fillRect(cubeX, cubeY, cubeSize, cubeSize);
+                    if (cubeIndex > 0) {
+                        ctx.fillStyle = '#a855f7';
+                        const fillHeight = Math.round(cubeSize * cubeIndex / 3);
+                        ctx.fillRect(cubeX, cubeY + cubeSize - fillHeight, cubeSize, fillHeight);
+                    }
+                    ctx.fillStyle = '#09090b';
+                    ctx.fillRect(cubeX + 4, cubeY + 5, 3, 4);
+                    ctx.fillRect(cubeX + 10, cubeY + 5, 3, 4);
+                });
+                const eyeX = x + 52;
+                const eyePulse = Math.sin(now * 0.018) * 1.5;
+                ctx.fillStyle = '#f0abfc';
+                ctx.beginPath();
+                ctx.moveTo(eyeX - 24, y);
+                ctx.quadraticCurveTo(eyeX, y - 16 + eyePulse, eyeX + 24, y);
+                ctx.quadraticCurveTo(eyeX, y + 16 - eyePulse, eyeX - 24, y);
+                ctx.fill();
+                ctx.fillStyle = '#050006';
+                ctx.fillRect(eyeX - 6, y - 6, 12, 12);
+            } else {
+                ctx.fillStyle = '#f0abfc';
+                if (hint === 'jump' || hint === 'doubleJump') {
+                    const cubeSize = 18;
+                    const arrowWidth = 18;
+                    const gap = 12;
+                    const arrowGap = 9;
+                    const arrowCount = hint === 'doubleJump' ? 2 : 1;
+                    const groupWidth = cubeSize + gap + arrowCount * arrowWidth + (arrowCount - 1) * arrowGap;
+                    const groupLeft = x - groupWidth / 2;
+                    const cubeX = groupLeft;
+                    const cubeY = y - cubeSize / 2;
+                    ctx.fillStyle = '#facc15';
+                    ctx.fillRect(cubeX, cubeY, cubeSize, cubeSize);
+                    ctx.fillStyle = '#a855f7';
+                    ctx.fillRect(cubeX, cubeY + cubeSize / 2, cubeSize, cubeSize / 2);
+                    ctx.fillStyle = '#09090b';
+                    ctx.fillRect(cubeX + 5, cubeY + 5, 3, 4);
+                    ctx.fillRect(cubeX + 11, cubeY + 5, 3, 4);
+                    const firstArrowX = groupLeft + cubeSize + gap + arrowWidth / 2;
+                    const arrowXs = Array.from({ length: arrowCount }, (_, arrowIndex) => firstArrowX + arrowIndex * (arrowWidth + arrowGap));
+                    arrowXs.forEach(arrowX => {
+                        ctx.fillStyle = '#f0abfc';
+                        ctx.beginPath();
+                        ctx.moveTo(arrowX, y - 7);
+                        ctx.lineTo(arrowX + 9, y + 7);
+                        ctx.lineTo(arrowX - 9, y + 7);
+                        ctx.closePath();
+                        ctx.fill();
+                    });
+                } else if (hint === 'spikes') {
+                    for (const spikeX of [x - 28, x, x + 28]) {
+                        ctx.beginPath();
+                        ctx.moveTo(spikeX, y - 12);
+                        ctx.lineTo(spikeX + 11, y + 10);
+                        ctx.lineTo(spikeX - 11, y + 10);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                } else if (hint === 'corrupted') {
+                    ctx.fillRect(x - 34, y - 10, 20, 20);
+                    ctx.fillRect(x - 10, y - 10, 20, 20);
+                    ctx.fillRect(x + 14, y - 10, 20, 20);
+                } else {
+                    for (const dropX of [x - 24, x, x + 24]) {
+                        ctx.beginPath();
+                        ctx.moveTo(dropX - 9, y - 9);
+                        ctx.lineTo(dropX + 9, y - 9);
+                        ctx.lineTo(dropX, y + 11);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                }
+            }
+        });
+        ctx.restore();
+    }
+    function drawGameplayGlitch(now) {
+        if (!running || paused || completed || stageTransitionStarted) return;
+        const stageProgress = Math.max(0, (currentStage - 8) / Math.max(1, maxStage - 8));
+        if (stageProgress <= 0) return;
+        const flicker = Math.max(0, Math.sin(now * (0.007 + stageProgress * 0.014)));
+        const intensity = Math.min(0.5, (stageProgress * 0.86 + flicker * stageProgress * 0.24) * 0.5);
+        const burstRate = Math.max(44, 190 - intensity * 122);
+        const burst = Math.floor(now / burstRate) % 4 === 0;
+        const lineCount = Math.floor(2 + intensity * 12);
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
+        for (let i = 0; i < lineCount; i += 1) {
+            const drift = Math.floor(now * (0.11 + intensity * 0.16));
+            const y = (i * 97 + drift * (19 + i * 3)) % canvas.height;
+            const h = Math.max(1, Math.floor(1 + intensity * ((i % 4) + 2)));
+            const alpha = 0.035 + intensity * 0.105;
+            if (i % 3 === 0) ctx.fillStyle = `rgba(216, 70, 239, ${alpha})`;
+            else if (i % 3 === 1) ctx.fillStyle = `rgba(248, 250, 252, ${alpha * 0.38})`;
+            else ctx.fillStyle = `rgba(8, 0, 12, ${alpha * 1.25})`;
+            const offset = Math.round(Math.sin(now * 0.017 + i * 1.73) * intensity * 20);
+            ctx.fillRect(offset, y, canvas.width, h);
+            if (intensity > 0.42 && (i + Math.floor(now / 80)) % 2 === 0) {
+                ctx.fillStyle = `rgba(126, 34, 206, ${alpha * 0.72})`;
+                ctx.fillRect(-offset * 0.6, y + h + 1, canvas.width, 1);
+            }
+        }
+        if (burst && intensity > 0.36) {
+            const tearCount = Math.floor(1 + intensity * 5);
+            for (let i = 0; i < tearCount; i += 1) {
+                const y = (Math.floor(now * 0.31) + i * 131) % canvas.height;
+                const h = 5 + Math.floor(intensity * 18);
+                const x = Math.round(Math.sin(now * 0.021 + i) * intensity * 34);
+                ctx.globalAlpha = 0.045 + intensity * 0.07;
+                ctx.fillStyle = i % 2 ? '#d946ef' : '#0b0011';
+                ctx.fillRect(x, y, canvas.width, h);
+            }
+
+        }
+
+        ctx.restore();
+    }
     function drawStageTransition(now) {
         if (!stageTransitionStarted) return;
         const elapsed = (now - stageTransitionStarted) / 1000;
@@ -1688,6 +2026,7 @@ function initDoxxClickGame() {
         const visualNow = (paused ? pauseStartedAt : now) - visualPausedDuration;
         drawBackground(visualNow);
         drawWorld(visualNow);
+        drawGameplayGlitch(visualNow);
         if (paused) drawPauseOverlay(now);
         drawStageTransition(now);
         if (completed && currentStage >= maxStage && stageTransitionStarted
@@ -1697,7 +2036,12 @@ function initDoxxClickGame() {
         animationId = requestAnimationFrame(frame);
     }
 
+    function isPortraitBlocked() {
+        return window.matchMedia?.('(orientation: portrait)').matches;
+    }
+
     function startGame(stage = Math.min(maxStage, unlockedStage)) {
+        if (isPortraitBlocked()) return;
         setMobileControlsDisabled(false);
         musicScene = 'game';
         ensureAudio();
@@ -1718,21 +2062,41 @@ function initDoxxClickGame() {
         if (!animationId) animationId = requestAnimationFrame(frame);
     }
 
+    function goToTestStage(delta) {
+        if (!testMode || !running || paused || completed) return false;
+        const nextStage = Math.max(1, Math.min(maxStage, currentStage + delta));
+        if (nextStage === currentStage) return true;
+        keys.left = false;
+        keys.right = false;
+        keys.jump = false;
+        jumpKeyHeld = false;
+        startGame(nextStage);
+        return true;
+    }
+
     function setKey(event, pressed) {
         const key = event.key.toLowerCase();
-        const isJumpKey = key === 'arrowup' || key === 'w' || key === ' ';
+        const isJumpKey = key === ' ';
+        const isStageSkipKey = key === 'a' || key === 'd';
+        if (isStageSkipKey) {
+            keys.left = false;
+            keys.right = false;
+            if (testMode && pressed && !event.repeat) goToTestStage(key === 'd' ? 1 : -1);
+            event.preventDefault();
+            return;
+        }
         if (!running) {
             if (isJumpKey && !pressed) jumpKeyHeld = false;
             return;
         }
-        if (key === 'arrowleft' || key === 'a') keys.left = pressed;
-        if (key === 'arrowright' || key === 'd') keys.right = pressed;
+        if (key === 'arrowleft') keys.left = pressed;
+        if (key === 'arrowright') keys.right = pressed;
         if (isJumpKey) {
             if (pressed && !jumpKeyHeld) keys.jump = true;
             jumpKeyHeld = pressed;
         }
-        if (pressed && control === 'waiting' && ['arrowleft', 'arrowright', 'arrowup', 'a', 'd', 'w', ' '].includes(key)) beginPlayerControl(performance.now());
-        if (['arrowleft', 'arrowright', 'arrowup', 'a', 'd', 'w', ' '].includes(key)) event.preventDefault();
+        if (pressed && control === 'waiting' && ['arrowleft', 'arrowright', ' '].includes(key)) beginPlayerControl(performance.now());
+        if (['arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
     }
 
     window.addEventListener('keydown', event => setKey(event, true));

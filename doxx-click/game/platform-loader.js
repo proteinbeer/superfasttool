@@ -1,5 +1,5 @@
 ﻿(function loadDoxxPlatform() {
-    const version = '0.2.96';
+    const version = '0.3.36';
 
     function loadScript(src) {
         return new Promise((resolve, reject) => {

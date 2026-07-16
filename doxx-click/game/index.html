@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#050006">
-    <meta name="application-version" content="0.2.96">
+    <meta name="application-version" content="0.3.36">
     <title>Dox'x Click</title>
     <meta name="description" content="Dox'x Click is a compact pixel horror platform game where control shifts between the player and a hostile entity.">
     <style>
@@ -30,11 +30,27 @@
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
         button { font: inherit; -webkit-tap-highlight-color: transparent; }
+        html,
+        body,
+        body *,
+        .game-shell,
+        .game-frame,
+        #doxxClickIntro,
+        #doxxClickMenu,
+        #doxxClickGameWrap,
+        #doxxClickCanvas,
         button,
         button * {
             user-select: none;
             -webkit-user-select: none;
+            -ms-user-select: none;
             -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img,
+        canvas {
+            -webkit-user-drag: none;
+            user-drag: none;
         }
         button:not(:disabled) { cursor: pointer; }
         .hidden { display: none !important; }
@@ -344,7 +360,18 @@
             font-size: clamp(11px, 2.4dvh, 16px);
             font-weight: 900;
         }
-        #doxxClickStageGrid button:disabled { border-color: #18181b; background: #09090b; color: #3f3f46; cursor: not-allowed; }
+        #doxxClickStageGrid button:disabled { border-color: #18181b; background: #09090b; color: #3f3f46; cursor: not-allowed; }        #doxxClickStageGrid button.is-cleared { border-color: #4a044e; color: #a855f7; opacity: 0.82; }
+        #doxxClickStageGrid button.is-current {
+            border-color: #f0abfc;
+            color: #fff;
+            background: #4a044e;
+            box-shadow: 0 0 0 1px rgba(240,171,252,.35), 0 0 18px rgba(217,70,239,.42);
+            animation: stageCurrentPulse 1.15s ease-in-out infinite alternate;
+        }
+        @keyframes stageCurrentPulse {
+            from { box-shadow: 0 0 0 1px rgba(240,171,252,.26), 0 0 10px rgba(217,70,239,.24); }
+            to { box-shadow: 0 0 0 1px rgba(240,171,252,.5), 0 0 23px rgba(217,70,239,.58); }
+        }
         #doxxClickGameWrap { width: 100%; flex-direction: column; gap: 12px; }
         #doxxClickGameWrap:not(.hidden) { display: flex; }
         .doxx-click-canvas-shell { position: relative; width: 100%; }
@@ -443,6 +470,33 @@
                 flex-shrink: 1;
             }
         }
+        #doxxClickOrientationLock {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: radial-gradient(circle at 50% 35%, rgba(88, 28, 135, 0.72), rgba(3, 0, 5, 0.98) 68%);
+            color: #e9d5ff;
+            text-align: center;
+            font: 900 clamp(18px, 5vw, 34px) monospace;
+            letter-spacing: 0.04em;
+            touch-action: none;
+        }
+        #doxxClickOrientationLock span {
+            display: block;
+            max-width: 360px;
+            padding: 18px 20px;
+            border: 2px solid #a855f7;
+            background: #18181b;
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.36);
+        }
+        @media (orientation: portrait) {
+            html, body { overflow: hidden !important; }
+            #doxxClickOrientationLock { display: flex; }
+        }
         @media (hover: none) and (pointer: coarse) {
             html.doxx-controls-overlay body { display: block; overflow-y: auto; }
             html.doxx-controls-overlay .game-shell {
@@ -468,6 +522,7 @@
     </style>
 </head>
 <body>
+    <div id="doxxClickOrientationLock" aria-hidden="true"><span>&#9635;&#9587;&#9618; ROTATE &#9618;&#9587;&#9635;</span></div>
     <main class="game-shell">
         <section id="doxxClickGameCard" class="game-frame" aria-label="Dox'x Click">
             <div id="doxxClickIntro">
@@ -488,7 +543,7 @@
                 <div id="doxxClickInfoOverlay" class="title-info-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="doxxClickInfoTitle" aria-hidden="true">
                     <div class="title-info-panel" data-doxx-click-readable>
                         <div class="title-info-logo" role="img" aria-label="Proteinbeer developer logo"></div>
-                        <div id="doxxClickInfoTitle">v0.2.96</div>
+                        <div id="doxxClickInfoTitle">v0.3.36</div>
                         <div>&copy; 2026 &#9619;&#824;&#9618;&#9587;&#9617; &#9671;&#9618;&#9619;</div>
                     </div>
                 </div>
@@ -537,6 +592,6 @@
             requestAnimationFrame(reportEmbeddedHeight);
         }
     </script>
-    <script src="platform-loader.js?v=0.2.96"></script>
+    <script src="platform-loader.js?v=0.3.36"></script>
 </body>
 </html>
