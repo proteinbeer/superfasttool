@@ -201,7 +201,7 @@ const autoConfigs = Object.values(catalog.tools).map(tool => {
   };
 });
 
-export const toolI18nConfigs = [...manualConfigs, ...autoConfigs, doxxConfig];
+export const toolI18nConfigs = [...manualConfigs, ...autoConfigs];
 
 export function getToolI18nConfig(slug) {
   const config = toolI18nConfigs.find(item => item.slug === slug);

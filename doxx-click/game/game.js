@@ -418,6 +418,11 @@
     window.addEventListener('doxx-platform-audio', event => {
         platformMuted = Boolean(event.detail?.muted);
         updateMuteState();
+        if (platformMuted) {
+            pauseBackgroundMusic();
+        } else if (!paused && musicScene !== 'silent' && (running || completed)) {
+            resumeBackgroundMusic();
+        }
     });
     window.addEventListener('doxx-platform-pause', () => {
         platformPauseWasRunning = running && !paused;

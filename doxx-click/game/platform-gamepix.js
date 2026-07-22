@@ -1,4 +1,4 @@
-(function initGamePixSdk() {
+﻿(function initGamePixSdk() {
     const local = window.localStorage;
     const sdk = window.GamePix;
     let loadedPromise = null;
@@ -19,6 +19,21 @@
         } catch (error) {
             console.warn(`GamePix.${label} failed.`, error);
             return undefined;
+        }
+    }
+
+    async function runAd(label, callback) {
+        dispatch('doxx-platform-audio', { muted: true });
+        dispatch('doxx-platform-pause', { reason: 'ad' });
+        try {
+            const result = await callback();
+            return Boolean(result?.success);
+        } catch (error) {
+            console.warn(`GamePix ${label} ad failed.`, error);
+            return false;
+        } finally {
+            dispatch('doxx-platform-audio', { muted: false });
+            dispatch('doxx-platform-resume', { reason: 'ad' });
         }
     }
 
@@ -99,23 +114,11 @@
         },
         async showInterstitial() {
             if (typeof sdk?.interstitialAd !== 'function') return false;
-            try {
-                const result = await sdk.interstitialAd();
-                return Boolean(result?.success);
-            } catch (error) {
-                console.warn('GamePix interstitial ad failed.', error);
-                return false;
-            }
+            return runAd('interstitial', () => sdk.interstitialAd());
         },
         async showReward() {
             if (typeof sdk?.rewardAd !== 'function') return false;
-            try {
-                const result = await sdk.rewardAd();
-                return Boolean(result?.success);
-            } catch (error) {
-                console.warn('GamePix reward ad failed.', error);
-                return false;
-            }
+            return runAd('reward', () => sdk.rewardAd());
         }
     };
 
